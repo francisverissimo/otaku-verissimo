@@ -1,5 +1,5 @@
-import { Link, useSearchParams } from 'react-router-dom'
-import { ArrowClockwise, Broom, HouseSimple, SignIn, Video } from '@phosphor-icons/react'
+import { useSearchParams } from 'react-router-dom'
+import { HouseSimple, RocketLaunch, SignIn, Video } from '@phosphor-icons/react'
 import { useAuth } from '@/hooks/use-auth'
 import logo from '@/assets/logo-short.svg'
 
@@ -82,9 +82,7 @@ export function Sidebar() {
               window.location.reload()
             }}
           >
-            <SignIn size={20} />
-            <Broom size={20} />
-            <ArrowClockwise size={20} />
+            <RocketLaunch size={32} />
           </button>
         )}
       </div>
