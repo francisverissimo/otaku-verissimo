@@ -30,6 +30,7 @@ export const GET_SEARCH_QUERY = gql`
         }
         coverImage {
           large
+          color
         }
         genres
         episodes
