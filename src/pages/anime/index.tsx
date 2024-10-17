@@ -281,7 +281,7 @@ export function Anime() {
                 <Subtitle text="Info" />
 
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
-                  <span className="min-w-[110px] text-sm"> userPreferred</span>
+                  <span className="min-w-[110px] text-sm">Title</span>
                   <Title title={anime.title.userPreferred} />
                 </div>
 
