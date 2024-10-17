@@ -1,15 +1,22 @@
-import { useSearchParams } from "react-router-dom";
-import { GET_SEARCH_QUERY } from "@/lib/queries/search-query";
-import { InputSearch } from "./search-fields";
-import { ResultsList } from "./search-results-list";
+import { Link, useSearchParams } from 'react-router-dom'
+import { GET_SEARCH_QUERY } from '@/lib/queries/search-query'
+import { InputSearch } from './search-fields'
+import { ResultsList } from './search-results-list'
+import shortLogo from '@/assets/logo-short.svg'
 
 export function Search() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchTerm = searchParams.get("search") || "";
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchTerm = searchParams.get('search') || ''
 
   return (
     <>
-      <div className="flex max-w-5xl flex-wrap items-center justify-between gap-4 p-4 pt-20">
+      <div className="flex h-16 items-center justify-between gap-2 md:justify-center">
+        <Link to="/" title="back to home">
+          <img src={shortLogo} alt="otakuVERISSIMO logo" className="mx-4 w-12" />
+        </Link>
+      </div>
+
+      <div className="flex max-w-5xl flex-wrap items-center justify-between gap-4 p-4">
         <InputSearch
           searchTerm={searchTerm}
           searchParams={searchParams}
@@ -53,11 +60,11 @@ export function Search() {
             perPage: 20,
             page: 1,
             search: searchTerm,
-            sort: "POPULARITY_DESC",
+            sort: 'POPULARITY_DESC',
             isAdult: false,
           }}
         />
       )}
     </>
-  );
+  )
 }
