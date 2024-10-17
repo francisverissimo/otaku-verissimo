@@ -49,6 +49,10 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
     }
   })
 
+  if (!edges.length) {
+    return null
+  }
+
   return (
     <div className="mt-4 flex flex-col">
       <Subtitle text="Relations" className="px-4" />
