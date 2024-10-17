@@ -23,7 +23,7 @@ export function EntryCard({ entry, onClickIncrementEpisode, loadingMutation }: T
         src={media.coverImage.large}
         alt={media.title.userPreferred}
         onClick={() => navigate(`/anime/${media.id}`)}
-        className="aspect-[6/9] w-32 cursor-pointer bg-cover object-cover"
+        className="aspect-[6/9] w-24 cursor-pointer bg-cover object-cover md:w-28"
       />
 
       <div className="flex w-full flex-col">
