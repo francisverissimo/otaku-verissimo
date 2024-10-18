@@ -24,7 +24,7 @@ export function CoverCard({ anime }: TCoverCardProps) {
       <HoverCard.Trigger className="relative" asChild>
         <Link to={`/anime/${id}`}>
           <div className="group flex h-full cursor-pointer flex-col">
-            <div className="relative mb-3 overflow-hidden rounded-lg shadow-md">
+            <div className="relative overflow-hidden rounded-t-lg shadow-md">
               <img
                 src={coverImage.large}
                 alt={title.userPreferred}
@@ -39,7 +39,7 @@ export function CoverCard({ anime }: TCoverCardProps) {
             </div>
 
             <span
-              className="line-clamp-2 min-h-[28px] text-[14px] font-medium"
+              className="line-clamp-2 rounded-b-lg p-1 text-[14px] font-medium backdrop-blur-sm backdrop-brightness-75"
               style={{ color: isAnimeColorAppropriate ? coverImage.color : primaryThemeColor }}
             >
               {title.userPreferred}

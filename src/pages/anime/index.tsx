@@ -87,7 +87,7 @@ export function Anime() {
                 onLoad={(t) => (t.currentTarget.style.opacity = '1')}
               />
 
-              <div className="absolute bottom-0 h-full w-full bg-gradient-to-r from-zinc-800 via-zinc-800/20 to-transparent md:w-[60%] md:via-zinc-800/70" />
+              <div className="absolute bottom-0 h-full w-full bg-gradient-to-r from-zinc-900 via-zinc-900/20 to-transparent md:w-[60%] md:via-zinc-800/70" />
             </div>
           </div>
         ) : (
@@ -522,7 +522,16 @@ type StudiosListProps = {
 
 function StudiosList({ studios }: StudiosListProps) {
   const animationStudio = studios.filter((studio) => studio.isMain)
-  const producers = studios.filter((studio) => !studio.isMain)
+  const producers = studios.reduce(
+    (acc, curr) => {
+      if (!curr.isMain && !acc.some((accArr) => curr.node.id == accArr.node.id)) {
+        acc.push(curr)
+      }
+
+      return acc
+    },
+    [] as StudiosListProps['studios']
+  )
 
   return (
     <div className="flex flex-col gap-2 px-4">
@@ -531,8 +540,8 @@ function StudiosList({ studios }: StudiosListProps) {
 
         <div className="flex flex-col gap-1">
           {animationStudio && animationStudio.length > 0
-            ? animationStudio.map((studio) => (
-                <span key={studio.node.id} className="flex-1 text-sm text-main">
+            ? animationStudio.map((studio, idx) => (
+                <span key={idx} className="flex-1 text-sm text-main">
                   {studio.node.name}
                 </span>
               ))
@@ -545,11 +554,13 @@ function StudiosList({ studios }: StudiosListProps) {
 
         <div className="flex flex-col gap-1">
           {producers && producers.length > 0
-            ? producers.map((producer) => (
-                <span key={producer.node.id} className="flex-1 text-sm text-main">
-                  {producer.node.name}
-                </span>
-              ))
+            ? producers.map((producer) => {
+                return (
+                  <span key={producer.node.id} className="flex-1 text-sm text-main">
+                    {producer.node.name}
+                  </span>
+                )
+              })
             : '?'}
         </div>
       </div>
