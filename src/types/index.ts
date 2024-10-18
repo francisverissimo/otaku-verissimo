@@ -22,43 +22,30 @@ type MediaFormat =
 type MediaStatus = 'FINISHED' | 'RELEASING' | 'NOT_YET_RELEASED' | 'CANCELLED' | 'HIATUS'
 
 export type MediaSort =
-  | 'TITLE_ userPreferred_DESC'
-  | 'POPULARITY_DESC'
-  | 'SCORE_DESC'
-  | 'TRENDING_DESC'
-  | 'FAVOURITES_DESC'
+  | 'ID'
   | 'ID_DESC'
+  | 'TITLE_ROMAJI'
+  | 'TITLE_ROMAJI_DESC'
+  | 'TITLE_ENGLISH'
+  | 'TITLE_ENGLISH_DESC'
+  | 'TITLE_NATIVE'
+  | 'TITLE_NATIVE_DESC'
+  | 'TYPE'
+  | 'TYPE_DESC'
+  | 'FORMAT'
+  | 'FORMAT_DESC'
+  | 'START_DATE'
   | 'START_DATE_DESC'
-// | "ID"
-// | "TITLE_ userPreferred"
-// | "TITLE_ENGLISH"
-// | "TITLE_ENGLISH_DESC"
-// | "TITLE_NATIVE"
-// | "TITLE_NATIVE_DESC"
-// | "TYPE"
-// | "TYPE_DESC"
-// | "FORMAT"
-// | "FORMAT_DESC"
-// | "START_DATE"
-// | "END_DATE"
-// | "END_DATE_DESC"
-// | "SCORE"
-// | "POPULARITY"
-// | "TRENDING"
-// | "EPISODES"
-// | "EPISODES_DESC"
-// | "DURATION"
-// | "DURATION_DESC"
-// | "STATUS"
-// | "STATUS_DESC"
-// | "CHAPTERS"
-// | "CHAPTERS_DESC"
-// | "VOLUMES"
-// | "VOLUMES_DESC"
-// | "UPDATED_AT"
-// | "UPDATED_AT_DESC"
-// | "SEARCH_MATCH"
-// | "FAVOURITES"
+  | 'END_DATE'
+  | 'END_DATE_DESC'
+  | 'SCORE'
+  | 'SCORE_DESC'
+  | 'POPULARITY'
+  | 'POPULARITY_DESC'
+  | 'TRENDING'
+  | 'TRENDING_DESC'
+  | 'EPISODES'
+  | 'EPISODES_DESC'
 
 export type PageInfo = {
   total: number
