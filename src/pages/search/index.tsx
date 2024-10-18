@@ -10,13 +10,11 @@ export function Search() {
 
   return (
     <>
-      <div className="flex h-16 items-center justify-between gap-2 md:justify-center">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 p-4">
         <Link to="/" title="back to home">
           <img src={shortLogo} alt="otakuVERISSIMO logo" className="mx-4 w-12" />
         </Link>
-      </div>
 
-      <div className="flex max-w-5xl flex-wrap items-center justify-between gap-4 p-4">
         <InputSearch
           searchTerm={searchTerm}
           searchParams={searchParams}
@@ -53,18 +51,16 @@ export function Search() {
           </div> */}
       </div>
 
-      {searchTerm && (
-        <ResultsList
-          query={GET_SEARCH_QUERY}
-          variables={{
-            perPage: 20,
-            page: 1,
-            search: searchTerm,
-            sort: 'POPULARITY_DESC',
-            isAdult: false,
-          }}
-        />
-      )}
+      <ResultsList
+        query={GET_SEARCH_QUERY}
+        variables={{
+          perPage: 40,
+          page: 1,
+          ...(searchTerm && { search: searchTerm }),
+          sort: 'POPULARITY_DESC',
+          isAdult: false,
+        }}
+      />
     </>
   )
 }
