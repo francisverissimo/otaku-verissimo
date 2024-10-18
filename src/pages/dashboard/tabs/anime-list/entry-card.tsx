@@ -24,6 +24,13 @@ export function EntryCard({ entry, onClickIncrementEpisode, loadingMutation }: T
         alt={media.title.userPreferred}
         onClick={() => navigate(`/anime/${media.id}`)}
         className="aspect-[6/9] w-24 cursor-pointer bg-cover object-cover md:w-28"
+        style={{
+          opacity: 0,
+          transitionDuration: '600ms',
+        }}
+        onLoad={(t) => {
+          t.currentTarget.style.opacity = '1'
+        }}
       />
 
       <div className="flex w-full flex-col">
