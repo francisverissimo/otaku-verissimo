@@ -12,9 +12,13 @@ type TCoverCardPopoverProps = {
   anime: PageMediaResultQuery
 }
 
+const primaryThemeColor = '#fdba74' /** tailwind colors > orange[300] */
+
 export function CoverCard({ anime }: TCoverCardProps) {
   const { id, title, coverImage } = anime
-  
+
+  const isAnimeColorAppropriate = isContrastAppropriate(anime.coverImage.color)
+
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
       <HoverCard.Trigger className="relative" asChild>
@@ -36,7 +40,7 @@ export function CoverCard({ anime }: TCoverCardProps) {
 
             <span
               className="line-clamp-2 min-h-[28px] text-[14px] font-medium"
-              style={{ color: coverImage.color }}
+              style={{ color: isAnimeColorAppropriate ? coverImage.color : primaryThemeColor }}
             >
               {title.userPreferred}
             </span>
@@ -62,7 +66,7 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
   const { episodes, studios, averageScore, season, seasonYear, format, startDate } = anime
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
   const { __typename, ...restStartDate } = startDate
-  const isTBA = !Object.values(restStartDate).some((item) => item != null)
+  const isTBA = !Object.values(restStartDate).some((item) => item)
   const isAnimeColorAppropriate = isContrastAppropriate(anime.coverImage.color)
 
   return (
@@ -102,7 +106,7 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
               key={index}
               className="text-sm font-medium"
               style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : '#FF5F00',
+                color: isAnimeColorAppropriate ? anime.coverImage.color : primaryThemeColor,
               }}
             >
               {studio.name}
@@ -129,7 +133,7 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
             <span
               className="peer py-1 text-sm font-medium"
               style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : '#FF5F00',
+                color: isAnimeColorAppropriate ? anime.coverImage.color : primaryThemeColor,
               }}
             >
               {genre}
