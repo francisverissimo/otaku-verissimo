@@ -32,6 +32,11 @@ type TMedia = {
   genres: string[]
   bannerImage: string | null
   startDate: TFuzzyDate
+  nextAiringEpisode: {
+    airingAt: number
+    timeUntilAiring: number
+    episode: number
+  }
 }
 
 type TAdvancedScores = {
