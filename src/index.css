@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  @apply box-border min-h-screen overflow-x-hidden bg-zinc-900 font-main text-zinc-50;
+  @apply dark:bg-darkBG dark:text-darkTxt bg-lightBG text-lightTxt box-border min-h-screen overflow-x-hidden font-main;
   --webkit-font-smoothing: antialiased;
 }
 
