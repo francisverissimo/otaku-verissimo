@@ -9,7 +9,7 @@ type TCollapseParagraphProps = ClassAttributes<HTMLDivElement> & {
 export function CollapseParagraph({ description, className }: TCollapseParagraphProps) {
   const [collapse, setCollapse] = useState(false)
 
-  if (description.replaceAll(' ', '').length >= 256) {
+  if (description.replace(/ /g, '').length >= 256) {
     return (
       <div className="relative">
         {!collapse && (
@@ -20,16 +20,21 @@ export function CollapseParagraph({ description, className }: TCollapseParagraph
           </div>
         )}
 
-        <p
-          className={`${className}`}
-          dangerouslySetInnerHTML={{
-            __html: description,
-          }}
-        />
+        <div>
+          <p
+            className={`${className} ${!collapse && 'max-h-64 overflow-hidden'}`}
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
+
+          {!collapse && <div className='absolute z-[5] top-0 bg-gradient-to-t from-darkBG to-transparent h-full w-full' />}
+        </div>
+
 
         <button
-          onClick={() => setCollapse((prev) => !prev)}
-          className="mx-auto mt-2 flex w-fit items-center justify-center outline-main/50"
+          onClick={() => setCollapse((prev) => !prev)}  
+          className={`${!collapse && 'absolute bottom-0 z-[10]'} mx-auto mt-2 flex w-full items-center p-2 h-20 justify-center outline-main/50`}
         >
           {collapse ? (
             <>
