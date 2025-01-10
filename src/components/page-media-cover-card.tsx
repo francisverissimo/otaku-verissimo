@@ -1,23 +1,19 @@
 import { Link } from 'react-router-dom'
-import * as HoverCard from '@radix-ui/react-hover-card'
-import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
-import { PageMediaResultQuery } from '@/types'
 import { isContrastAppropriate } from '@/utils/is-contrast-appropriate'
+import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
+import * as HoverCard from '@radix-ui/react-hover-card'
+import { TPageMedia } from '@/types/t-page-media'
 
 type TCoverCardProps = {
-  anime: PageMediaResultQuery
-}
-
-type TCoverCardPopoverProps = {
-  anime: PageMediaResultQuery
+  anime: TPageMedia
 }
 
 const primaryThemeColor = '#fdba74' /** tailwind colors > orange[300] */
 
-export function CoverCard({ anime }: TCoverCardProps) {
+export function PageMediaCoverCard({ anime }: TCoverCardProps) {
   const { id, title, coverImage } = anime
 
-  const isAnimeColorAppropriate = isContrastAppropriate(anime.coverImage.color)
+  const isAnimeColorAppropriate = isContrastAppropriate(coverImage.color)
 
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
@@ -40,7 +36,12 @@ export function CoverCard({ anime }: TCoverCardProps) {
 
             <span
               className="line-clamp-2 rounded-b-lg p-1 text-[14px] font-medium backdrop-blur-sm backdrop-brightness-75"
-              style={{ color: isAnimeColorAppropriate ? coverImage.color : primaryThemeColor }}
+              style={{
+                color:
+                  isAnimeColorAppropriate && coverImage.color
+                    ? coverImage.color
+                    : primaryThemeColor,
+              }}
             >
               {title.userPreferred}
             </span>
@@ -62,12 +63,13 @@ export function CoverCard({ anime }: TCoverCardProps) {
   )
 }
 
-function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
-  const { episodes, studios, averageScore, season, seasonYear, format, startDate } = anime
+function CoverCardPopover({ anime }: TCoverCardProps) {
+  const { episodes, studios, averageScore, season, seasonYear, format, startDate, coverImage } =
+    anime
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
   const { __typename, ...restStartDate } = startDate
   const isTBA = !Object.values(restStartDate).some((item) => item)
-  const isAnimeColorAppropriate = isContrastAppropriate(anime.coverImage.color)
+  const isAnimeColorAppropriate = isContrastAppropriate(coverImage.color)
 
   return (
     <div className="-mt-1 flex w-72 flex-col gap-1 rounded-lg bg-zinc-950 p-4 shadow-2xl">
@@ -106,7 +108,10 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
               key={index}
               className="text-sm font-medium"
               style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : primaryThemeColor,
+                color:
+                  isAnimeColorAppropriate && coverImage.color
+                    ? coverImage.color
+                    : primaryThemeColor,
               }}
             >
               {studio.name}
@@ -133,7 +138,10 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
             <span
               className="peer py-1 text-sm font-medium"
               style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : primaryThemeColor,
+                color:
+                  isAnimeColorAppropriate && anime.coverImage.color
+                    ? anime.coverImage.color
+                    : primaryThemeColor,
               }}
             >
               {genre}
