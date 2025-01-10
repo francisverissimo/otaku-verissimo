@@ -9,7 +9,7 @@ export function Sidebar() {
   const active = searchParams.get('tabs') || '/'
 
   return (
-    <div className="fixed z-40 hidden h-screen w-14 flex-col items-center justify-center gap-4 bg-zinc-950/50 backdrop-blur md:flex">
+    <div className="fixed z-40 hidden h-screen w-14 flex-col items-center justify-center gap-4 bg-zinc-950/50 md:flex">
       <img src={logo} alt="ov logo" className="w-10 pt-4" />
 
       <div className="flex flex-1 flex-col items-center justify-center gap-4">
@@ -72,7 +72,7 @@ export function Sidebar() {
         )}
       </div>
 
-      <div className="min-h-14 py-4">
+      <div className="hidden min-h-14 py-4">
         {location.hostname === 'localhost' && (
           <button
             title="force localhost oauth"

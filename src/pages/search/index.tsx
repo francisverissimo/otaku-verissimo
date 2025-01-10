@@ -10,9 +10,9 @@ export function Search() {
 
   return (
     <>
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 p-4">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 pr-4">
         <Link to="/" title="back to home">
-          <img src={shortLogo} alt="otakuVERISSIMO logo" className="mx-4 w-12" />
+          <img src={shortLogo} alt="otakuVERISSIMO logo" className="w-12 mx-4" />
         </Link>
 
         <InputSearch
@@ -20,8 +20,9 @@ export function Search() {
           searchParams={searchParams}
           setSearchParams={setSearchParams}
         />
+      </div>
 
-        {/* <div className="flex gap-4">
+      {/* <div className="flex gap-4">
             <div className="flex flex-col gap-2">
               <span className="font-medium text-sm">Genres</span>
               <SelectFieldGenres />
@@ -49,7 +50,6 @@ export function Search() {
 
             <ButtonMoreOptions />
           </div> */}
-      </div>
 
       <ResultsList
         query={GET_SEARCH_QUERY}

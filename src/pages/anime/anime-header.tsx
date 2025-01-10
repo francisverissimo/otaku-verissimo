@@ -13,7 +13,7 @@ export function AnimeHeader() {
   }
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-20 w-full">
+    <div className="fixed left-0 right-0 top-0 z-40 w-full">
       <div className="mx-auto flex w-full max-w-5xl justify-between p-4">
         <div
           className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-white/10 backdrop-blur-sm"
