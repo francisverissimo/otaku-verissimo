@@ -21,6 +21,8 @@ export const GET_CHARACTER_QUERY = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             coverImage {
               large
