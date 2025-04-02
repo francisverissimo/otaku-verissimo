@@ -1,12 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-main: #ff5f00;
+  --color-second: #01a2e3;
+  --color-darkBG: #18181b;
+  --color-darkTxt: #fafafa;
+  --color-lightBG: #e4e4e7;
+  --color-lightTxt: #27272a;
+
+  --font-main: 'Open Sans', sans-serif;
+  --font-raleway: 'Raleway', sans-serif;
+}
 
 body {
-  @apply dark:bg-darkBG dark:text-darkTxt bg-lightBG text-lightTxt box-border min-h-screen overflow-x-hidden font-main;
-  --webkit-font-smoothing: antialiased;
+  @apply dark:bg-darkBG dark:text-darkTxt bg-lightBG text-lightTxt font-main box-border min-h-screen overflow-x-hidden antialiased;
 }
 
 .swiper-pagination-bullet {
