@@ -8,12 +8,10 @@ type TCoverCardProps = {
   anime: TPageMedia
 }
 
-const primaryThemeColor = '#fdba74' /** tailwind colors > orange[300] */
-
 export function PageMediaCoverCard({ anime }: TCoverCardProps) {
   const { id, title, coverImage } = anime
 
-  const isAnimeColorAppropriate = isContrastAppropriate(coverImage.color)
+  const accentColor = isContrastAppropriate(coverImage.color)
 
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
@@ -35,13 +33,8 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
             </div>
 
             <span
-              className="line-clamp-2 rounded-b-lg p-1 text-[14px] font-medium backdrop-blur-sm backdrop-brightness-75"
-              style={{
-                color:
-                  isAnimeColorAppropriate && coverImage.color
-                    ? coverImage.color
-                    : primaryThemeColor,
-              }}
+              className="line-clamp-2 rounded-b-lg px-2 font-medium backdrop-blur-sm backdrop-brightness-50"
+              style={{ color: accentColor }}
             >
               {title.userPreferred}
             </span>
@@ -51,10 +44,10 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
 
       <HoverCard.Portal>
         <HoverCard.Content
-          className="pointer-events-none z-10 hidden md:block"
+          className="data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out pointer-events-none z-10 hidden md:block"
           side="right"
           align="start"
-          sideOffset={14}
+          sideOffset={10}
         >
           <CoverCardPopover anime={anime} />
         </HoverCard.Content>
@@ -69,18 +62,15 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
   const { __typename, ...restStartDate } = startDate
   const isTBA = !Object.values(restStartDate).some((item) => item)
-  const isAnimeColorAppropriate = isContrastAppropriate(coverImage.color)
+  const accentColor = isContrastAppropriate(coverImage.color)
 
   return (
-    <div className="-mt-1 flex w-72 flex-col gap-1 rounded-lg bg-zinc-950 p-4 shadow-2xl">
+    <div className="bg-darkBG/80 flex w-72 flex-col gap-2 rounded-lg p-4 shadow-2xl backdrop-blur">
       <div className="flex items-center justify-between">
         {!isTBA && (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2">
             {season && <span className="peer text-sm font-medium">{season}</span>}
-
-            <span className="text-sm font-medium text-second peer-[]:ml-2">
-              {seasonYear || startDate.year}
-            </span>
+            <span className="text-second text-sm font-medium">{seasonYear || startDate.year}</span>
           </div>
         )}
 
@@ -104,16 +94,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
       {studios.nodes.length > 0 && (
         <div>
           {studios.nodes.map((studio, index, array) => (
-            <span
-              key={index}
-              className="text-sm font-medium"
-              style={{
-                color:
-                  isAnimeColorAppropriate && coverImage.color
-                    ? coverImage.color
-                    : primaryThemeColor,
-              }}
-            >
+            <span key={index} className="text-sm font-medium" style={{ color: accentColor }}>
               {studio.name}
               {index != array.length - 1 && ', '}
             </span>
@@ -122,32 +103,22 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
       )}
 
       <div className="flex">
-        {format && <span>{format.replaceAll('_', ' ')}</span>}
+        {format && <span>{format.replace(/_/g, ' ')}</span>}
 
         {episodes && (
           <div className="flex items-center">
-            <div className="mx-2 h-2 w-2 rounded-full bg-white/60" />
+            <div className="bg-second mx-2 h-1 w-1 rounded-full" />
             <span className="">{episodes + `${episodes > 1 ? ' episodes' : ' episode'}`}</span>
           </div>
         )}
       </div>
 
-      <div className="flex w-fit flex-wrap items-center">
-        {genres.map((genre, index, array) => (
-          <div key={genre} className="flex items-center">
-            <span
-              className="peer py-1 text-sm font-medium"
-              style={{
-                color:
-                  isAnimeColorAppropriate && anime.coverImage.color
-                    ? anime.coverImage.color
-                    : primaryThemeColor,
-              }}
-            >
+      <div className="flex w-fit flex-wrap items-center gap-2">
+        {genres.map((genre, idx) => (
+          <div key={idx} className="flex items-center">
+            <span className="rounded-2xl px-2 py-1 text-sm ring" style={{ color: accentColor }}>
               {genre}
             </span>
-
-            {index != array.length - 1 && <div className="mx-2 h-2 w-2 rounded-full bg-white/60" />}
           </div>
         ))}
       </div>
