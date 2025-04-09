@@ -1,40 +1,21 @@
-import { DocumentNode, useQuery } from '@apollo/client'
 import { SwiperSlide } from 'swiper/react'
-import { PageMediaResultQuery } from '@/types'
 import { Subtitle } from '@/components/subtitle'
+import { PageMediaCoverCard } from '@/components/page-media-cover-card'
 import { SwiperSectionHome } from '@/components/swiper-section-home'
-import { CoverCard } from '@/components/cover-card'
-import { DefaultLoading as Loading } from '@/components/loading'
+import { TPageMedia } from '@/types/t-page-media'
 
 type THomeListingSectionProps = {
   title: string
-  query: DocumentNode
-  variables: {
-    perPage?: number
-    season?: string
-    seasonYear?: number
-    sort: string
-  }
+  mediasArray: TPageMedia[]
 }
 
-const isLocalHost = location.href.includes('localhost')
-
-export function HomeListingSection({ title, query, variables }: THomeListingSectionProps) {
-  const { data, loading } = useQuery(query, {
-    variables: { ...variables, perPage: isLocalHost ? 6 : 10 },
-    notifyOnNetworkStatusChange: true,
-  })
-
-  const animes: PageMediaResultQuery[] = data?.Page.media
-
+export function HomeListingSection({ title, mediasArray }: THomeListingSectionProps) {
   return (
     <div>
       <div className="mx-auto my-2 flex items-center justify-between px-4">
-        {loading ? (
-          <div className="h-7 w-36 animate-pulse rounded-lg px-4" />
-        ) : (
-          <Subtitle text={title} />
-        )}
+        <Subtitle className="font-raleway text-main py-4 text-xl font-semibold uppercase underline underline-offset-8">
+          {title}
+        </Subtitle>
 
         {/* <button
         onClick={() => navigate(`/${/anime/?sort=TRENDING_DESC}`)}
@@ -44,17 +25,15 @@ export function HomeListingSection({ title, query, variables }: THomeListingSect
       </button> */}
       </div>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <SwiperSectionHome>
-          {animes?.map((media, index) => (
+      <SwiperSectionHome>
+        {mediasArray.map((media, index) => {
+          return (
             <SwiperSlide key={index}>
-              <CoverCard anime={media} />
+              <PageMediaCoverCard anime={media} />
             </SwiperSlide>
-          ))}
-        </SwiperSectionHome>
-      )}
+          )
+        })}
+      </SwiperSectionHome>
     </div>
   )
 }
