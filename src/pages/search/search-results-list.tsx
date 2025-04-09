@@ -1,6 +1,7 @@
 import { DocumentNode, useQuery } from '@apollo/client'
-import { PageMediaResultQuery, MediaSort } from '@/types'
-import { CoverCard } from '@/components/cover-card'
+import { TPageMedia } from '@/types/t-page-media'
+import { MediaSort } from '@/types'
+import { PageMediaCoverCard } from '@/components/page-media-cover-card'
 import { DefaultLoading as Loading } from '@/components/loading'
 // import { IntersectionObserverComponent } from "@/components/intersection-observer-component";
 
@@ -37,8 +38,8 @@ export function ResultsList({ query, variables }: ResultsListProps) {
     <div className="mx-auto max-w-5xl p-4">
       <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] justify-between gap-4 sm:grid-cols-[repeat(auto-fill,minmax(132px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
         {data &&
-          data.Page.media.map((anime: PageMediaResultQuery) => (
-            <CoverCard key={anime.id} anime={anime} />
+          data.Page.media.map((anime: TPageMedia) => (
+            <PageMediaCoverCard key={anime.id} anime={anime} />
           ))}
       </div>
 

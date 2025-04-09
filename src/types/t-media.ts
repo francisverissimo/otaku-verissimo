@@ -161,7 +161,7 @@ type FuzzyDate = {
   year: number | null
 }
 
-type MediaTag = {
+export type MediaTag = {
   __typename: 'MediaTag'
   id: number
   name: string

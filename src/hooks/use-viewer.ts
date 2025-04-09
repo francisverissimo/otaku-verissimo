@@ -60,10 +60,10 @@ export function useViewer() {
 
       if (!accessToken || !storedViewer) return undefined
 
-      const timestampDifference = Date.now() - storedViewer.lastAccess
-      const oneHourInMs = 60 * 60 * 1000
+      const differenceLastAccess = Date.now() - storedViewer.lastAccess
+      const oneHour = 60 * 60 * 1000
 
-      if (timestampDifference > oneHourInMs || !storedViewer) {
+      if (differenceLastAccess > oneHour) {
         return await fetchViewerData(accessToken)
       }
 

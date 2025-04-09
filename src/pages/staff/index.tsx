@@ -124,7 +124,7 @@ export function Staff() {
                   {staff.description && (
                     <CollapseParagraph
                       description={staff.description}
-                      className="flex flex-col gap-1 text-justify [&_a]:text-main"
+                      className="[&_a]:text-main flex flex-col gap-1 text-justify"
                     />
                   )}
                 </div>
@@ -158,11 +158,11 @@ export function Staff() {
 
                           <div className="flex flex-1 flex-col">
                             <Link to={`/character/${edge.node.id}`} className="w-fit">
-                              <span className="break-all text-lg font-medium">
+                              <span className="text-lg font-medium break-all">
                                 {edge.node.name.full}
                               </span>
                             </Link>
-                            <span className="text-sm text-main">{edge.role}</span>
+                            <span className="text-main text-sm">{edge.role}</span>
                           </div>
                         </div>
 
@@ -189,13 +189,13 @@ export function Staff() {
                                   />
                                 </div>
 
-                                <div className="left-0 right-0 top-0 flex items-center pt-2">
-                                  <span className="text-sm text-main">
-                                    {media.format ? media.format.replaceAll('_', ' ') : ''}
+                                <div className="top-0 right-0 left-0 flex items-center pt-2">
+                                  <span className="text-main text-sm">
+                                    {media.format ? media.format.replace(/_/g, ' ') : ''}
                                   </span>
                                 </div>
 
-                                <div className="bottom-0 left-0 right-0 flex items-center">
+                                <div className="right-0 bottom-0 left-0 flex items-center">
                                   <span className="line-clamp-2 min-h-[20px] text-sm font-medium">
                                     {media.title.userPreferred}
                                   </span>
@@ -250,7 +250,7 @@ export function Staff() {
                 <div className="px-4 py-4">
                   <div className="mx-auto flex max-w-5xl flex-col gap-4">
                     <div className="grid flex-col gap-4 rounded">
-                      <strong className="w-fit border-t-4 border-main/70 font-sans text-lg font-medium uppercase">
+                      <strong className="border-main/70 w-fit border-t-4 font-sans text-lg font-medium uppercase">
                         Anime Staff Roles
                       </strong>
 
@@ -286,7 +286,7 @@ export function Staff() {
                                       {startDate.year}
                                     </span>
 
-                                    <span className="line-clamp-2 text-xs font-medium text-main">
+                                    <span className="text-main line-clamp-2 text-xs font-medium">
                                       {title.userPreferred}
                                     </span>
 
