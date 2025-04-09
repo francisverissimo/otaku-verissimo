@@ -1,13 +1,13 @@
-import { ClassAttributes } from 'react'
+import { ClassAttributes, ReactNode } from 'react'
 
 type TSubtitleProps = ClassAttributes<HTMLSpanElement> & {
-  text: string
   className?: string
+  children: ReactNode
+  id?: string
+  as?: keyof JSX.IntrinsicElements
 }
 
-export function Subtitle({ text, className }: TSubtitleProps) {
-  const classnames = 'text-xl font-semibold uppercase text-main italic '.concat(
-    className ? className : ''
-  )
-  return <span className={classnames.trim()}>{text}</span>
+export function Subtitle({ className, children, id, as = 'h2' }: TSubtitleProps) {
+  const Tag = as
+  return <Tag id={id} className={className}>{children}</Tag>
 }
