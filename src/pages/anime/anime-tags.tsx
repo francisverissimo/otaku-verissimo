@@ -1,60 +1,51 @@
-import { Subtitle } from "@/components/subtitle";
-import { useState } from "react";
+import { Subtitle } from '@/components/subtitle'
+import { MediaTag } from '@/types/t-media'
+import { useState } from 'react'
 
-type TAnimeTagsProps = {
-  tags: {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    rank: number;
-    isGeneralSpoiler: boolean;
-    isMediaSpoiler: boolean;
-    isAdult: boolean;
-  }[];
-};
+interface TAnimeTagsProps {
+  tags: MediaTag[]
+}
 
 export function AnimeTags({ tags }: TAnimeTagsProps) {
-  const [showSpoilerTags, setShowSpoilerTags] = useState(false);
+  const [showSpoilerTags, setShowSpoilerTags] = useState(false)
+
+  if (!tags.length) {
+    return null
+  }
 
   return (
-    <>
-      <div className="mb-2 mt-4 flex justify-between px-4">
-        <Subtitle text="tags" />
+    <div>
+      <div className="flex justify-between p-4">
+        <Subtitle className="font-raleway p-4 text-xl font-semibold uppercase underline underline-offset-4">
+          tags
+        </Subtitle>
 
         {tags.find((item) => item.isMediaSpoiler === true) && (
           <button
-            className="text-sm font-medium text-yellow-400 outline-main/50 md:text-base"
+            className="outline-main/50 cursor-pointer text-lg font-medium text-yellow-400 italic"
             onClick={() => setShowSpoilerTags(!showSpoilerTags)}
           >
-            {showSpoilerTags ? "Hide Spoiler" : "Show Spoiler"}
+            {showSpoilerTags ? 'hide spoiler' : 'show spoilers'}
           </button>
         )}
       </div>
 
-      <ul className="grid grid-cols-1 gap-x-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="flex flex-wrap gap-x-2 gap-y-4 px-4 pb-4">
         {tags.map((tag) => {
           if (!tag.isMediaSpoiler || showSpoilerTags) {
             return (
-              <div key={tag.id} className="flex justify-between">
+              <li key={tag.id} className="flex justify-between gap-2">
                 <span
-                  className={`${tag.isMediaSpoiler ? "text-yellow-400" : "text-zinc-300"} text-sm`}
+                  data-is-spoiler={tag.isMediaSpoiler}
+                  className="rounded-3xl px-2 py-1 text-lg text-zinc-300 ring data-[is-spoiler=true]:text-yellow-400 data-[is-spoiler=true]:italic"
                 >
-                  {tag.name}
+                  {tag.name.concat(` · ${tag.rank}%`)}
                 </span>
-
-                <span
-                  className={`${
-                    tag.isMediaSpoiler ? "text-yellow-400" : "text-zinc-300"
-                  } text-sm md:text-base`}
-                >
-                  {tag.rank + "%"}
-                </span>
-              </div>
-            );
+              </li>
+            )
           }
         })}
       </ul>
-    </>
-  );
+    </div>
+  )
 }

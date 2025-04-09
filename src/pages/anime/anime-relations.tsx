@@ -1,24 +1,10 @@
+import { SwiperSlide } from 'swiper/react'
 import { Link } from 'react-router-dom'
+import { TMedia } from '@/types/t-media'
 import { Subtitle } from '@/components/subtitle'
 import { SwiperCoverCardsBellow } from './anime-section-cards'
-import { SwiperSlide } from 'swiper/react'
 
-type TAnimeRelationsProps = {
-  edges: Array<{
-    relationType: string
-    node: {
-      id: number
-      title: {
-        userPreferred: string
-      }
-      format: string
-      coverImage: {
-        large: string
-      }
-      type: string
-    }
-  }>
-}
+type TAnimeRelationsProps = { edges: TMedia['relations']['edges'] }
 
 const order = [
   'ADAPTATION',
@@ -54,8 +40,10 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
   }
 
   return (
-    <div className="mt-4 flex flex-col">
-      <Subtitle text="Relations" className="px-4" />
+    <div className="flex flex-col">
+      <Subtitle className="font-raleway p-4 text-xl font-semibold uppercase underline underline-offset-4">
+        relations
+      </Subtitle>
 
       <SwiperCoverCardsBellow>
         {sorttedEdges.map((edge) => {
@@ -63,14 +51,7 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
 
           return (
             <SwiperSlide key={id}>
-              <Link
-                to={`/anime/${id}`}
-                onClick={() => {
-                  if (window.scrollY <= document.body.scrollHeight)
-                    scrollTo({ top: 0, behavior: 'smooth' })
-                }}
-                className="flex cursor-pointer flex-col gap-1 py-1"
-              >
+              <Link to={`/anime/${id}`} className="flex cursor-pointer flex-col gap-1 py-1">
                 <div className="relative mb-2 aspect-[6/9] overflow-hidden rounded-lg shadow-md">
                   <img
                     src={coverImage.large}
@@ -84,20 +65,22 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
                     onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                   />
 
-                  <div className="absolute right-0 top-0 rounded-bl-lg bg-zinc-950/70 p-1">
+                  <div className="absolute top-0 right-0 rounded-bl-lg bg-zinc-950/70 p-1">
                     <span className="text-xs font-medium text-zinc-50">
-                      {format ? format.replaceAll('_', ' ') : ''}
+                      {format ? format.replace(/_/g, ' ') : ''}
                     </span>
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-center bg-zinc-950/70 p-1">
+                  <div className="absolute right-0 bottom-0 left-0 flex justify-center bg-zinc-950/70 p-1">
                     <span className="text-sm font-medium text-zinc-50">
-                      {edge.relationType.replaceAll('_', ' ')}
+                      {edge.relationType.replace(/_/g, ' ')}
                     </span>
                   </div>
                 </div>
 
-                <span className="line-clamp-2 text-center text-base">{title.userPreferred}</span>
+                <span className="line-clamp-2 text-center text-sm md:text-base">
+                  {title.userPreferred}
+                </span>
               </Link>
             </SwiperSlide>
           )
