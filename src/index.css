@@ -2,7 +2,7 @@
 
 @theme {
   --color-main: #ff5f00;
-  --color-second: #01a2e3;
+  --color-second: #00a0ff;
   --color-darkBG: #18181b;
   --color-darkTxt: #fafafa;
   --color-lightBG: #e4e4e7;
@@ -10,6 +10,31 @@
 
   --font-main: 'Open Sans', sans-serif;
   --font-raleway: 'Raleway', sans-serif;
+
+  --animate-fade-in: fade-in 80ms ease-in;
+  --animate-fade-out: fade-out 60ms ease-out;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fade-out {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
 }
 
 body {
