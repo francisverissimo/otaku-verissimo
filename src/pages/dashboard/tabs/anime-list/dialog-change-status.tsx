@@ -21,7 +21,7 @@ export const DialogChangeStatus = forwardRef<TDialogChangeStatusHandle, TDialogC
       setDialogState(data)
     }
 
-    useImperativeHandle(ref, function () {
+    useImperativeHandle(ref, () => {
       return {
         handleDialog,
       }
@@ -35,7 +35,7 @@ export const DialogChangeStatus = forwardRef<TDialogChangeStatusHandle, TDialogC
       <Dialog.Root open>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-          <Dialog.Content className="fixed inset-0 z-50 my-auto flex h-fit w-full flex-col justify-center overflow-hidden bg-zinc-700 outline-none md:inset-auto md:left-1/2 md:top-1/2 md:max-w-[600px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
+          <Dialog.Content className="fixed inset-0 z-50 my-auto flex h-fit w-full flex-col justify-center overflow-hidden bg-zinc-700 outline-none md:inset-auto md:top-1/2 md:left-1/2 md:max-w-[600px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
             <Dialog.Title className="m-4 text-xl font-medium">
               Move to {dialogState.status}
             </Dialog.Title>
@@ -51,7 +51,7 @@ export const DialogChangeStatus = forwardRef<TDialogChangeStatusHandle, TDialogC
                   onClickStay()
                   setDialogState(null)
                 }}
-                className="flex w-full items-center justify-center border-none bg-sky-500/10 p-4 font-medium uppercase leading-none text-sky-400 outline-none hover:bg-sky-500/20 hover:ring-2 hover:ring-sky-400 focus:bg-sky-500/20 focus:ring-2 focus:ring-sky-400"
+                className="flex w-full items-center justify-center border-none bg-sky-500/10 p-4 leading-none font-medium text-sky-400 uppercase outline-none hover:bg-sky-500/20 hover:ring-2 hover:ring-sky-400 focus:bg-sky-500/20 focus:ring-2 focus:ring-sky-400"
               >
                 stay
               </Dialog.Close>
@@ -62,7 +62,7 @@ export const DialogChangeStatus = forwardRef<TDialogChangeStatusHandle, TDialogC
                   setDialogState(null)
                 }}
                 autoFocus
-                className="ooutline-none flex w-full items-center justify-center bg-green-500/10 p-4 font-medium uppercase leading-none text-green-400 outline-none hover:bg-green-500/20 hover:ring-2 hover:ring-green-400 focus:bg-green-500/20 focus:ring-2 focus:ring-green-400"
+                className="ooutline-none flex w-full items-center justify-center bg-green-500/10 p-4 leading-none font-medium text-green-400 uppercase outline-none hover:bg-green-500/20 hover:ring-2 hover:ring-green-400 focus:bg-green-500/20 focus:ring-2 focus:ring-green-400"
               >
                 move
               </Dialog.Close>
@@ -73,7 +73,7 @@ export const DialogChangeStatus = forwardRef<TDialogChangeStatusHandle, TDialogC
                 onClickCancel()
                 setDialogState(null)
               }}
-              className="focus:ring-300 absolute right-[10px] top-[10px] inline-flex items-center justify-center px-1 text-red-400 outline-none hover:bg-red-500/30 hover:text-red-300 hover:ring-2 hover:ring-red-300 focus:bg-red-500/30 focus:text-red-300 focus:ring-2 focus:ring-red-300"
+              className="absolute top-[10px] right-[10px] inline-flex items-center justify-center px-1 text-red-400 outline-none hover:bg-red-500/30 hover:text-red-300 hover:ring-2 hover:ring-red-300 focus:bg-red-500/30 focus:text-red-300 focus:ring-2 focus:ring-red-300"
               aria-label="Cancel"
             >
               CANCEL
