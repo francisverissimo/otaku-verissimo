@@ -20,6 +20,10 @@ export function AnimeRecommendations({ edges }: TAnimeRecommendationsProps) {
 
       <SwiperCoverCardsBellow>
         {edges.map((edge) => {
+          if (!edge.node.mediaRecommendation) {
+            return null
+          }
+
           const { id, title, coverImage, averageScore, favourites, format } =
             edge.node.mediaRecommendation
 

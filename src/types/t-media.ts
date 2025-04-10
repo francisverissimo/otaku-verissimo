@@ -204,7 +204,7 @@ type Recommendation = {
   __typename: 'Recommendation'
   id: number
   rating: number
-  mediaRecommendation: TMedia
+  mediaRecommendation: TMedia | null
 }
 
 type MediaExternalLink = {
