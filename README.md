@@ -1,25 +1,39 @@
-<p align="center">
-  <img alt="Project screenshot" src=".github/otakuVERISSIMO.png" width="100%">
-</p>
+<h1 align="center">
+  <img alt="otakuVERISSIMO" height="80" title="otakuVERISSIMO logo" src=".github/logo.svg" />
+</h1>
 
-<h2>Site published <a href="https://otakuverissimo.vercel.app/">here</a></h2>
+Site de animes e mangás com uma vasta biblioteca de títulos e informações sobre eles. O objetivo deste projeto é fornecer aos usuários um local centralizado para encontrar informações sobre animes e mangás de forma rápida e fácil.
 
-## Technologies
+<!-- ## ⚙️ Funcionalidades
+- **Cadastro e exclusão de jobs**: Adicione ou remova facilmente seus projetos.
+- **Estimativa de custo**: Obtenha uma previsão de quanto cada job pode custar.
+- **Cálculo do valor da hora**: Calcule automaticamente o seu valor de hora de trabalho com base nos seus dados. -->
 
-This project was developed with the following technologies:
+## 🛠 Tecnologias Utilizadas
 
-<ul>
-  <li>React</li>
-  <li>TailwindCSS</li>
-  <li>GraphQL</li>
-  <li>Typescript</li>
-  <li>Phosphor Icons</li>
-</ul>
+- **React**
+- **Tailwind CSS**
+- **Typescript**
+- **GraphQL**
 
-## Project
+## 🚀 Acesse o Projeto
+Você pode acessar o projeto online através do seguinte link:
 
-<p>
-  Anime and manga website with a vast library of titles and information about them. The aim of this project is to provide users with a centralized place to find information about anime and manga quickly and easily
-</p>
+[**Clique aqui para acessar**](https://otakuverissimo.vercel.app/).
 
-**<p align="center" weight="bold">Personal project</p>**
+## 📸 Capturas de Tela
+Aqui estão algumas capturas de tela do projeto em funcionamento:
+
+![página inicial](.github/print-1.png)
+
+![página de anime um anime, overview](.github/print-2.png)
+
+![página de anime um anime, personagens](.github/print-3.png)
+
+![lista do usuário logado](.github/print-4.png)
+
+![página de pesquisa](.github/print-5.png)
+
+---
+
+Feito com 💙 por [francisverissimo](https://francissportfolio.vercel.app/)
