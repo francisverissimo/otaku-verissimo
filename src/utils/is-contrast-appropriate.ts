@@ -1,35 +1,45 @@
-const root = document.documentElement
-const backgroundThemeColor = getComputedStyle(root).getPropertyValue('--color-darkBG').trim()
-const primaryThemeColor = getComputedStyle(root).getPropertyValue('--color-main').trim()
+function hexToRgb(hex: string) {
+  hex = hex.replace(/^#/, '')
+  if (hex.length === 3) {
+    hex = hex
+      .split('')
+      .map((c) => c + c)
+      .join('')
+  }
+  const bigint = parseInt(hex, 16)
+  return {
+    r: (bigint >> 16) & 255,
+    g: (bigint >> 8) & 255,
+    b: bigint & 255,
+  }
+}
 
 function getLuminance(hexColor: string): number {
-  hexColor = hexColor.replace(/^#/, '')
-
-  // Converter o código hexadecimal em valores RGB
-  const r = parseInt(hexColor.substring(0, 2), 16)
-  const g = parseInt(hexColor.substring(2, 4), 16)
-  const b = parseInt(hexColor.substring(4, 6), 16)
-
-  // Calcular a luminância usando a fórmula Y = 0.299*R + 0.587*G + 0.114*B
+  const { r, g, b } = hexToRgb(hexColor)
   return 0.299 * r + 0.587 * g + 0.114 * b
 }
 
-function getContrastRatio(hexColor: string): number {
-  const colorLuminance = getLuminance(hexColor)
-  const siteBackgroundLuminance = getLuminance(backgroundThemeColor)
-
-  // Calcular o contraste usando a fórmula (L1 + 0.05) / (L2 + 0.05), onde L1 e L2 são as luminâncias
-  return (colorLuminance + 0.05) / (siteBackgroundLuminance + 0.05)
+/**
+ * cálculo de contraste, usando a fórmula: (L1 + 0.05) / (L2 + 0.05)
+ * L1 e L2 são as luminâncias
+ * */
+function getContrastRatio(fg: string, bg: string): number {
+  const fgLum = getLuminance(fg)
+  const bgLum = getLuminance(bg)
+  return (fgLum + 0.05) / (bgLum + 0.05)
 }
 
-export function isContrastAppropriate(hexColor: string | null): string {
-  if (!hexColor) return primaryThemeColor
+export function getContrastSafeColor(hexColor: string | null): string {
+  const root = document.documentElement
+  const bgThemeColor = getComputedStyle(root).getPropertyValue('--color-darkBG').trim()
+  const mainThemeColor = getComputedStyle(root).getPropertyValue('--color-main').trim()
 
-  const cardBackgroundColor = hexColor // Cor dinâmica
-  const contrastRatio = getContrastRatio(cardBackgroundColor)
+  if (!hexColor || !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hexColor)) {
+    return mainThemeColor
+  }
 
-  // Você pode definir um valor mínimo aceitável para o contraste e verificar se atende aos seus requisitos.
-  const minContrastRatio = 3 // Exemplo de um valor mínimo aceitável
+  const ratio = getContrastRatio(hexColor, bgThemeColor)
+  const minContrastRatio = 3
 
-  return contrastRatio >= minContrastRatio ? hexColor : primaryThemeColor
+  return ratio >= minContrastRatio ? hexColor : mainThemeColor
 }
