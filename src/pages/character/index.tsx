@@ -12,11 +12,8 @@ export function Character() {
   const { id } = useParams() as { id: string }
 
   const { data, error } = useQuery(GET_CHARACTER_QUERY, {
-    variables: { id: id },
+    variables: { id },
     notifyOnNetworkStatusChange: true,
-    onCompleted(data) {
-      document.title = `${data.Character.name.full} · otakuVERISSIMO`
-    },
     onError(error) {
       console.error(error)
     },

@@ -1,15 +1,14 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useMutation } from '@apollo/client'
 import { TMediaList, TMediaListGroup } from '@/types/t-media-list-collection'
 import { SAVE_MEDIA_LIST_ENTRY } from '@/lib/mutations/save-media-list-entry'
 import { DialogChangeStatus, TDialogChangeStatusHandle } from './dialog-change-status'
 import { EntryCard } from './entry-card'
+import { useAnimeListContext } from './use-anime-list-context'
 import { sortEntries } from './utils'
-import logo from '@/assets/logo-short.svg'
 
 type AnimeListContainerProps = {
-  data: TMediaListGroup[] | undefined
-  loadingQuery: boolean
+  data: TMediaListGroup[]
 }
 
 type TMediaListGroupCached = Omit<TMediaListGroup, 'entries'> & {
@@ -17,16 +16,21 @@ type TMediaListGroupCached = Omit<TMediaListGroup, 'entries'> & {
 }
 
 type TMutationVariables = { id: number; status: string; progress: number } | undefined
-// type TMutationStatus = { before: string; after: string }
 
-export function AnimeListContent({ data, loadingQuery }: AnimeListContainerProps) {
+export function AnimeListContent({ data }: AnimeListContainerProps) {
   let mutationVariables: TMutationVariables
   let mediaListSatusBeforeMutation = ''
+
+  const { search } = useAnimeListContext()
 
   const dialogRef = useRef<TDialogChangeStatusHandle>(null)
 
   const [saveMediaListEntryFunction, { loading }] = useMutation(SAVE_MEDIA_LIST_ENTRY, {
-    /** TASK: se a entrada estiver com status diferente de 'CURRENT' deve ser eliminada do cache */
+    context: {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
+    },
     update(cache, { data: { SaveMediaListEntry } }) {
       if (mediaListSatusBeforeMutation == SaveMediaListEntry.status) {
         mediaListSatusBeforeMutation = ''
@@ -85,47 +89,6 @@ export function AnimeListContent({ data, loadingQuery }: AnimeListContainerProps
     }
 
     mediaListSatusBeforeMutation = status
-
-    // número total de episódios é válido
-    // if (totalEpisodes) {
-    //   // o próximo EP é o último
-    //   if (theNextEpisodeIsTheLast) {
-    //     // status é igual a COMPLETED
-    //     if (isCompleted) {
-    //       /**
-    //        * executar mutation > incrementar EP
-    //        */
-    //     } else {
-    //       /**
-    //        * abrir dialog COMPLETED
-    //        */
-    //       dialogRef.current?.handleDialog({ open: true, status: 'COMPLETED' })
-    //       return
-    //     }
-    //   } else {
-    //     // status é igual CURRENT
-    //     if (isCurrent) {
-    //       /**
-    //        * executar mutation > incrementar EP
-    //        */
-    //     } else {
-    //       // abrir dialog CURRENT
-    //       dialogRef.current?.handleDialog({ open: true, status: 'CURRENT' })
-    //       return
-    //     }
-    //   }
-    // } else {
-    //   // status é igual a CURRENT?
-    //   if (isCurrent) {
-    //     /**
-    //      * executar mutation > incrementar EP
-    //      */
-    //   } else {
-    //     // abrir dialog CURRENT
-    //     dialogRef.current?.handleDialog({ open: true, status: 'CURRENT' })
-    //     return
-    //   }
-    // }
 
     if (shouldComplete) {
       dialogRef.current?.handleDialog({ open: true, status: 'COMPLETED' })
@@ -193,29 +156,44 @@ export function AnimeListContent({ data, loadingQuery }: AnimeListContainerProps
     })
   }
 
+  const filteredLists = useMemo(() => {
+    return search.length > 1
+      ? data.map((list) => {
+          return {
+            ...list,
+            entries: list.entries.filter((entry) => {
+              if (
+                entry.media.title.userPreferred
+                  .toLocaleLowerCase()
+                  .includes(search.toLocaleLowerCase())
+              ) {
+                return entry
+              }
+            }),
+          }
+        })
+      : data
+  }, [search, data])
+
   return (
     <div className="mx-auto flex h-full w-full max-w-5xl flex-col items-center gap-4">
       {/* <select className="bg-transparent">
-    {userMediaListCollection.lists.map((listName) => (
-      <option key={listName.name} value={listName.name}>
-        {listName.name}
-      </option>
-    ))}
-  </select> */}
+        {filteredLists.map((listName) => (
+          <option key={listName.name} value={listName.name}>
+            {listName.name}
+          </option>
+        ))}
+      </select> */}
 
-      {loadingQuery && (
-        <div className="my-auto items-center justify-center saturate-50">
-          <img src={logo} alt="ov logo" className="w-32 animate-bounce opacity-25" />
-        </div>
-      )}
-
-      {data && (
+      {filteredLists && (
         <>
-          {data.map((list) => (
-            <div key={list.name} className="px w-full">
-              <span className="my-2 inline-block text-2xl">{list.name}</span>
+          {filteredLists.map((list) => (
+            <div key={list.name} className="flex w-full flex-col">
+              {list.entries.length > 0 && (
+                <span className="mx-auto mt-2 inline-block text-3xl italic">{list.name}</span>
+              )}
 
-              <div className="flex flex-col gap-4">
+              <div className="grid divide-y divide-second/50 md:grid-cols-2 md:gap-x-4 md:divide-y-0">
                 {sortEntries(list.entries).map((entry) => {
                   return (
                     <EntryCard

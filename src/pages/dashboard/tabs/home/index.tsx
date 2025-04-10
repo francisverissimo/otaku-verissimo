@@ -1,35 +1,90 @@
 import { useEffect } from 'react'
-import { GET_ANIME_PAGE_QUERY } from '@/lib/queries/anime-page-query'
-import { HomeListingSection } from './home-listing-section'
-import { seasonHandler as season } from '@/utils/season-handler'
-import { Compass } from '@phosphor-icons/react'
+import { useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
-
-const isLocalHost = location.href.includes('localhost')
+import { GET_PAGE_MEDIA_QUERY } from '@/lib/queries/page-media-query'
+import { seasonHandler as season } from '@/utils/season-handler'
+import { DefaultLoading as Loading } from '@/components/loading'
+import { TPageMediaResultQuery } from '@/types/t-page-media'
+import { MagnifyingGlass } from '@phosphor-icons/react'
+import { HomeListingSection } from './home-listing-section'
+import shortLogo from '@/assets/logo-short.svg'
 
 export function Home() {
-  function handleLoginWithAniList() {
-    const popUp = window.open(`http://localhost:5174`, 'AniListAuth', 'width=500,height=600')
+  const {
+    data: trendingData,
+    loading: trendingLoading,
+    error: trendingError,
+  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
+    variables: { perPage: 10, sort: 'TRENDING_DESC' },
+  })
 
-    window.addEventListener('message', (event) => {
-      console.log(event.data)
-    })
-  }
+  const {
+    data: thisSeasonData,
+    loading: thisSeasonLoading,
+    error: thisSeasonError,
+  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
+    variables: {
+      perPage: 10,
+      season: season.getCurrentSeason(),
+      seasonYear: season.getCurrentYear(),
+      sort: 'POPULARITY_DESC',
+    },
+  })
+
+  const {
+    data: nextSeasonData,
+    loading: nextSeasonLoading,
+    error: nextSeasonError,
+  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
+    variables: {
+      perPage: 10,
+      season: season.getNextSeason(),
+      seasonYear: season.getNextYear(),
+      sort: 'POPULARITY_DESC',
+    },
+  })
+
+  const isLoading = trendingLoading || thisSeasonLoading || nextSeasonLoading
+  const hasError = trendingError || thisSeasonError || nextSeasonError
 
   useEffect(() => {
-    if (document.title !== 'otakuVERISSIMO') document.title = 'otakuVERISSIMO'
-  }, [])
+    if (trendingData) {
+      const animeTrending = trendingData.Page.media.find((media) => media.bannerImage)
+
+      const homeElement = document.getElementById('homeBgTrending')
+
+      if (homeElement && animeTrending) {
+        homeElement.style.backgroundImage = `url(${animeTrending.bannerImage})`
+        homeElement.style.transform = 'scale(1)'
+        homeElement.style.opacity = '0.3'
+      }
+    }
+  }, [trendingData, thisSeasonData, nextSeasonData])
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (hasError) {
+    return (
+      <strong className="flex w-full items-center justify-center p-4 text-2xl font-medium uppercase italic text-red-300">
+        Error occurred
+      </strong>
+    )
+  }
 
   return (
-    <div className="w-full flex flex-col max-w-5xl mx-auto pb-14">
-      <div className="flex items-center justify-end gap-2">
+    <div className="mx-auto flex w-full max-w-5xl flex-col pb-14">
+      <div className="flex h-16 items-center justify-between gap-2 md:justify-end">
+        <img src={shortLogo} alt="otakuVERISSIMO logo" className="mx-4 w-12 md:hidden" />
+
         <Link
           title="go to search page"
-          className="flex h-full gap-1 cursor-pointer items-center justify-center transition hover:saturate-200 p-4"
+          className="flex h-full cursor-pointer items-center justify-center gap-1 p-4 transition hover:brightness-125"
           to="/search"
         >
-          <span className="text-main text-lg">Explore</span>
-          <Compass size={36} className="text-main" />
+          <span className="text-lg uppercase text-main">search for some anime</span>
+          <MagnifyingGlass size={24} className="rotate-90 text-main" />
         </Link>
       </div>
 
@@ -51,34 +106,26 @@ export function Home() {
         </>
       )} */}
 
-      <div className="w-full">
-        <HomeListingSection
-          title="trending now"
-          query={GET_ANIME_PAGE_QUERY}
-          variables={{ perPage: 10, sort: 'TRENDING_DESC' }}
-        />
+      {trendingData && thisSeasonData && nextSeasonData && (
+        <div className="w-full">
+          <HomeListingSection title="trending now" mediasArray={trendingData.Page.media} />
 
-        {/* <HomeListingSection
-          title="popular this season"
-          query={GET_ANIME_PAGE_QUERY}
-          variables={{
-            perPage: 10,
-            season: season.getCurrentSeason(),
-            seasonYear: season.getCurrentYear(),
-            sort: 'POPULARITY_DESC',
-          }}
-        />
+          <HomeListingSection title="popular this season" mediasArray={thisSeasonData.Page.media} />
 
-        <HomeListingSection
-          title="upcoming next season"
-          query={GET_ANIME_PAGE_QUERY}
-          variables={{
-            perPage: 10,
-            season: season.getNextSeason(),
-            seasonYear: season.getNextYear(),
-            sort: 'POPULARITY_DESC',
-          }}
-        /> */}
+          <HomeListingSection
+            title="upcoming next season"
+            mediasArray={nextSeasonData.Page.media}
+          />
+        </div>
+      )}
+
+      <div
+        id="homeBgTrending"
+        style={{ transform: 'scale(0.9)', opacity: '0' }}
+        className="fixed inset-0 -z-40 flex h-[35vh] w-full flex-col justify-between bg-cover bg-center bg-no-repeat duration-300 md:h-[50vh]"
+      >
+        <div className="h-[7vh] w-full bg-gradient-to-b from-zinc-900 to-transparent md:h-[10vh]" />
+        <div className="h-[7vh] w-full bg-gradient-to-t from-zinc-900 to-transparent md:h-[10vh]" />
       </div>
     </div>
   )

@@ -1,22 +1,28 @@
-import { useSearchParams } from "react-router-dom";
-import { GET_SEARCH_QUERY } from "@/lib/queries/search-query";
-import { InputSearch } from "./search-fields";
-import { ResultsList } from "./search-results-list";
+import { Link, useSearchParams } from 'react-router-dom'
+import { GET_SEARCH_QUERY } from '@/lib/queries/search-query'
+import { InputSearch } from './search-fields'
+import { ResultsList } from './search-results-list'
+import shortLogo from '@/assets/logo-short.svg'
 
 export function Search() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchTerm = searchParams.get("search") || "";
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchTerm = searchParams.get('search') || ''
 
   return (
     <>
-      <div className="flex max-w-5xl flex-wrap items-center justify-between gap-4 p-4 pt-20">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 pr-4">
+        <Link to="/" title="back to home">
+          <img src={shortLogo} alt="otakuVERISSIMO logo" className="w-12 mx-4" />
+        </Link>
+
         <InputSearch
           searchTerm={searchTerm}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
         />
+      </div>
 
-        {/* <div className="flex gap-4">
+      {/* <div className="flex gap-4">
             <div className="flex flex-col gap-2">
               <span className="font-medium text-sm">Genres</span>
               <SelectFieldGenres />
@@ -44,20 +50,17 @@ export function Search() {
 
             <ButtonMoreOptions />
           </div> */}
-      </div>
 
-      {searchTerm && (
-        <ResultsList
-          query={GET_SEARCH_QUERY}
-          variables={{
-            perPage: 20,
-            page: 1,
-            search: searchTerm,
-            sort: "POPULARITY_DESC",
-            isAdult: false,
-          }}
-        />
-      )}
+      <ResultsList
+        query={GET_SEARCH_QUERY}
+        variables={{
+          perPage: 40,
+          page: 1,
+          ...(searchTerm && { search: searchTerm }),
+          sort: 'POPULARITY_DESC',
+          isAdult: false,
+        }}
+      />
     </>
-  );
+  )
 }

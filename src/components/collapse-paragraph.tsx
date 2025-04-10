@@ -9,39 +9,42 @@ type TCollapseParagraphProps = ClassAttributes<HTMLDivElement> & {
 export function CollapseParagraph({ description, className }: TCollapseParagraphProps) {
   const [collapse, setCollapse] = useState(false)
 
-  if (description.replaceAll(' ', '').length >= 256) {
+  function handleToggleCollapse() {
+    setCollapse((prev) => !prev)
+  }
+
+  if (description.replace(/ /g, '').length > 256) {
     return (
       <div className="relative">
-        {!collapse && (
-          <div className="absolute bottom-0 right-0 flex gap-1">
-            <div className="h-2 w-2 rounded-full bg-main/90" />
-            <div className="h-2 w-2 rounded-full bg-main/70" />
-            <div className="h-2 w-2 rounded-full bg-main/60" />
-          </div>
-        )}
+        <div>
+          <p
+            className={`${className} ${!collapse && 'max-h-64 overflow-hidden'}`}
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
 
-        <p
-          className={`${className}`}
-          dangerouslySetInnerHTML={{
-            __html: description,
-          }}
-        />
+          {!collapse && (
+            <div className="from-darkBG absolute top-0 z-[5] h-full w-full bg-gradient-to-t to-transparent" />
+          )}
+        </div>
 
         <button
-          onClick={() => setCollapse((prev) => !prev)}
-          className="mx-auto mt-2 flex w-fit items-center justify-center outline-main/50"
+          data-collapse={collapse}
+          onClick={handleToggleCollapse}
+          className="ring-main/30 hover:bg-main/5 mx-auto mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl p-2 outline-none focus-within:ring hover:brightness-125 data-[collapse=false]:absolute data-[collapse=false]:bottom-0 data-[collapse=false]:z-[10]"
         >
           {collapse ? (
             <>
               <span className="text-sm font-medium text-zinc-400 hover:text-zinc-300">
-                SHOW LESS
+                show less
               </span>
               <CaretUp size={18} className="text-main" weight="bold" />
             </>
           ) : (
             <>
               <span className="text-sm font-medium text-zinc-400 hover:text-zinc-300">
-                SHOW MORE
+                show more
               </span>
               <CaretDown size={18} className="text-main" weight="bold" />
             </>

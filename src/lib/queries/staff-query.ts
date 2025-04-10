@@ -41,6 +41,8 @@ export const GET_STAFF_QUERY = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             coverImage {
               large
@@ -59,6 +61,8 @@ export const GET_STAFF_QUERY = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             coverImage {
               large
@@ -100,6 +104,8 @@ export const GET_STAFF_CHARACTERS_PAGINATION = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             coverImage {
               large
@@ -125,6 +131,8 @@ export const GET_STAFF_STAFF_MEDIA_PAGINATION = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             coverImage {
               large

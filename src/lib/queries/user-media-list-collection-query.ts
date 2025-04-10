@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const GET_USER_MEDIA_LIST_COLLECTION_QUERY = gql`
   query MediaListCollectionQuery($userId: Int) {
@@ -44,6 +44,8 @@ export const GET_USER_MEDIA_LIST_COLLECTION_QUERY = gql`
       id
       title {
         userPreferred
+        english
+        native
       }
       coverImage {
         large
@@ -66,6 +68,11 @@ export const GET_USER_MEDIA_LIST_COLLECTION_QUERY = gql`
         month
         day
       }
+      nextAiringEpisode {
+        airingAt
+        timeUntilAiring
+        episode
+      }
     }
   }
-`;
+`

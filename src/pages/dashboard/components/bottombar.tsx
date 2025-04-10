@@ -55,7 +55,7 @@ export function BottomBar() {
             onClick={() => setSearchParams({ tabs: 'profile' })}
             className="flex h-full cursor-pointer items-center justify-center gap-1 p-2 data-[active=true]:text-main md:h-28 md:w-28"
           >
-            <img src={user.avatar.medium} alt="avatar image user" className="w-10" />
+            <img src={user.avatar.medium} alt="avatar image user" className="w-10 rounded-full" />
             <span>Profile</span>
           </button>
         )}

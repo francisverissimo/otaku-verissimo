@@ -1,11 +1,13 @@
 import { gql } from '@apollo/client'
 
-export const GET_ANIME_MEDIA_QUERY = gql`
-  query AnimeMediaQuery($id: Int) {
+export const GET_MEDIA_QUERY = gql`
+  query MediaQuery($id: Int) {
     Media(id: $id, type: ANIME) {
       id
       title {
         userPreferred
+        english
+        native
       }
       coverImage {
         large
@@ -117,6 +119,8 @@ export const GET_ANIME_MEDIA_QUERY = gql`
             id
             title {
               userPreferred
+              english
+              native
             }
             format
             coverImage {
@@ -136,6 +140,8 @@ export const GET_ANIME_MEDIA_QUERY = gql`
               id
               title {
                 userPreferred
+                english
+                native
               }
               format
               coverImage {
@@ -159,7 +165,7 @@ export const GET_ANIME_MEDIA_QUERY = gql`
   }
 `
 
-export const GET_ANIME_CHARACTERS_PAGINATION = gql`
+export const GET_MEDIA_CHARACTERS_PAGINATION = gql`
   query AnimeCharactersPagination($id: Int, $charactersPage: Int) {
     Media(id: $id, type: ANIME) {
       characters(sort: [ROLE, ID], page: $charactersPage, perPage: 20) {
@@ -196,7 +202,7 @@ export const GET_ANIME_CHARACTERS_PAGINATION = gql`
   }
 `
 
-export const GET_ANIME_STAFF_PAGINATION = gql`
+export const GET_MEDIA_STAFF_PAGINATION = gql`
   query AnimeStaffPagination($id: Int, $staffPage: Int) {
     Media(id: $id, type: ANIME) {
       staff(sort: RELEVANCE, page: $staffPage, perPage: 20) {

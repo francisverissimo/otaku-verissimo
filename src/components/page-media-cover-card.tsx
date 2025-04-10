@@ -1,26 +1,24 @@
 import { Link } from 'react-router-dom'
-import * as HoverCard from '@radix-ui/react-hover-card'
 import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
-import { PageMediaResultQuery } from '@/types'
-import { isContrastAppropriate } from '@/utils/is-contrast-appropriate'
+import * as HoverCard from '@radix-ui/react-hover-card'
+import { TPageMedia } from '@/types/t-page-media'
+import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 
 type TCoverCardProps = {
-  anime: PageMediaResultQuery
+  anime: TPageMedia
 }
 
-type TCoverCardPopoverProps = {
-  anime: PageMediaResultQuery
-}
-
-export function CoverCard({ anime }: TCoverCardProps) {
+export function PageMediaCoverCard({ anime }: TCoverCardProps) {
   const { id, title, coverImage } = anime
-  
+
+  const safeColor = getContrastSafeColor(coverImage.color)
+
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
       <HoverCard.Trigger className="relative" asChild>
         <Link to={`/anime/${id}`}>
           <div className="group flex h-full cursor-pointer flex-col">
-            <div className="relative mb-3 overflow-hidden rounded-lg shadow-md">
+            <div className="relative overflow-hidden rounded-t-lg shadow-md">
               <img
                 src={coverImage.large}
                 alt={title.userPreferred}
@@ -35,8 +33,8 @@ export function CoverCard({ anime }: TCoverCardProps) {
             </div>
 
             <span
-              className="line-clamp-2 min-h-[28px] text-[14px] font-medium"
-              style={{ color: coverImage.color }}
+              className="line-clamp-2 rounded-b-lg px-2 font-medium backdrop-blur-sm backdrop-brightness-50"
+              style={{ color: safeColor }}
             >
               {title.userPreferred}
             </span>
@@ -46,10 +44,10 @@ export function CoverCard({ anime }: TCoverCardProps) {
 
       <HoverCard.Portal>
         <HoverCard.Content
-          className="pointer-events-none z-10 hidden md:block"
+          className="data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out pointer-events-none z-10 hidden md:block"
           side="right"
           align="start"
-          sideOffset={14}
+          sideOffset={10}
         >
           <CoverCardPopover anime={anime} />
         </HoverCard.Content>
@@ -58,23 +56,21 @@ export function CoverCard({ anime }: TCoverCardProps) {
   )
 }
 
-function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
-  const { episodes, studios, averageScore, season, seasonYear, format, startDate } = anime
+function CoverCardPopover({ anime }: TCoverCardProps) {
+  const { episodes, studios, averageScore, season, seasonYear, format, startDate, coverImage } =
+    anime
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
   const { __typename, ...restStartDate } = startDate
-  const isTBA = !Object.values(restStartDate).some((item) => item != null)
-  const isAnimeColorAppropriate = isContrastAppropriate(anime.coverImage.color)
+  const isTBA = !Object.values(restStartDate).some((item) => item)
+  const safeColor = getContrastSafeColor(coverImage.color)
 
   return (
-    <div className="-mt-1 flex w-72 flex-col gap-1 rounded-lg bg-zinc-950 p-4 shadow-2xl">
+    <div className="bg-darkBG/80 flex w-72 flex-col gap-2 rounded-lg p-4 shadow-2xl backdrop-blur">
       <div className="flex items-center justify-between">
         {!isTBA && (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2">
             {season && <span className="peer text-sm font-medium">{season}</span>}
-
-            <span className="text-sm font-medium text-second peer-[]:ml-2">
-              {seasonYear || startDate.year}
-            </span>
+            <span className="text-second text-sm font-medium">{seasonYear || startDate.year}</span>
           </div>
         )}
 
@@ -98,13 +94,7 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
       {studios.nodes.length > 0 && (
         <div>
           {studios.nodes.map((studio, index, array) => (
-            <span
-              key={index}
-              className="text-sm font-medium"
-              style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : '#FF5F00',
-              }}
-            >
+            <span key={index} className="text-sm font-medium" style={{ color: safeColor }}>
               {studio.name}
               {index != array.length - 1 && ', '}
             </span>
@@ -113,29 +103,22 @@ function CoverCardPopover({ anime }: TCoverCardPopoverProps) {
       )}
 
       <div className="flex">
-        {format && <span>{format.replaceAll('_', ' ')}</span>}
+        {format && <span>{format.replace(/_/g, ' ')}</span>}
 
         {episodes && (
           <div className="flex items-center">
-            <div className="mx-2 h-2 w-2 rounded-full bg-white/60" />
+            <div className="bg-second mx-2 h-1 w-1 rounded-full" />
             <span className="">{episodes + `${episodes > 1 ? ' episodes' : ' episode'}`}</span>
           </div>
         )}
       </div>
 
-      <div className="flex w-fit flex-wrap items-center">
-        {genres.map((genre, index, array) => (
-          <div key={genre} className="flex items-center">
-            <span
-              className="peer py-1 text-sm font-medium"
-              style={{
-                color: isAnimeColorAppropriate ? anime.coverImage.color : '#FF5F00',
-              }}
-            >
+      <div className="flex w-fit flex-wrap items-center gap-2">
+        {genres.map((genre, idx) => (
+          <div key={idx} className="flex items-center">
+            <span className="rounded-2xl px-2 py-1 text-sm ring" style={{ color: safeColor }}>
               {genre}
             </span>
-
-            {index != array.length - 1 && <div className="mx-2 h-2 w-2 rounded-full bg-white/60" />}
           </div>
         ))}
       </div>

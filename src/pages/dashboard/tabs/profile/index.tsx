@@ -14,7 +14,7 @@ export function Profile() {
     <div className="flex h-full flex-col items-center justify-center gap-4 p-4 pt-20">
       {user && (
         <>
-          <img className="w-20" src={user.avatar.medium} alt="profile picture" />
+          <img className="w-20 rounded-full" src={user.avatar.medium} alt="profile picture" />
 
           <span className="text-2xl text-main">{user.name}</span>
 

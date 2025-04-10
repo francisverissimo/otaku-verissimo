@@ -11,9 +11,9 @@ export function Footer() {
             <a
               href="https://francissportfolio.vercel.app/"
               target="_blank"
-              className="inline-block text-main invert duration-200 hover:text-orange-500"
+              className="inline-block text-second duration-200 hover:brightness-125"
             >
-              francissv97
+              francisverissimo
             </a>
 
             <span className="inline-block">

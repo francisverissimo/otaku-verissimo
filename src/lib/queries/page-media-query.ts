@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
-export const GET_ANIME_PAGE_QUERY = gql`
-  query AnimePageQuery(
+export const GET_PAGE_MEDIA_QUERY = gql`
+  query PageMediaQuery(
     $perPage: Int
     $page: Int
     $search: String
@@ -26,8 +26,10 @@ export const GET_ANIME_PAGE_QUERY = gql`
       ) {
         id
         title {
-          userPreferred
-        }
+        userPreferred
+        english
+        native
+      }
         coverImage {
           large
           color

@@ -1,10 +1,44 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-main: #ff5f00;
+  --color-second: #00a0ff;
+  --color-darkBG: #18181b;
+  --color-darkTxt: #fafafa;
+  --color-lightBG: #e4e4e7;
+  --color-lightTxt: #27272a;
+
+  --font-main: 'Open Sans', sans-serif;
+  --font-raleway: 'Raleway', sans-serif;
+
+  --animate-fade-in: fade-in 80ms ease-in;
+  --animate-fade-out: fade-out 60ms ease-out;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fade-out {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
+}
 
 body {
-  @apply bg-zinc-800 text-zinc-50 font-main overflow-x-hidden min-h-screen box-border;
-  --webkit-font-smoothing: antialiased;
+  @apply dark:bg-darkBG dark:text-darkTxt bg-lightBG text-lightTxt font-main box-border min-h-screen overflow-x-hidden antialiased;
 }
 
 .swiper-pagination-bullet {

@@ -3,34 +3,29 @@ import { SwiperSlide } from 'swiper/react'
 import { Subtitle } from '@/components/subtitle'
 import { Heart, Star } from '@phosphor-icons/react'
 import { SwiperCoverCardsBellow } from './anime-section-cards'
+import { TMedia } from '@/types/t-media'
 
-type TAnimeRecommendationsProps = {
-  edges: {
-    node: {
-      mediaRecommendation: {
-        id: number
-        title: {
-          userPreferred: string
-        }
-        format: string
-        coverImage: {
-          large: string
-        }
-        averageScore: number
-        favourites: number
-      }
-    }
-  }[]
-}
+type TAnimeRecommendationsProps = { edges: TMedia['recommendations']['edges'] }
 
 export function AnimeRecommendations({ edges }: TAnimeRecommendationsProps) {
+  if (!edges.length) {
+    return null
+  }
+
   return (
-    <div className="mt-4 flex flex-col">
-      <Subtitle text="Recommendations" className="px-4" />
+    <div className="flex flex-col">
+      <Subtitle className="font-raleway p-4 text-xl font-semibold uppercase underline underline-offset-4">
+        recommendations
+      </Subtitle>
 
       <SwiperCoverCardsBellow>
         {edges.map((edge) => {
-          const { id, title, coverImage, averageScore, favourites, format } = edge.node.mediaRecommendation
+          if (!edge.node.mediaRecommendation) {
+            return null
+          }
+
+          const { id, title, coverImage, averageScore, favourites, format } =
+            edge.node.mediaRecommendation
 
           if (edge.node.mediaRecommendation != null) {
             return (
@@ -47,7 +42,7 @@ export function AnimeRecommendations({ edges }: TAnimeRecommendationsProps) {
                     <img
                       alt={title.userPreferred}
                       src={coverImage.large}
-                      className="h-full w-full object-cover object-center group-hover:border-main"
+                      className="group-hover:border-main h-full w-full object-cover object-center"
                       loading="lazy"
                       style={{
                         opacity: 0,
@@ -56,28 +51,36 @@ export function AnimeRecommendations({ edges }: TAnimeRecommendationsProps) {
                       onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                     />
 
-                    <div className="absolute top-0 flex items-center gap-1 rounded-br-lg bg-zinc-950/60 p-1">
-                      <Star size={18} weight="fill" className="text-yellow-400" />
-                      <span className="text-sm font-medium text-zinc-50">
-                        {averageScore > 0 ? averageScore : 0}
-                      </span>
-                    </div>
+                    {averageScore != null && (
+                      <div className="absolute top-0 flex items-center gap-1 rounded-br-lg bg-zinc-950/60 p-1">
+                        <Star size={18} weight="fill" className="text-yellow-400" />
+                        <span className="text-sm font-medium text-zinc-50">
+                          {averageScore > 0 ? averageScore : 0}
+                        </span>
+                      </div>
+                    )}
 
-                    <div className="absolute bottom-0 flex items-center gap-1 rounded-tr-lg bg-zinc-950/60 p-1">
-                      <Heart size={18} weight="fill" className="text-red-500" />
-                      <span className="text-sm font-medium text-zinc-50">
-                        {favourites > 0 ? favourites : 0}
-                      </span>
-                    </div>
+                    {favourites && (
+                      <div className="absolute bottom-0 flex items-center gap-1 rounded-tr-lg bg-zinc-950/60 p-1">
+                        <Heart size={18} weight="fill" className="text-red-500" />
+                        <span className="text-sm font-medium text-zinc-50">
+                          {favourites > 0 ? favourites : 0}
+                        </span>
+                      </div>
+                    )}
 
-                    <div className="absolute right-0 top-0 flex items-center gap-1 rounded-bl-lg bg-zinc-950/60 p-1">
-                      <span className="text-xs font-medium text-zinc-50">
-                        {format.replaceAll('_', ' ')}
-                      </span>
-                    </div>
+                    {format && (
+                      <div className="absolute top-0 right-0 flex items-center gap-1 rounded-bl-lg bg-zinc-950/60 p-1">
+                        <span className="text-xs font-medium text-zinc-50">
+                          {format.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  <span className="line-clamp-2 text-center">{title.userPreferred}</span>
+                  <span className="line-clamp-2 text-center text-sm md:text-base">
+                    {title.userPreferred}
+                  </span>
                 </Link>
               </SwiperSlide>
             )

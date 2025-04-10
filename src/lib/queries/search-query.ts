@@ -26,10 +26,13 @@ export const GET_SEARCH_QUERY = gql`
       ) {
         id
         title {
-          userPreferred
-        }
+        userPreferred
+        english
+        native
+      }
         coverImage {
           large
+          color
         }
         genres
         episodes

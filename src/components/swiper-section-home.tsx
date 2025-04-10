@@ -1,18 +1,18 @@
-import { ReactNode } from "react";
-import { Swiper } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
+import { ReactNode } from 'react'
+import { Swiper } from 'swiper/react'
+import { Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
 type TSwiperSectionHomeProps = {
-  children: ReactNode[];
+  children: ReactNode[]
 }
 
 export function SwiperSectionHome({ children }: TSwiperSectionHomeProps) {
   return (
     <Swiper
       slidesPerView={2}
-      spaceBetween={16}
+      spaceBetween={12}
       pagination={{ dynamicBullets: true }}
       modules={[Pagination]}
       breakpoints={{
@@ -25,13 +25,10 @@ export function SwiperSectionHome({ children }: TSwiperSectionHomeProps) {
         768: {
           slidesPerView: 5,
         },
-        1024: {
-          slidesPerView: 6,
-        },
       }}
-      style={{ paddingBottom: 24, paddingInline: 16 }}
+      style={{ paddingBottom: 24, paddingInline: 8 }}
     >
       {children}
     </Swiper>
-  );
+  )
 }

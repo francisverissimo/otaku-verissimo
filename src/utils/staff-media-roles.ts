@@ -3,6 +3,8 @@ type StaffMediaRoleInitialType = {
     id: number
     title: {
       userPreferred: string
+      english: string | null
+      native: string
     }
     coverImage: {
       large: string
@@ -22,6 +24,8 @@ type StaffMediaRolesGrouped = {
     id: number
     title: {
       userPreferred: string
+      english: string | null
+      native: string
     }
     coverImage: {
       large: string
@@ -79,7 +83,7 @@ class StaffMediaRolesUtils {
 
       const aDay = aStartDate.day ?? Number.MAX_VALUE
       const bDay = bStartDate.day ?? Number.MAX_VALUE
-      
+
       if (aDay !== bDay) {
         return bDay - aDay
       }

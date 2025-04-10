@@ -34,7 +34,9 @@ export function App() {
   }
 
   useEffect(() => {
-    checkViewerDataIfNeeded()
+    if (user === undefined) {
+      checkViewerDataIfNeeded()
+    }
   }, [])
 
   if (user === undefined) {

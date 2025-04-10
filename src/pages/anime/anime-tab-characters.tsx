@@ -1,137 +1,180 @@
+import { useLazyQuery } from '@apollo/client'
+import { GET_MEDIA_CHARACTERS_PAGINATION } from '@/lib/queries/media-query'
+import { TMedia } from '@/types/t-media'
 import { Link } from 'react-router-dom'
+import { Subtitle } from '@/components/subtitle'
+import { useEffect } from 'react'
 // import { HorizontalCardSkeleton } from '../../components/loading'
 // import { IntersectionObserverComponent } from '../../components/intersection-observer-component'
 
 type TAnimeTabCharactersProps = {
-  characters: {
-    edges: {
-      node: {
-        id: number
-        name: { full: string }
-        image: { medium: string }
-      }
-      voiceActorRoles: {
-        roleNotes: string | null
-        voiceActor: {
-          id: number
-          name: { full: string }
-          image: { medium: string }
-        }
-      }[]
-      role: 'MAIN' | 'SUPPORTING' | 'BACKGROUND'
-    }[]
-    pageInfo: {
-      currentPage: number
-      hasNextPage: boolean
-    }
-  }
-  callback: () => void
+  characters: TMedia['characters']
+  mediaId: TMedia['id']
 }
 
-export function AnimeTabCharacters({ characters, callback }: TAnimeTabCharactersProps) {
+export function AnimeTabCharacters({ characters, mediaId }: TAnimeTabCharactersProps) {
+  const { edges, pageInfo } = characters
+
+  // console.log(edges)
+
+  // const [paginate, { data, loading, client }] = useLazyQuery(GET_MEDIA_CHARACTERS_PAGINATION, {
+  //   variables: {
+  //     charactersPage: characters.pageInfo.currentPage + 1,
+  //     id: mediaId,
+  //   },
+  //   onCompleted(data) {
+  //     client.cache.modify({ fields: {
+  //       Media(existingMedia) {
+
+  //       }
+  //     }})
+  //   },
+  // })
+
+  useEffect(() => {
+    const elementHeader = document.querySelector('#characters_header')
+    if (elementHeader) elementHeader.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   return (
     <div className="mx-auto max-w-5xl px-4">
-      <div className="mt-2 grid gap-4 pb-2 md:grid-cols-2">
-        {characters.edges.map((character) =>
-          character.voiceActorRoles.length >= 1 ? (
-            character.voiceActorRoles.map((voiceActorRole, index) => (
-              <div key={index} className="flex overflow-hidden rounded-lg bg-zinc-700 shadow-lg">
+      <Subtitle
+        id="characters_header"
+        as="h2"
+        className="text-main font-raleway block py-4 text-center text-2xl font-medium uppercase underline underline-offset-4 md:pt-4"
+      >
+        characters
+      </Subtitle>
+
+      <div className="grid gap-4 pb-2 md:grid-cols-2">
+        {edges.map((character) => {
+          if (!character.voiceActorRoles.length) {
+            return (
+              <div
+                key={character.node.id}
+                className="bg-darkTxt/10 flex overflow-hidden rounded-lg shadow-lg"
+              >
                 <Link to={`/character/${character.node.id}`}>
-                  <div className="overflow-hidden bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
-                    <img
-                      src={character.node.image.medium}
-                      alt={character.node.name.full}
-                      style={{
-                        opacity: 0,
-                        transitionDuration: '600ms',
-                      }}
-                      onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                      className="aspect-[6/9] h-32 object-cover"
-                    />
+                  <img
+                    src={character.node.image.medium}
+                    alt={character.node.name.full}
+                    style={{
+                      opacity: 0,
+                      transitionDuration: '600ms',
+                    }}
+                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
+                    className="h-full w-24 object-cover md:w-28"
+                  />
+                </Link>
+
+                <div className="flex gap-1 p-2">
+                  <div className="flex w-full flex-col gap-1">
+                    <span className="font-medium">{character.node.name.full}</span>
+                    <span className="text-main">{character.role}</span>
                   </div>
+                </div>
+              </div>
+            )
+          }
+
+          return character.voiceActorRoles.map((voiceActorRole, index) => {
+            return (
+              <div
+                key={index}
+                className="bg-darkTxt/10 flex h-36 justify-between overflow-hidden rounded-lg shadow-lg md:h-40"
+              >
+                <Link to={`/character/${character.node.id}`}>
+                  <img
+                    src={character.node.image.medium}
+                    alt={character.node.name.full}
+                    style={{
+                      opacity: 0,
+                      transitionDuration: '600ms',
+                    }}
+                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
+                    className="h-full w-24 object-cover md:w-28"
+                  />
                 </Link>
 
                 <div className="flex flex-1 flex-col justify-between">
-                  <div className="flex w-fit gap-1 p-2">
-                    <div className="flex w-full flex-col gap-1">
-                      <Link to={`/character/${character.node.id}`}>
-                        <span className="line-clamp-2 break-all text-sm font-medium">
-                          {character.node.name.full}
-                        </span>
-                      </Link>
-                      <span className="text-xs text-main">{character.role}</span>
-                    </div>
+                  <div className="flex w-full flex-col gap-1 p-2">
+                    <Link
+                      className="line-clamp-2 font-medium break-all"
+                      to={`/character/${character.node.id}`}
+                    >
+                      {character.node.name.full}
+                    </Link>
+                    <span className="text-main">{character.role}</span>
                   </div>
 
                   {voiceActorRole && (
                     <div className="flex w-fit flex-col place-self-end p-2">
                       {voiceActorRole.roleNotes && (
-                        <span className="text-end text-xs text-main">
-                          {voiceActorRole.roleNotes}
-                        </span>
+                        <span className="text-main text-end">{voiceActorRole.roleNotes}</span>
                       )}
 
-                      <Link to={`/staff/${voiceActorRole.voiceActor.id}`}>
-                        <span className="text-end text-sm font-medium">
-                          {voiceActorRole.voiceActor.name.full}
-                        </span>
+                      <Link
+                        className="text-end font-medium"
+                        to={`/staff/${voiceActorRole.voiceActor.id}`}
+                      >
+                        {voiceActorRole.voiceActor.name.full}
                       </Link>
                     </div>
                   )}
                 </div>
 
-                {voiceActorRole && (
+                {voiceActorRole && voiceActorRole.voiceActor.image && (
                   <Link to={`/staff/${voiceActorRole.voiceActor.id}`}>
-                    <div className="overflow-hidden bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
-                      <img
-                        src={voiceActorRole.voiceActor.image.medium}
-                        alt={voiceActorRole.voiceActor.name.full}
-                        style={{
-                          opacity: 0,
-                          transitionDuration: '600ms',
-                        }}
-                        onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                        className="aspect-[6/9] h-32 object-cover"
-                      />
-                    </div>
+                    <img
+                      src={voiceActorRole.voiceActor.image.medium}
+                      alt={voiceActorRole.voiceActor.name.full}
+                      style={{
+                        opacity: 0,
+                        transitionDuration: '600ms',
+                      }}
+                      onLoad={(t) => (t.currentTarget.style.opacity = '1')}
+                      className="h-full w-24 overflow-hidden object-cover md:w-28"
+                    />
                   </Link>
                 )}
               </div>
-            ))
-          ) : (
-            <div
-              key={character.node.id}
-              className="flex overflow-hidden rounded-lg bg-zinc-700 shadow-lg"
-            >
-              <div className="flex flex-1">
-                <img
-                  src={character.node.image.medium}
-                  alt={character.node.name.full}
-                  style={{
-                    opacity: 0,
-                    transitionDuration: '600ms',
-                  }}
-                  onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                  className="aspect-[6/9] h-32 object-cover"
-                />
-
-                <div className="flex gap-1 p-2">
-                  <div className="flex w-full flex-col gap-1">
-                    <span className="text-sm font-medium ">{character.node.name.full}</span>
-                    <span className="text-xs text-main">{character.role}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        )}
+            )
+          })
+        })}
 
         {/* {isLoading && <HorizontalCardSkeleton />} */}
       </div>
 
-      {/* {!isLoading && characters.pageInfo.hasNextPage && (
-        <IntersectionObserverComponent page={characters.pageInfo.currentPage} callback={callback} />
+      {/* {!isLoading && pageInfo.hasNextPage && (
+        <IntersectionObserverComponent page={pageInfo.currentPage} callback={callback} />
       )} */}
     </div>
   )
 }
+
+/** antigo fetchMore. Agora, trasncreva-o para um useLazyQuery e atualize o cache */
+// callback={() => {
+//   fetchMore({
+//     query: GET_MEDIA_CHARACTERS_PAGINATION,
+//     variables: {
+//       charactersPage: anime.characters.pageInfo.currentPage + 1,
+//       id: anime.id,
+//     },
+//     updateQuery(pv, { fetchMoreResult }) {
+//       if (!fetchMoreResult) return pv
+
+//       return {
+//         Media: {
+//           ...pv.Media,
+//           characters: {
+//             ...fetchMoreResult.Media.characters,
+//             edges: [
+//               ...pv.Media.characters.edges,
+//               ...fetchMoreResult.Media.characters.edges,
+//             ],
+//           },
+//         },
+//       }
+//     },
+//   })
+// }}
