@@ -5,7 +5,7 @@ import { GET_MEDIA_QUERY } from '@/lib/queries/media-query'
 import { DefaultLoading as Loading } from '@/components/loading'
 import { ErrorFallback } from '@/components/ErroFallback'
 import { Footer } from '@/components/footer'
-import { isContrastAppropriate } from '@/utils/is-contrast-appropriate'
+import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 import { TMediaResultQuery } from '@/types/t-media'
 import { AnimeHeader as Header } from './anime-header'
 import { AnimeContent } from './anime-content'
@@ -26,7 +26,7 @@ export function Anime() {
   }
 
   const anime = data.Media
-  const accentColor = isContrastAppropriate(anime.coverImage.color)
+  const safeColor = getContrastSafeColor(anime.coverImage.color)
 
   const isToBeAnnounced = !anime.startDate.day && !anime.startDate.month && !anime.startDate.year
 
@@ -102,7 +102,7 @@ export function Anime() {
 
             <h1
               className="line-clamp-2 text-center text-3xl md:text-left md:text-4xl"
-              style={{ color: accentColor }}
+              style={{ color: safeColor }}
             >
               {anime.title.userPreferred}
             </h1>

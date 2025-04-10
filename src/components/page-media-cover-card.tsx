@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { isContrastAppropriate } from '@/utils/is-contrast-appropriate'
 import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
 import * as HoverCard from '@radix-ui/react-hover-card'
 import { TPageMedia } from '@/types/t-page-media'
+import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 
 type TCoverCardProps = {
   anime: TPageMedia
@@ -11,7 +11,7 @@ type TCoverCardProps = {
 export function PageMediaCoverCard({ anime }: TCoverCardProps) {
   const { id, title, coverImage } = anime
 
-  const accentColor = isContrastAppropriate(coverImage.color)
+  const safeColor = getContrastSafeColor(coverImage.color)
 
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
@@ -34,7 +34,7 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
 
             <span
               className="line-clamp-2 rounded-b-lg px-2 font-medium backdrop-blur-sm backdrop-brightness-50"
-              style={{ color: accentColor }}
+              style={{ color: safeColor }}
             >
               {title.userPreferred}
             </span>
@@ -62,7 +62,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
   const { __typename, ...restStartDate } = startDate
   const isTBA = !Object.values(restStartDate).some((item) => item)
-  const accentColor = isContrastAppropriate(coverImage.color)
+  const safeColor = getContrastSafeColor(coverImage.color)
 
   return (
     <div className="bg-darkBG/80 flex w-72 flex-col gap-2 rounded-lg p-4 shadow-2xl backdrop-blur">
@@ -94,7 +94,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
       {studios.nodes.length > 0 && (
         <div>
           {studios.nodes.map((studio, index, array) => (
-            <span key={index} className="text-sm font-medium" style={{ color: accentColor }}>
+            <span key={index} className="text-sm font-medium" style={{ color: safeColor }}>
               {studio.name}
               {index != array.length - 1 && ', '}
             </span>
@@ -116,7 +116,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
       <div className="flex w-fit flex-wrap items-center gap-2">
         {genres.map((genre, idx) => (
           <div key={idx} className="flex items-center">
-            <span className="rounded-2xl px-2 py-1 text-sm ring" style={{ color: accentColor }}>
+            <span className="rounded-2xl px-2 py-1 text-sm ring" style={{ color: safeColor }}>
               {genre}
             </span>
           </div>

@@ -13,7 +13,7 @@ import { AnimeStudios as Studios } from './anime-studios'
 import { AnimeFuzzyDate } from './anime-fuzzy-date'
 import { AnimeStats } from './anime-stats'
 import { TMedia } from '@/types/t-media'
-import { isContrastAppropriate } from '@/utils/is-contrast-appropriate'
+import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 
 interface AnimeTabOverviewProps {
   anime: TMedia
@@ -21,7 +21,7 @@ interface AnimeTabOverviewProps {
 }
 
 export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) {
-  const accentColor = isContrastAppropriate(anime.coverImage.color)
+  const safeColor = getContrastSafeColor(anime.coverImage.color)
 
   useEffect(() => {
     if (window.scrollY < document.body.scrollHeight) scrollTo({ top: 0, behavior: 'smooth' })
@@ -34,8 +34,8 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
           <button
             key={index}
             style={{
-              color: accentColor,
-              borderColor: accentColor,
+              color: safeColor,
+              borderColor: safeColor,
             }}
             className="pointer-events-none flex rounded-2xl border-2 px-3 text-lg font-medium"
           >
@@ -194,7 +194,7 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
 
       {anime.externalLinks.length > 0 && (
         <div className="flex flex-col gap-3 p-4">
-          <Subtitle className="font-raleway p-4 text-xl font-semibold uppercase underline underline-offset-4">
+          <Subtitle className="font-raleway py-4 text-xl font-semibold uppercase underline underline-offset-4">
             links
           </Subtitle>
 
