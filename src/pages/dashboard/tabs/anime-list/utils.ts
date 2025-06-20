@@ -18,24 +18,53 @@ export function sortSections(
 }
 
 export function sortEntries(entries: TMediaListGroup['entries']): TMediaListGroup['entries'] {
-  return entries.slice().sort((a, b) => {
-    const aStartedAtMilliseconds =
-      a.media.startDate.year && a.media.startDate.month && a.media.startDate.day
-        ? new Date(a.media.startDate.year, a.media.startDate.month, a.media.startDate.day).getTime()
-        : Number.MAX_SAFE_INTEGER
-    const bStartedAtMilliseconds =
-      b.media.startDate.year && b.media.startDate.month && b.media.startDate.day
-        ? new Date(b.media.startDate.year, b.media.startDate.month, b.media.startDate.day).getTime()
-        : Number.MAX_SAFE_INTEGER
+  function sortByAverageScore() {
+    return entries.slice().sort((a, b) => {
+      const aAverageScore = a.media.averageScore
+      const bAverageScore = b.media.averageScore
 
-    if (aStartedAtMilliseconds > bStartedAtMilliseconds) {
-      return -1
-    }
+      if (aAverageScore > bAverageScore) {
+        return -1
+      }
 
-    if (aStartedAtMilliseconds < bStartedAtMilliseconds) {
-      return 1
-    }
+      if (aAverageScore < bAverageScore) {
+        return 1
+      }
 
-    return 0
-  })
+      return 0
+    })
+  }
+
+  function sortByReleaseDate() {
+    return entries.slice().sort((a, b) => {
+      const aStartedAtMilliseconds =
+        a.media.startDate.year && a.media.startDate.month && a.media.startDate.day
+          ? new Date(
+              a.media.startDate.year,
+              a.media.startDate.month,
+              a.media.startDate.day
+            ).getTime()
+          : Number.MAX_SAFE_INTEGER
+      const bStartedAtMilliseconds =
+        b.media.startDate.year && b.media.startDate.month && b.media.startDate.day
+          ? new Date(
+              b.media.startDate.year,
+              b.media.startDate.month,
+              b.media.startDate.day
+            ).getTime()
+          : Number.MAX_SAFE_INTEGER
+
+      if (aStartedAtMilliseconds > bStartedAtMilliseconds) {
+        return -1
+      }
+
+      if (aStartedAtMilliseconds < bStartedAtMilliseconds) {
+        return 1
+      }
+
+      return 0
+    })
+  }
+
+  return sortByAverageScore()
 }
