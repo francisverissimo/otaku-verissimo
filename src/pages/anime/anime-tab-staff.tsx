@@ -12,10 +12,10 @@ type TAnimeTabStaffProps = {
 export function AnimeTabStaff({ staff, mediaId }: TAnimeTabStaffProps) {
   const { edges, pageInfo } = staff
 
-  // useEffect(() => {
-  //   const elementHeader = document.querySelector('#staff_header')
-  //   if (elementHeader) elementHeader.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  // }, [])
+  useEffect(() => {
+    const elementHeader = document.querySelector('#staff_header')
+    if (elementHeader) elementHeader.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
 
   return (
     <div className="mx-auto max-w-5xl px-4">
@@ -49,7 +49,7 @@ export function AnimeTabStaff({ staff, mediaId }: TAnimeTabStaffProps) {
                 </Link>
               )}
 
-              <div className="flex gap-1 p-2 flex-1">
+              <div className="flex flex-1 gap-1 p-2">
                 <div className="flex w-full flex-col gap-1">
                   <Link className="font-medium" to={`/staff/${edge.node.id}`}>
                     {edge.node.name.full}
