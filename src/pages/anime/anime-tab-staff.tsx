@@ -2,15 +2,13 @@ import { Link } from 'react-router-dom'
 import { TMedia } from '@/types/t-media'
 import { useEffect } from 'react'
 import { Subtitle } from '@/components/subtitle'
-// import { IntersectionObserverComponent } from "@/components/intersection-observer-component";
 
 type TAnimeTabStaffProps = {
   staff: TMedia['staff']
-  mediaId: TMedia['id']
 }
 
-export function AnimeTabStaff({ staff, mediaId }: TAnimeTabStaffProps) {
-  const { edges, pageInfo } = staff
+export function AnimeTabStaff({ staff }: TAnimeTabStaffProps) {
+  const { edges } = staff
 
   useEffect(() => {
     const elementHeader = document.querySelector('#staff_header')
@@ -61,39 +59,7 @@ export function AnimeTabStaff({ staff, mediaId }: TAnimeTabStaffProps) {
             </div>
           </div>
         ))}
-
-        {/* {isLoading && <HorizontalCardSkeleton />} */}
       </div>
-
-      {/* {!isLoading && pageInfo.hasNextPage && (
-          <IntersectionObserverComponent
-            page={pageInfo.currentPage}
-            callback={() => pagingFunction()}
-          />
-        )} */}
     </div>
   )
 }
-/** antigo fetchMore. Agora, trascreva-o para um useLazyQuery e atualize o cache */
-// callback={() => {
-//   fetchMore({
-//     query: GET_MEDIA_STAFF_PAGINATION,
-//     variables: {
-//       staffPage: anime.staff.pageInfo.currentPage + 1,
-//       id: anime.id,
-//     },
-//     updateQuery(pv, { fetchMoreResult }) {
-//       if (!fetchMoreResult) return pv
-
-//       return {
-//         Media: {
-//           ...pv.Media,
-//           staff: {
-//             ...fetchMoreResult.Media.staff,
-//             edges: [...pv.Media.staff.edges, ...fetchMoreResult.Media.staff.edges],
-//           },
-//         },
-//       }
-//     },
-//   })
-// }}

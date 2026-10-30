@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom'
 import { SignIn, HouseSimple } from '@phosphor-icons/react'
+import { ANILIST_AUTH_URL } from '@/auth/token'
 import logo from '@/assets/logo-short.svg'
 
 export function UnauthenticatedView() {
-  const aniListAuthUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ID_CLIENT}&response_type=token`
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-2">
       <div className="flex flex-1 flex-col items-center justify-center">
@@ -18,7 +17,7 @@ export function UnauthenticatedView() {
         </div>
 
         <a
-          href={aniListAuthUrl}
+          href={ANILIST_AUTH_URL}
           title="Sign in with AniList"
           className="flex cursor-pointer items-center justify-center rounded bg-gradient-to-r from-sky-600 via-cyan-500 to-cyan-300 p-2 transition"
         >

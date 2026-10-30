@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useCallback, useMemo, useState } from 'react'
 import { TViewer } from '@/types/t-viewer'
+import { clearStoredToken } from '@/auth/token'
+import { clearStoredViewer } from '@/auth/viewer'
 
 type TAuthContext = {
   user: TViewer | null | undefined
@@ -16,13 +18,17 @@ type TAuthContextProviderProps = {
 export function AuthContextProvider({ children }: TAuthContextProviderProps) {
   const [user, setUser] = useState<TViewer | null | undefined>(undefined)
 
-  function signin(user: TViewer | null) {
+  const signin = useCallback((user: TViewer | null) => {
     setUser(user)
-  }
+  }, [])
 
-  function signout() {
+  const signout = useCallback(() => {
+    clearStoredToken()
+    clearStoredViewer()
     setUser(null)
-  }
+  }, [])
 
-  return <AuthContext.Provider value={{ user, signin, signout }}>{children}</AuthContext.Provider>
+  const value = useMemo(() => ({ user, signin, signout }), [user, signin, signout])
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

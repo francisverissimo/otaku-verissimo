@@ -4,7 +4,6 @@ import { SwiperSlide } from 'swiper/react'
 import { Subtitle } from '@/components/subtitle'
 import { SwiperHorizontal } from '@/components/swiper-horizontal'
 import { CollapseParagraph } from '@/components/collapse-paragraph'
-/* implementar composition patterns para os componentes abaixo  */
 import { AnimeTitle as Title } from './anime-title'
 import { AnimeTags as Tags } from './anime-tags'
 import { AnimeRelations as Relations } from './anime-relations'
@@ -200,10 +199,11 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
 
           <div className="flex flex-wrap gap-2">
             {anime.externalLinks.map((link) => (
-              <Link
+              <a
                 key={link.id}
-                to={link.url}
+                href={link.url}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="my-auto flex h-fit cursor-pointer items-center gap-1 rounded p-2 hover:scale-[102%]"
                 style={{
                   backgroundColor: link.color ? link.color : '#52525b',
@@ -211,7 +211,7 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
               >
                 {link.icon && <img src={link.icon} alt={link.site} className="w-6" />}
                 <strong className="text-sm text-white">{link.site}</strong>
-              </Link>
+              </a>
             ))}
           </div>
         </div>

@@ -60,8 +60,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
   const { episodes, studios, averageScore, season, seasonYear, format, startDate, coverImage } =
     anime
   const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
-  const { __typename, ...restStartDate } = startDate
-  const isTBA = !Object.values(restStartDate).some((item) => item)
+  const isTBA = !startDate.year && !startDate.month && !startDate.day
   const safeColor = getContrastSafeColor(coverImage.color)
 
   return (

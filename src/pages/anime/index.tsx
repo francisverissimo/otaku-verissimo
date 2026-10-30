@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Heart, Star } from '@phosphor-icons/react'
 import { GET_MEDIA_QUERY } from '@/lib/queries/media-query'
 import { DefaultLoading as Loading } from '@/components/loading'
-import { ErrorFallback } from '@/components/ErroFallback'
+import { ErrorFallback } from '@/components/error-fallback'
 import { Footer } from '@/components/footer'
 import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 import { TMediaResultQuery } from '@/types/t-media'
@@ -17,12 +17,12 @@ export function Anime() {
     variables: { id },
   })
 
-  if (loading || !data) {
-    return <Loading />
-  }
-
   if (error) {
     return <ErrorFallback error={error} onRetry={refetch} />
+  }
+
+  if (loading || !data) {
+    return <Loading />
   }
 
   const anime = data.Media
@@ -71,14 +71,7 @@ export function Anime() {
                   opacity: 0,
                   transitionDuration: '800ms',
                 }}
-                onLoad={(t) => {
-                  t.currentTarget.style.opacity = '1'
-                  // if (t.currentTarget.width >= t.currentTarget.height) {
-                  //   const animeCoverEl = document.querySelector('#anime_cover')
-                  //   // animeCoverEl?.classList.add('max-w-[320px]')
-                  //   // animeCoverEl?.classList.add('w-full')
-                  // }
-                }}
+                onLoad={(t) => (t.currentTarget.style.opacity = '1')}
               />
             </div>
           </div>

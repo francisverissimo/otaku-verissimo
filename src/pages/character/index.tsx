@@ -19,7 +19,8 @@ export function Character() {
     },
   })
 
-  const character: CharacterModel = data && data.Character
+  const character: CharacterModel | undefined = data?.Character
+  const voiceActors = character?.media.edges[0]?.voiceActors ?? []
 
   useEffect(() => {
     scrollTo({ top: 0 })
@@ -63,43 +64,45 @@ export function Character() {
             </div>
           )}
 
-          <div className="flex flex-col gap-4 pb-4">
-            <strong className="px-4 text-lg font-medium">Voices Actors</strong>
+          {voiceActors.length > 0 && (
+            <div className="flex flex-col gap-4 pb-4">
+              <strong className="px-4 text-lg font-medium">Voices Actors</strong>
 
-            <SwiperHorizontal>
-              {character.media.edges[0].voiceActors.map((voiceActor) => (
-                <SwiperSlide key={voiceActor.id}>
-                  <Link to={`/staff/${voiceActor.id}`}>
-                    <div className="flex w-28 flex-col">
-                      <div className="h-28 w-full overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
-                        <img
-                          src={voiceActor.image.large}
-                          alt={voiceActor.name.full}
-                          className="h-28 w-full rounded-full object-cover shadow-lg shadow-black/10"
-                          loading="lazy"
-                          style={{
-                            opacity: 0,
-                            transitionDuration: '700ms',
-                          }}
-                          onLoad={(t) => {
-                            t.currentTarget.style.opacity = '1'
-                          }}
-                        />
+              <SwiperHorizontal>
+                {voiceActors.map((voiceActor) => (
+                  <SwiperSlide key={voiceActor.id}>
+                    <Link to={`/staff/${voiceActor.id}`}>
+                      <div className="flex w-28 flex-col">
+                        <div className="h-28 w-full overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
+                          <img
+                            src={voiceActor.image.large}
+                            alt={voiceActor.name.full}
+                            className="h-28 w-full rounded-full object-cover shadow-lg shadow-black/10"
+                            loading="lazy"
+                            style={{
+                              opacity: 0,
+                              transitionDuration: '700ms',
+                            }}
+                            onLoad={(t) => {
+                              t.currentTarget.style.opacity = '1'
+                            }}
+                          />
+                        </div>
+
+                        <span className="mt-2 line-clamp-2 text-center font-medium">
+                          {voiceActor.name.full}
+                        </span>
+
+                        <span className="text-main line-clamp-2 text-center font-medium">
+                          {voiceActor.languageV2}
+                        </span>
                       </div>
-
-                      <span className="mt-2 line-clamp-2 text-center font-medium">
-                        {voiceActor.name.full}
-                      </span>
-
-                      <span className="line-clamp-2 text-center font-medium text-main">
-                        {voiceActor.languageV2}
-                      </span>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              ))}
-            </SwiperHorizontal>
-          </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </SwiperHorizontal>
+            </div>
+          )}
 
           <div className="flex flex-col gap-4 px-4">
             <strong className="text-lg font-medium">Series</strong>

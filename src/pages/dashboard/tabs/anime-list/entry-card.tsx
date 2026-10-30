@@ -4,8 +4,9 @@ import { TMediaList } from '@/types/t-media-list-collection'
 
 type TEntryCardProps = {
   entry: TMediaList
-  onClickIncrementEpisode: (data: any) => void
-  loadingMutation: boolean
+  onClickIncrementEpisode: (entry: TMediaList) => void
+  disabled: boolean
+  isUpdating: boolean
 }
 
 function timeLeftUntilTheNextEp(
@@ -16,8 +17,7 @@ function timeLeftUntilTheNextEp(
     return null
   }
 
-  let releaseDate: string,
-    userDelay: string | null = null
+  let userDelay: string | null = null
 
   const nextEpSubtractionLastEpWatched = nextAiringEpisode.episode - 1 - entryProgress
   /** anilist data is in seconds */
@@ -38,12 +38,15 @@ function timeLeftUntilTheNextEp(
     userDelay = `You are ${nextEpSubtractionLastEpWatched} ${nextEpSubtractionLastEpWatched > 1 ? 'episodes' : 'episode'} behind.`
   }
 
-  releaseDate = formattedReleaseDate
-
-  return { releaseDate, userDelay }
+  return { releaseDate: formattedReleaseDate, userDelay }
 }
 
-export function EntryCard({ entry, onClickIncrementEpisode, loadingMutation }: TEntryCardProps) {
+export function EntryCard({
+  entry,
+  onClickIncrementEpisode,
+  disabled,
+  isUpdating,
+}: TEntryCardProps) {
   const navigate = useNavigate()
 
   const { id, status, media, progress } = entry
@@ -90,26 +93,17 @@ export function EntryCard({ entry, onClickIncrementEpisode, loadingMutation }: T
             <div className="flex w-full flex-1 items-end justify-end gap-2 self-end pb-1 text-sm">
               <span className="p-2">{`${entry.progress} / ${media.episodes ?? '?'}`}</span>
 
-              {/* <button
-              onClick={() => {
-                console.log(timeLeftUntilTheNextEp(media.nextAiringEpisode, progress))
-                // console.log(entry.media.nextAiringEpisode)
-              }}
-              className="relative flex min-h-[40px] min-w-[60px] items-center justify-center rounded-full bg-second px-3 py-2 transition hover:brightness-125"
-            >
-              <span>DateHandle</span>
-              <CircleNotch weight="thin" size={20} className="absolute hidden animate-spin" />
-            </button> */}
-
               {status !== 'COMPLETED' && (
                 <button
-                  disabled={loadingMutation}
-                  id={`increment-button-${entry.id}`}
-                  onClick={() => onClickIncrementEpisode({ entry })}
+                  disabled={disabled}
+                  onClick={() => onClickIncrementEpisode(entry)}
                   className="bg-main relative flex min-h-[40px] min-w-[60px] cursor-pointer items-center justify-center rounded-full px-3 py-2 transition hover:brightness-125"
                 >
-                  <span>+1 EP</span>
-                  <CircleNotch weight="thin" size={20} className="absolute hidden animate-spin" />
+                  {isUpdating ? (
+                    <CircleNotch weight="thin" size={20} className="animate-spin" />
+                  ) : (
+                    <span>+1 EP</span>
+                  )}
                 </button>
               )}
             </div>

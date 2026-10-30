@@ -1,17 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { CaretLeft, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { useAnimeListContext } from './use-anime-list-context'
 
 export function AnimeListHeader() {
   const { search, setSearch } = useAnimeListContext()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [showSearchField, setShowSearchField] = useState(() => {
-    if (search !== '') {
-      return true
-    }
-
-    return false
-  })
+  const [showSearchField, setShowSearchField] = useState(search !== '')
 
   function handleToggleInputSearch() {
     if (!showSearchField) {
