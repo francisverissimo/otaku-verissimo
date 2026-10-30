@@ -1,4 +1,5 @@
-import { ClassAttributes, useState } from 'react'
+import { ClassAttributes, useMemo, useState } from 'react'
+import DOMPurify from 'dompurify'
 import { CaretDown, CaretUp } from '@phosphor-icons/react'
 
 type TCollapseParagraphProps = ClassAttributes<HTMLDivElement> & {
@@ -8,6 +9,8 @@ type TCollapseParagraphProps = ClassAttributes<HTMLDivElement> & {
 
 export function CollapseParagraph({ description, className }: TCollapseParagraphProps) {
   const [collapse, setCollapse] = useState(false)
+  /** AniList descriptions contain user-submitted HTML, so never render them unsanitized. */
+  const safeHtml = useMemo(() => DOMPurify.sanitize(description), [description])
 
   function handleToggleCollapse() {
     setCollapse((prev) => !prev)
@@ -18,10 +21,8 @@ export function CollapseParagraph({ description, className }: TCollapseParagraph
       <div className="relative">
         <div>
           <p
-            className={`${className} ${!collapse && 'max-h-64 overflow-hidden'}`}
-            dangerouslySetInnerHTML={{
-              __html: description,
-            }}
+            className={`${className ?? ''} ${collapse ? '' : 'max-h-64 overflow-hidden'}`}
+            dangerouslySetInnerHTML={{ __html: safeHtml }}
           />
 
           {!collapse && (
@@ -54,5 +55,5 @@ export function CollapseParagraph({ description, className }: TCollapseParagraph
     )
   }
 
-  return <p className={className} dangerouslySetInnerHTML={{ __html: description }}></p>
+  return <p className={className} dangerouslySetInnerHTML={{ __html: safeHtml }} />
 }
