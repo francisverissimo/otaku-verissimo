@@ -4,22 +4,42 @@
 
 Site de animes e mangás com uma vasta biblioteca de títulos e informações sobre eles. O objetivo deste projeto é fornecer aos usuários um local centralizado para encontrar informações sobre animes e mangás de forma rápida e fácil.
 
-<!-- ## ⚙️ Funcionalidades
-- **Cadastro e exclusão de jobs**: Adicione ou remova facilmente seus projetos.
-- **Estimativa de custo**: Obtenha uma previsão de quanto cada job pode custar.
-- **Cálculo do valor da hora**: Calcule automaticamente o seu valor de hora de trabalho com base nos seus dados. -->
-
 ## 🛠 Tecnologias Utilizadas
 
-- **React**
+- **React** com **React Router**
+- **TypeScript**
 - **Tailwind CSS**
-- **Typescript**
-- **GraphQL**
+- **GraphQL** ([AniList API](https://docs.anilist.co/)) via **Apollo Client**
+- **Vite**
 
 ## 🚀 Acesse o Projeto
 Você pode acessar o projeto online através do seguinte link:
 
 [**Clique aqui para acessar**](https://otakuverissimo.vercel.app/).
+
+## 💻 Rodando localmente
+
+Requisitos: Node 26 (definido em `.nvmrc`) e Yarn 1.
+
+```bash
+nvm use
+yarn install
+cp .env.example .env.local   # preencha VITE_ID_CLIENT
+yarn dev                     # http://localhost:9000
+```
+
+O login usa o fluxo OAuth implícito da AniList. Para testá-lo localmente, crie um client em
+[anilist.co/settings/developer](https://anilist.co/settings/developer) com a redirect URL
+`http://localhost:9000` e use o ID dele em `VITE_ID_CLIENT`. As páginas públicas funcionam sem login.
+
+| Script | O que faz |
+| --- | --- |
+| `yarn dev` | servidor de desenvolvimento |
+| `yarn lint` | ESLint |
+| `yarn build` | checagem de tipos (`tsc`) e build de produção |
+| `yarn preview` | serve o build localmente |
+
+Variáveis `VITE_*` são embutidas no bundle e ficam visíveis no navegador. Nunca coloque segredos nelas.
 
 ## 📸 Capturas de Tela
 Aqui estão algumas capturas de tela do projeto em funcionamento:
