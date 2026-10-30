@@ -1,8 +1,4 @@
 import { useState } from 'react'
-import {
-  GET_MEDIA_CHARACTERS_PAGINATION,
-  GET_MEDIA_STAFF_PAGINATION,
-} from '@/lib/queries/media-query'
 import { TMedia } from '@/types/t-media'
 import { AnimeTabCharacters as TabCharacters } from './anime-tab-characters'
 import { AnimeTabStaff as TabStaff } from './anime-tab-staff'
@@ -26,10 +22,10 @@ export function AnimeContent({ anime }: TAnimeContentProps) {
       )}
 
       {pageContent == 'characters' && (
-        <TabCharacters characters={anime.characters} mediaId={anime.id} />
+        <TabCharacters characters={anime.characters} />
       )}
 
-      {pageContent == 'staff' && <TabStaff staff={anime.staff} mediaId={anime.id} />}
+      {pageContent == 'staff' && <TabStaff staff={anime.staff} />}
     </div>
   )
 }

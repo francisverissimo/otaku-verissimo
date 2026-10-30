@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
-import { HouseSimple, RocketLaunch, SignIn, Video } from '@phosphor-icons/react'
+import { HouseSimple, SignIn, Video } from '@phosphor-icons/react'
 import { useAuth } from '@/hooks/use-auth'
+import { ANILIST_AUTH_URL } from '@/auth/token'
 import logo from '@/assets/logo-short.svg'
 
 export function Sidebar() {
@@ -46,7 +47,7 @@ export function Sidebar() {
 
         {user === null && (
           <a
-            href={`https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ID_CLIENT}&response_type=token`}
+            href={ANILIST_AUTH_URL}
             title="Sign in with AniList"
             className="group relative flex cursor-pointer items-center justify-center px-2 whitespace-nowrap transition"
           >
@@ -68,21 +69,6 @@ export function Sidebar() {
             <span className="bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block">
               Profile
             </span>
-          </button>
-        )}
-      </div>
-
-      <div className="hidden min-h-14 py-4">
-        {location.hostname === 'localhost' && (
-          <button
-            title="force localhost oauth"
-            className="hover:text-main flex flex-col text-zinc-400"
-            onClick={() => {
-              window.location.href = `/#access_token=${import.meta.env.VITE_TOKEN}`
-              window.location.reload()
-            }}
-          >
-            <RocketLaunch size={32} />
           </button>
         )}
       </div>

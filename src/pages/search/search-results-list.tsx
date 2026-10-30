@@ -3,7 +3,6 @@ import { TPageMedia } from '@/types/t-page-media'
 import { MediaSort } from '@/types'
 import { PageMediaCoverCard } from '@/components/page-media-cover-card'
 import { DefaultLoading as Loading } from '@/components/loading'
-// import { IntersectionObserverComponent } from "@/components/intersection-observer-component";
 
 type ResultsListProps = {
   query: DocumentNode
@@ -21,7 +20,7 @@ type ResultsListProps = {
 }
 
 export function ResultsList({ query, variables }: ResultsListProps) {
-  const { data, loading, fetchMore } = useQuery(query, {
+  const { data, loading } = useQuery(query, {
     variables,
     notifyOnNetworkStatusChange: true,
   })
@@ -44,27 +43,6 @@ export function ResultsList({ query, variables }: ResultsListProps) {
       </div>
 
       {loading && <Loading />}
-
-      {/* {!loading && data.Page.pageInfo.hasNextPage && (
-        <IntersectionObserverComponent
-          page={data.Page.pageInfo.currentPage}
-          callback={() =>
-            fetchMore({
-              variables: { page: data.Page.pageInfo.currentPage + 1 },
-              updateQuery(pv, { fetchMoreResult }) {
-                if (!fetchMoreResult) return pv;
-
-                fetchMoreResult.Page.media = [
-                  ...pv.Page.media,
-                  ...fetchMoreResult.Page.media,
-                ];
-
-                return fetchMoreResult;
-              },
-            })
-          }
-        />
-      )} */}
     </div>
   )
 }

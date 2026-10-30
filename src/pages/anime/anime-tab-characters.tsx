@@ -1,35 +1,14 @@
-import { useLazyQuery } from '@apollo/client'
-import { GET_MEDIA_CHARACTERS_PAGINATION } from '@/lib/queries/media-query'
 import { TMedia } from '@/types/t-media'
 import { Link } from 'react-router-dom'
 import { Subtitle } from '@/components/subtitle'
 import { useEffect } from 'react'
-// import { HorizontalCardSkeleton } from '../../components/loading'
-// import { IntersectionObserverComponent } from '../../components/intersection-observer-component'
 
 type TAnimeTabCharactersProps = {
   characters: TMedia['characters']
-  mediaId: TMedia['id']
 }
 
-export function AnimeTabCharacters({ characters, mediaId }: TAnimeTabCharactersProps) {
-  const { edges, pageInfo } = characters
-
-  // console.log(edges)
-
-  // const [paginate, { data, loading, client }] = useLazyQuery(GET_MEDIA_CHARACTERS_PAGINATION, {
-  //   variables: {
-  //     charactersPage: characters.pageInfo.currentPage + 1,
-  //     id: mediaId,
-  //   },
-  //   onCompleted(data) {
-  //     client.cache.modify({ fields: {
-  //       Media(existingMedia) {
-
-  //       }
-  //     }})
-  //   },
-  // })
+export function AnimeTabCharacters({ characters }: TAnimeTabCharactersProps) {
+  const { edges } = characters
 
   useEffect(() => {
     const elementHeader = document.querySelector('#characters_header')
@@ -141,40 +120,7 @@ export function AnimeTabCharacters({ characters, mediaId }: TAnimeTabCharactersP
             )
           })
         })}
-
-        {/* {isLoading && <HorizontalCardSkeleton />} */}
       </div>
-
-      {/* {!isLoading && pageInfo.hasNextPage && (
-        <IntersectionObserverComponent page={pageInfo.currentPage} callback={callback} />
-      )} */}
     </div>
   )
 }
-
-/** antigo fetchMore. Agora, trasncreva-o para um useLazyQuery e atualize o cache */
-// callback={() => {
-//   fetchMore({
-//     query: GET_MEDIA_CHARACTERS_PAGINATION,
-//     variables: {
-//       charactersPage: anime.characters.pageInfo.currentPage + 1,
-//       id: anime.id,
-//     },
-//     updateQuery(pv, { fetchMoreResult }) {
-//       if (!fetchMoreResult) return pv
-
-//       return {
-//         Media: {
-//           ...pv.Media,
-//           characters: {
-//             ...fetchMoreResult.Media.characters,
-//             edges: [
-//               ...pv.Media.characters.edges,
-//               ...fetchMoreResult.Media.characters.edges,
-//             ],
-//           },
-//         },
-//       }
-//     },
-//   })
-// }}

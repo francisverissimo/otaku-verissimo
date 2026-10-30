@@ -21,10 +21,8 @@ export function Profile() {
           <button
             className="ml-auto mt-auto w-full rounded p-1 text-red-600 ring-2 ring-red-600 transition hover:text-red-500 hover:ring-red-500"
             onClick={() => {
-              localStorage.removeItem('access_token')
-              localStorage.removeItem('viewer')
-              navigate('/')
               signout()
+              navigate('/')
             }}
           >
             Sign Out

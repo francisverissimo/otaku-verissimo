@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { HouseSimple, SignIn, Video } from '@phosphor-icons/react'
 import { useAuth } from '@/hooks/use-auth'
+import { ANILIST_AUTH_URL } from '@/auth/token'
 
 export function BottomBar() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -39,7 +40,7 @@ export function BottomBar() {
 
         {user === null && (
           <a
-            href={`https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ID_CLIENT}&response_type=token`}
+            href={ANILIST_AUTH_URL}
             title="Sign in with AniList"
             className="flex h-full cursor-pointer items-center justify-center px-2 transition"
           >

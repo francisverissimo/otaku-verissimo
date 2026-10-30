@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { useViewer } from './hooks/use-viewer'
 import { useAuth } from './hooks/use-auth'
+import { resolveViewer } from './auth/viewer'
 import { Anime } from './pages/anime'
 import { Staff } from './pages/staff'
 import { Search } from './pages/search'
@@ -21,26 +21,14 @@ const router = createBrowserRouter([
 export function App() {
   const { user, signin } = useAuth()
 
-  async function checkViewerDataIfNeeded() {
-    const { refreshViewerDataIfNeeded } = useViewer()
-
-    const viewer = await refreshViewerDataIfNeeded()
-
-    if (viewer) {
-      signin(viewer)
-    } else {
-      signin(null)
-    }
-  }
-
   useEffect(() => {
-    if (user === undefined) {
-      checkViewerDataIfNeeded()
-    }
-  }, [])
+    if (user !== undefined) return
+
+    resolveViewer().then((viewer) => signin(viewer ?? null))
+  }, [user, signin])
 
   if (user === undefined) {
-    return
+    return null
   }
 
   return <RouterProvider router={router} />

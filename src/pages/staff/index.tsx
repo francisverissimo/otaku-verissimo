@@ -1,12 +1,7 @@
-import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { Heart } from '@phosphor-icons/react'
-import {
-  GET_STAFF_QUERY,
-  GET_STAFF_CHARACTERS_PAGINATION,
-  GET_STAFF_STAFF_MEDIA_PAGINATION,
-} from '@/lib/queries/staff-query'
+import { GET_STAFF_QUERY } from '@/lib/queries/staff-query'
 import { StaffModel } from '@/types'
 import { CollapseParagraph } from '@/components/collapse-paragraph'
 import { Footer } from '@/components/footer'
@@ -16,7 +11,7 @@ import { formatDateToString } from '@/utils/format-date-to-string'
 export function Staff() {
   const { id } = useParams() as { id: string }
 
-  const { data, error, fetchMore } = useQuery(GET_STAFF_QUERY, {
+  const { data, error } = useQuery(GET_STAFF_QUERY, {
     variables: { id },
     notifyOnNetworkStatusChange: true,
     onError(error) {
@@ -24,7 +19,7 @@ export function Staff() {
     },
   })
 
-  const staff: StaffModel = data && data.Staff
+  const staff: StaffModel | undefined = data?.Staff
 
   return (
     <div className="flex min-h-screen flex-col justify-between pt-20">
@@ -69,7 +64,7 @@ export function Staff() {
                     <span>{staff.name.native}</span>
                   </div>
 
-                  {staff.dateOfBirth && (
+                  {staff.dateOfBirth.year && staff.dateOfBirth.month && staff.dateOfBirth.day && (
                     <div>
                       <span className="font-medium">Birth: </span>
                       <span>
@@ -82,7 +77,7 @@ export function Staff() {
                     </div>
                   )}
 
-                  {staff.age && (
+                  {staff.age != null && (
                     <div>
                       <span className="font-medium">Age: </span>
                       <span>{staff.age}</span>
@@ -100,9 +95,7 @@ export function Staff() {
                     <div>
                       <span className="font-medium">Years active: </span>
                       <span>
-                        {staff.yearsActive.length > 1
-                          ? staff.yearsActive.map((year) => <span key={year}>{year}</span>)
-                          : `${staff.yearsActive[0]} - Present`}
+                        {`${staff.yearsActive[0]} - ${staff.yearsActive[1] ?? 'Present'}`}
                       </span>
                     </div>
                   )}
@@ -135,8 +128,8 @@ export function Staff() {
               {staff.characters.edges.length > 0 && (
                 <div className="px-4">
                   <div className="mx-auto flex max-w-5xl flex-col gap-8 py-4">
-                    {staff.characters.edges.map((edge, index, array) => (
-                      <div className="grid flex-col gap-4">
+                    {staff.characters.edges.map((edge) => (
+                      <div key={edge.id} className="grid flex-col gap-4">
                         <div className="flex items-center gap-2">
                           <div className="overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300 shadow-md shadow-black/20">
                             <Link to={`/character/${edge.node.id}`}>
@@ -206,47 +199,13 @@ export function Staff() {
                         </div>
                       </div>
                     ))}
-
-                    {/* {isLoading && <StaffCharactersSkeleton />} */}
                   </div>
-
-                  {/* {!isLoading && staff.characters.pageInfo.hasNextPage && (
-                    <IntersectionObserverComponent
-                      callback={() => {
-                        setIsLoading(true)
-
-                        fetchMore({
-                          query: GET_STAFF_CHARACTERS_PAGINATION,
-                          variables: {
-                            charactersPage: staff.characters.pageInfo.currentPage + 1,
-                            id: staff.id,
-                          },
-                          updateQuery(pv, { fetchMoreResult }) {
-                            if (!fetchMoreResult) return pv
-                            return {
-                              Staff: {
-                                ...pv.Staff,
-                                characters: {
-                                  ...fetchMoreResult.Staff.characters,
-                                  edges: [
-                                    ...pv.Staff.characters.edges,
-                                    ...fetchMoreResult.Staff.characters.edges,
-                                  ],
-                                },
-                              },
-                            }
-                          },
-                        })
-                      }}
-                      page={staff.characters.pageInfo.currentPage}
-                    />
-                  )} */}
                 </div>
               )}
             </div>
 
             <div>
-              {staff.staffMedia.edges.length > 0 && !staff.characters.pageInfo.hasNextPage && (
+              {staff.staffMedia.edges.length > 0 && (
                 <div className="px-4 py-4">
                   <div className="mx-auto flex max-w-5xl flex-col gap-4">
                     <div className="grid flex-col gap-4 rounded">
@@ -306,44 +265,9 @@ export function Staff() {
                               </Link>
                             )
                           })}
-
-                        {/* {isLoading && <StaffAnimeStaffRolesSkeleton />} */}
                       </div>
                     </div>
                   </div>
-
-                  {/* {!isLoading && staff.staffMedia.pageInfo.hasNextPage && (
-                    <IntersectionObserverComponent
-                      callback={() => {
-                        setIsLoading(true)
-
-                        fetchMore({
-                          query: GET_STAFF_STAFF_MEDIA_PAGINATION,
-                          variables: {
-                            staffMediaPage: staff.staffMedia.pageInfo.currentPage + 1,
-                            id: staff.id,
-                          },
-                          updateQuery(pv, { fetchMoreResult }) {
-                            if (!fetchMoreResult) return pv
-
-                            return {
-                              Staff: {
-                                ...pv.Staff,
-                                staffMedia: {
-                                  ...fetchMoreResult.Staff.staffMedia,
-                                  edges: [
-                                    ...pv.Staff.staffMedia.edges,
-                                    ...fetchMoreResult.Staff.staffMedia.edges,
-                                  ],
-                                },
-                              },
-                            }
-                          },
-                        })
-                      }}
-                      page={staff.staffMedia.pageInfo.currentPage}
-                    />
-                  )} */}
                 </div>
               )}
             </div>

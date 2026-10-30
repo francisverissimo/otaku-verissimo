@@ -24,14 +24,6 @@ export type MediaSort =
   | 'EPISODES'
   | 'EPISODES_DESC'
 
-export type PageInfo = {
-  total: number
-  currentPage: number
-  lastPage: number
-  hasNextPage: true
-  perPage: number
-}
-
 export type StaffModel = {
   id: number
   name: {
@@ -151,25 +143,3 @@ export type CharacterModel = {
     }[]
   }
 }
-
-export type PopularThisSeasonType = {
-  currentYear: number
-  currentSeason: string | undefined
-  perPage: number
-}
-
-export type UpcomingNextSeasonType = {
-  nextSeasonYear: number
-  nextSeason: string | undefined
-  perPage: number
-}
-
-export type TrendingNowType = {
-  perPage: number
-}
-
-export type AllTimePopularType = {
-  perPage: number
-}
-
-export type ViewAllParams = 'trending' | 'this-season' | 'next-season' | 'popular'

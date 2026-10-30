@@ -1,45 +1,58 @@
+const HEX_COLOR = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
+
+/** WCAG 2.x minimum contrast for large text and UI components. */
+const MIN_CONTRAST_RATIO = 3
+
 function hexToRgb(hex: string) {
-  hex = hex.replace(/^#/, '')
-  if (hex.length === 3) {
-    hex = hex
+  let value = hex.replace(/^#/, '')
+  if (value.length === 3) {
+    value = value
       .split('')
       .map((c) => c + c)
       .join('')
   }
-  const bigint = parseInt(hex, 16)
-  return {
-    r: (bigint >> 16) & 255,
-    g: (bigint >> 8) & 255,
-    b: bigint & 255,
-  }
+  const int = parseInt(value, 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255]
 }
 
-function getLuminance(hexColor: string): number {
-  const { r, g, b } = hexToRgb(hexColor)
-  return 0.299 * r + 0.587 * g + 0.114 * b
+/** Relative luminance as defined by WCAG: https://www.w3.org/TR/WCAG21/#dfn-relative-luminance */
+function getRelativeLuminance(hex: string): number {
+  const [r, g, b] = hexToRgb(hex).map((channel) => {
+    const c = channel / 255
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+export function getContrastRatio(a: string, b: string): number {
+  const la = getRelativeLuminance(a)
+  const lb = getRelativeLuminance(b)
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)
+}
+
+let themeColors: { background: string; fallback: string } | null = null
+
+function getThemeColors() {
+  if (!themeColors) {
+    const style = getComputedStyle(document.documentElement)
+    themeColors = {
+      background: style.getPropertyValue('--color-darkBG').trim(),
+      fallback: style.getPropertyValue('--color-main').trim(),
+    }
+  }
+  return themeColors
 }
 
 /**
- * cálculo de contraste, usando a fórmula: (L1 + 0.05) / (L2 + 0.05)
- * L1 e L2 são as luminâncias
- * */
-function getContrastRatio(fg: string, bg: string): number {
-  const fgLum = getLuminance(fg)
-  const bgLum = getLuminance(bg)
-  return (fgLum + 0.05) / (bgLum + 0.05)
-}
-
+ * AniList cover colors are used as accent text over the dark background. Returns the
+ * color itself when it is readable there, otherwise the theme's main color.
+ */
 export function getContrastSafeColor(hexColor: string | null): string {
-  const root = document.documentElement
-  const bgThemeColor = getComputedStyle(root).getPropertyValue('--color-darkBG').trim()
-  const mainThemeColor = getComputedStyle(root).getPropertyValue('--color-main').trim()
+  const { background, fallback } = getThemeColors()
 
-  if (!hexColor || !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hexColor)) {
-    return mainThemeColor
+  if (!hexColor || !HEX_COLOR.test(hexColor)) {
+    return fallback
   }
 
-  const ratio = getContrastRatio(hexColor, bgThemeColor)
-  const minContrastRatio = 3
-
-  return ratio >= minContrastRatio ? hexColor : mainThemeColor
+  return getContrastRatio(hexColor, background) >= MIN_CONTRAST_RATIO ? hexColor : fallback
 }
