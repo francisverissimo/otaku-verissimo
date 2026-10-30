@@ -3,20 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "26.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@apollo/client": "^3.9.9",
     "@phosphor-icons/react": "^2.0.15",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-hover-card": "^1.0.5",
-    "@radix-ui/react-select": "^2.0.0",
     "@tailwindcss/vite": "^4.1.0",
+    "dompurify": "^3.4.17",
     "graphql": "^16.8.1",
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -25,14 +28,18 @@
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.192",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^20.5.7",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react-swc": "^3.6.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "typescript": "^5.0.4",
+    "typescript-eslint": "^8.72.1",
     "vite": "^5.0.12"
   },
   "prettier": "./prettier.config.js"
