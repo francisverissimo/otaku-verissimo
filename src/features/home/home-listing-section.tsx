@@ -1,7 +1,7 @@
 import { SwiperSlide } from 'swiper/react'
+import { Carousel } from '@/components/carousel'
 import { Subtitle } from '@/components/subtitle'
 import { MediaCoverCard } from '@/components/media-cover-card'
-import { SwiperSectionHome } from '@/components/swiper-section-home'
 import type { MediaCoverCardData } from '@/components/media-cover-card-fragment'
 
 type THomeListingSectionProps = {
@@ -25,7 +25,7 @@ export function HomeListingSection({ title, mediasArray }: THomeListingSectionPr
       </button> */}
       </div>
 
-      <SwiperSectionHome>
+      <Carousel variant="cards">
         {mediasArray.map((media, index) => {
           return (
             <SwiperSlide key={index}>
@@ -33,7 +33,7 @@ export function HomeListingSection({ title, mediasArray }: THomeListingSectionPr
             </SwiperSlide>
           )
         })}
-      </SwiperSectionHome>
+      </Carousel>
     </div>
   )
 }

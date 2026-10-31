@@ -1,8 +1,8 @@
 import { SwiperSlide } from 'swiper/react'
-import { Link } from 'react-router'
+import { MediaCard, MediaCardBadge, MediaCardCover, MediaCardTitle } from '@/components/media-card'
+import { Carousel } from '@/components/carousel'
 import type { AnimeView } from './anime-queries'
 import { Subtitle } from '@/components/subtitle'
-import { SwiperCoverCardsBellow } from './anime-section-cards'
 
 type TAnimeRelationsProps = { relations: AnimeView['relations'] }
 
@@ -45,43 +45,30 @@ export function AnimeRelations({ relations }: TAnimeRelationsProps) {
         relations
       </Subtitle>
 
-      <SwiperCoverCardsBellow>
+      <Carousel variant="covers">
         {sortedRelations.map(({ id, title, cover, format, relationType }) => {
           return (
             <SwiperSlide key={id}>
-              <Link to={`/anime/${id}`} className="flex cursor-pointer flex-col gap-1 py-1">
-                <div className="relative mb-2 aspect-[6/9] overflow-hidden rounded-lg shadow-md">
-                  <img
-                    src={cover ?? undefined}
-                    alt={title}
-                    className="h-full w-full object-cover object-center"
-                    loading="lazy"
-                    style={{
-                      opacity: 0,
-                      transitionDuration: '700ms',
-                    }}
-                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                  />
+              <MediaCard to={`/anime/${id}`}>
+                <MediaCardCover src={cover} alt={title}>
+                  {format && (
+                    <MediaCardBadge position="top-right">
+                      {format.replace(/_/g, ' ')}
+                    </MediaCardBadge>
+                  )}
+                  {relationType && (
+                    <MediaCardBadge position="bottom">
+                      {relationType.replace(/_/g, ' ')}
+                    </MediaCardBadge>
+                  )}
+                </MediaCardCover>
 
-                  <div className="absolute top-0 right-0 rounded-bl-lg bg-zinc-950/70 p-1">
-                    <span className="text-xs font-medium text-zinc-50">
-                      {format ? format.replace(/_/g, ' ') : ''}
-                    </span>
-                  </div>
-
-                  <div className="absolute right-0 bottom-0 left-0 flex justify-center bg-zinc-950/70 p-1">
-                    <span className="text-sm font-medium text-zinc-50">
-                      {relationType?.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-                </div>
-
-                <span className="line-clamp-2 text-center text-sm md:text-base">{title}</span>
-              </Link>
+                <MediaCardTitle>{title}</MediaCardTitle>
+              </MediaCard>
             </SwiperSlide>
           )
         })}
-      </SwiperCoverCardsBellow>
+      </Carousel>
     </div>
   )
 }

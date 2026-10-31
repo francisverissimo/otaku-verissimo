@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router'
+import { Image } from '@/components/image'
 import { CircleNotch } from '@phosphor-icons/react'
 import type { MediaListEntry } from './anime-list-queries'
 
@@ -56,19 +57,11 @@ export function EntryCard({
   return (
     <div id={`entry-card-${id}`} key={id} className="relative pt-4 pb-8">
       <div className="flex">
-        <img
-          loading="lazy"
-          src={media.cover ?? undefined}
+        <Image
+          src={media.cover}
           alt={media.title}
           onClick={() => navigate(`/anime/${media.id}`)}
           className="h-full w-24 cursor-pointer self-start rounded-lg object-cover md:w-28"
-          style={{
-            opacity: 0,
-            transitionDuration: '600ms',
-          }}
-          onLoad={(t) => {
-            t.currentTarget.style.opacity = '1'
-          }}
         />
 
         <div className="relative flex w-full flex-col">

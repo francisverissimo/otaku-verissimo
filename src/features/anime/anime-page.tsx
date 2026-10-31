@@ -1,4 +1,5 @@
 import { Outlet, useParams } from 'react-router'
+import { Image } from '@/components/image'
 import { Heart, Star } from '@phosphor-icons/react'
 import { DefaultLoading as Loading } from '@/components/loading'
 import { ErrorFallback } from '@/components/error-fallback'
@@ -30,16 +31,11 @@ export function AnimePage() {
 
         {anime.banner ? (
           <div className="relative">
-            <img
+            <Image
+              fadeMs={1000}
               src={anime.banner}
               className="h-80 w-full object-cover object-center md:h-96"
               alt="anime banner image"
-              loading="lazy"
-              style={{
-                opacity: 0,
-                transitionDuration: '1000ms',
-              }}
-              onLoad={(t) => (t.currentTarget.style.opacity = '1')}
             />
 
             <div className="absolute bottom-0 h-full w-full bg-gradient-to-r from-zinc-900 via-zinc-900/20 to-transparent md:w-[60%] md:via-zinc-800/70" />
@@ -55,17 +51,7 @@ export function AnimePage() {
                 anime.banner && '-mt-40 md:-mt-36'
               }`}
             >
-              <img
-                src={anime.cover ?? undefined}
-                alt={anime.title.userPreferred}
-                className="h-full w-full"
-                loading="lazy"
-                style={{
-                  opacity: 0,
-                  transitionDuration: '800ms',
-                }}
-                onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-              />
+              <Image src={anime.cover} alt={anime.title.userPreferred} className="h-full w-full" />
             </div>
           </div>
 

@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
+import { Carousel } from '@/components/carousel'
+import { Image } from '@/components/image'
 import { Link } from 'react-router'
 import { SwiperSlide } from 'swiper/react'
 import { Subtitle } from '@/components/subtitle'
-import { SwiperHorizontal } from '@/components/swiper-horizontal'
 import { CollapseParagraph } from '@/components/collapse-paragraph'
 import { AnimeTitle as Title } from './anime-title'
 import { AnimeTags as Tags } from './anime-tags'
@@ -60,7 +61,7 @@ export function AnimeOverviewTab() {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <SwiperHorizontal>
+          <Carousel variant="avatars">
             {anime.characters.items
               .filter((character) => character.role == 'MAIN')
               .map(({ id, name, image }) => {
@@ -68,14 +69,9 @@ export function AnimeOverviewTab() {
                   <SwiperSlide key={id}>
                     <Link className="flex flex-col gap-4" to={`/character/${id}`}>
                       <div className="overflow-hidden rounded-full">
-                        <img
-                          src={image ?? undefined}
+                        <Image
+                          src={image}
                           alt={name}
-                          style={{
-                            opacity: 0,
-                            transitionDuration: '900ms',
-                          }}
-                          onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                           className="aspect-square h-full w-full object-cover"
                         />
                       </div>
@@ -87,7 +83,7 @@ export function AnimeOverviewTab() {
                   </SwiperSlide>
                 )
               })}
-          </SwiperHorizontal>
+          </Carousel>
         </div>
       </div>
 
