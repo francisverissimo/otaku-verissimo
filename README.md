@@ -9,7 +9,7 @@ Site de animes e mangás com uma vasta biblioteca de títulos e informações so
 - **React 19** com **React Router 8**
 - **TypeScript**
 - **Tailwind CSS**
-- **GraphQL** ([AniList API](https://docs.anilist.co/)) via **Apollo Client**
+- **GraphQL** ([AniList API](https://docs.anilist.co/)) com **TanStack Query** e **GraphQL Codegen**
 - **Vite 8**
 
 ## 🚀 Acesse o Projeto
@@ -38,6 +38,10 @@ O login usa o fluxo OAuth implícito da AniList. Para testá-lo localmente, crie
 | `yarn lint` | ESLint |
 | `yarn build` | checagem de tipos (`tsc`) e build de produção |
 | `yarn preview` | serve o build localmente |
+| `yarn codegen` | gera os tipos das queries em `src/gql/` |
+| `yarn codegen:schema` | atualiza `schema.graphql` com a API atual da AniList |
+
+Mais detalhes em [`docs/architecture.md`](docs/architecture.md) e nas decisões em [`docs/adr/`](docs/adr/).
 
 Variáveis `VITE_*` são embutidas no bundle e ficam visíveis no navegador. Nunca coloque segredos nelas.
 

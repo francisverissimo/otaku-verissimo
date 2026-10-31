@@ -1,14 +1,14 @@
-import { TMedia } from '@/types/t-media'
+import type { AnimeView } from './anime-queries'
 
 type StudiosListProps = {
-  studios: TMedia['studios']['edges']
+  studios: AnimeView['studios']
 }
 
 export function AnimeStudios({ studios }: StudiosListProps) {
   const animationStudio = studios.filter((studio) => studio.isMain)
   const producers = studios.reduce(
     (acc, curr) => {
-      if (!curr.isMain && !acc.some((accArr) => curr.node.id == accArr.node.id)) {
+      if (!curr.isMain && !acc.some((accArr) => curr.id == accArr.id)) {
         acc.push(curr)
       }
 
@@ -26,7 +26,7 @@ export function AnimeStudios({ studios }: StudiosListProps) {
           {animationStudio && animationStudio.length > 0
             ? animationStudio.map((studio, idx) => (
                 <span key={idx} className="text-main flex-1 text-lg">
-                  {studio.node.name}
+                  {studio.name}
                 </span>
               ))
             : '?'}
@@ -40,8 +40,8 @@ export function AnimeStudios({ studios }: StudiosListProps) {
           {producers && producers.length > 0
             ? producers.map((producer) => {
                 return (
-                  <span key={producer.node.id} className="text-main flex-1 text-lg">
-                    {producer.node.name}
+                  <span key={producer.id} className="text-main flex-1 text-lg">
+                    {producer.name}
                   </span>
                 )
               })

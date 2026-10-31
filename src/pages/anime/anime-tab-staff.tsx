@@ -1,14 +1,22 @@
-import { Link } from 'react-router'
-import { TMedia } from '@/types/t-media'
 import { useEffect } from 'react'
+import { Link } from 'react-router'
 import { Subtitle } from '@/components/subtitle'
+import { LoadMoreTrigger } from '@/components/load-more-trigger'
+import type { Page } from '@/lib/connection-page'
+import { useAnimeStaff, type AnimeStaffMember } from './anime-queries'
 
 type TAnimeTabStaffProps = {
-  staff: TMedia['staff']
+  animeId: number
+  firstPage: Page<AnimeStaffMember>
 }
 
-export function AnimeTabStaff({ staff }: TAnimeTabStaffProps) {
-  const { edges } = staff
+export function AnimeTabStaff({ animeId, firstPage }: TAnimeTabStaffProps) {
+  const {
+    data: staff,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAnimeStaff(animeId, firstPage)
 
   useEffect(() => {
     const elementHeader = document.querySelector('#staff_header')
@@ -26,17 +34,17 @@ export function AnimeTabStaff({ staff }: TAnimeTabStaffProps) {
       </Subtitle>
 
       <div className="grid gap-4 pb-2 md:grid-cols-2">
-        {edges.map((edge) => (
+        {staff.map((member) => (
           <div
-            key={edge.id}
+            key={member.edgeId}
             className="bg-darkTxt/10 flex h-36 overflow-hidden rounded-lg shadow-lg md:h-40"
           >
             <div className="flex flex-1">
-              {edge.node.image && (
-                <Link to={`/staff/${edge.node.id}`}>
+              {member.image && (
+                <Link to={`/staff/${member.id}`}>
                   <img
-                    src={edge.node.image.medium}
-                    alt={edge.node.name.full}
+                    src={member.image}
+                    alt={member.name}
                     style={{
                       opacity: 0,
                       transitionDuration: '700ms',
@@ -49,17 +57,23 @@ export function AnimeTabStaff({ staff }: TAnimeTabStaffProps) {
 
               <div className="flex flex-1 gap-1 p-2">
                 <div className="flex w-full flex-col gap-1">
-                  <Link className="font-medium" to={`/staff/${edge.node.id}`}>
-                    {edge.node.name.full}
+                  <Link className="font-medium" to={`/staff/${member.id}`}>
+                    {member.name}
                   </Link>
 
-                  <span className="text-second line-clamp-3 md:line-clamp-4">{edge.role}</span>
+                  <span className="text-second line-clamp-3 md:line-clamp-4">{member.role}</span>
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <LoadMoreTrigger
+        hasMore={hasNextPage}
+        isLoading={isFetchingNextPage}
+        onLoadMore={fetchNextPage}
+      />
     </div>
   )
 }

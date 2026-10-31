@@ -11,16 +11,16 @@ import { AnimeRecommendations as Recommendations } from './anime-recommendations
 import { AnimeStudios as Studios } from './anime-studios'
 import { AnimeFuzzyDate } from './anime-fuzzy-date'
 import { AnimeStats } from './anime-stats'
-import { TMedia } from '@/types/t-media'
+import type { AnimeView } from './anime-queries'
 import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 
 interface AnimeTabOverviewProps {
-  anime: TMedia
+  anime: AnimeView
   onChangeTab(tab: 'characters' | 'staff'): void
 }
 
 export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) {
-  const safeColor = getContrastSafeColor(anime.coverImage.color)
+  const safeColor = getContrastSafeColor(anime.color)
 
   useEffect(() => {
     if (window.scrollY < document.body.scrollHeight) scrollTo({ top: 0, behavior: 'smooth' })
@@ -65,17 +65,16 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
 
         <div className="flex gap-4 pt-4">
           <SwiperHorizontal>
-            {anime.characters.edges
+            {anime.characters.items
               .filter((character) => character.role == 'MAIN')
-              .map((character) => {
-                const { id, name, image } = character.node
+              .map(({ id, name, image }) => {
                 return (
                   <SwiperSlide key={id}>
                     <Link className="flex flex-col gap-4" to={`/character/${id}`}>
                       <div className="overflow-hidden rounded-full">
                         <img
-                          src={image.medium}
-                          alt={name.full}
+                          src={image ?? undefined}
+                          alt={name}
                           style={{
                             opacity: 0,
                             transitionDuration: '900ms',
@@ -86,7 +85,7 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
                       </div>
 
                       <span className="mx-auto line-clamp-2 w-full text-center text-sm md:text-lg">
-                        {name.full}
+                        {name}
                       </span>
                     </Link>
                   </SwiperSlide>
@@ -102,10 +101,12 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
           <Title title={anime.title.userPreferred} />
         </div>
 
-        <div className="flex flex-wrap gap-x-2 gap-y-2">
-          <span className="text-lg">Native title:</span>
-          <Title title={anime.title.native} />
-        </div>
+        {anime.title.native && (
+          <div className="flex flex-wrap gap-x-2 gap-y-2">
+            <span className="text-lg">Native title:</span>
+            <Title title={anime.title.native} />
+          </div>
+        )}
 
         {anime.title.english && (
           <div className="flex flex-wrap gap-x-2 gap-y-2">
@@ -176,7 +177,7 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
         )}
       </div>
 
-      <Studios studios={anime.studios.edges} />
+      <Studios studios={anime.studios} />
 
       <AnimeStats
         average={anime.averageScore}
@@ -187,9 +188,9 @@ export function AnimeTabOverview({ anime, onChangeTab }: AnimeTabOverviewProps) 
 
       <Tags tags={anime.tags} />
 
-      <Relations edges={anime.relations.edges} />
+      <Relations relations={anime.relations} />
 
-      <Recommendations edges={anime.recommendations.edges} />
+      <Recommendations recommendations={anime.recommendations} />
 
       {anime.externalLinks.length > 0 && (
         <div className="flex flex-col gap-3 p-4">

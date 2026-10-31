@@ -1,28 +1,23 @@
 import { useMemo, useRef, useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { TMediaList, TMediaListGroup } from '@/types/t-media-list-collection'
-import { SAVE_MEDIA_LIST_ENTRY } from '@/lib/mutations/save-media-list-entry'
-import { getStoredToken } from '@/auth/token'
+import type { MediaListStatus } from '@/gql/graphql'
 import { DialogChangeStatus, TDialogChangeStatusHandle } from './dialog-change-status'
 import { EntryCard } from './entry-card'
 import { useAnimeListContext } from './use-anime-list-context'
+import {
+  useSaveMediaListEntry,
+  type MediaListEntry,
+  type MediaListGroup,
+} from './anime-list-queries'
 import { sortEntries } from './utils'
 
 type AnimeListContainerProps = {
-  data: TMediaListGroup[]
+  data: MediaListGroup[]
+  userId: number
 }
 
-type TMediaListGroupCached = Omit<TMediaListGroup, 'entries'> & {
-  entries: { __ref: string }[]
-}
+type TPendingUpdate = { id: number; status: MediaListStatus; progress: number }
 
-type TPendingUpdate = { id: number; status: string; progress: number; previousStatus: string }
-
-type TSaveMediaListEntryResult = {
-  SaveMediaListEntry: { __typename: string; id: number; status: string; progress: number }
-}
-
-export function AnimeListContent({ data }: AnimeListContainerProps) {
+export function AnimeListContent({ data, userId }: AnimeListContainerProps) {
   const { search } = useAnimeListContext()
 
   const dialogRef = useRef<TDialogChangeStatusHandle>(null)
@@ -30,28 +25,16 @@ export function AnimeListContent({ data }: AnimeListContainerProps) {
   const pendingUpdateRef = useRef<TPendingUpdate | null>(null)
   const [updatingEntryId, setUpdatingEntryId] = useState<number | null>(null)
 
-  const [saveMediaListEntry, { loading }] = useMutation<TSaveMediaListEntryResult>(
-    SAVE_MEDIA_LIST_ENTRY,
-    {
-      context: {
-        headers: {
-          authorization: `Bearer ${getStoredToken()}`,
-        },
-      },
-    }
-  )
+  const saveMediaListEntry = useSaveMediaListEntry(userId)
 
-  function handleClickIncrementEpisodeButton(entry: TMediaList) {
+  function handleClickIncrementEpisodeButton(entry: MediaListEntry) {
     const { status, progress, media } = entry
+    if (!status) return
+
     const nextEpisode = progress + 1
     const shouldComplete = nextEpisode === media.episodes && status !== 'COMPLETED'
 
-    pendingUpdateRef.current = {
-      id: entry.id,
-      status,
-      progress: nextEpisode,
-      previousStatus: status,
-    }
+    pendingUpdateRef.current = { id: entry.id, status, progress: nextEpisode }
 
     if (shouldComplete) {
       dialogRef.current?.handleDialog({ open: true, status: 'COMPLETED' })
@@ -70,7 +53,7 @@ export function AnimeListContent({ data }: AnimeListContainerProps) {
     executeMutation()
   }
 
-  function handleDialogChangeStatusMove(status: string) {
+  function handleDialogChangeStatusMove(status: MediaListStatus) {
     if (!pendingUpdateRef.current) return
 
     pendingUpdateRef.current.status = status
@@ -82,47 +65,15 @@ export function AnimeListContent({ data }: AnimeListContainerProps) {
   }
 
   function executeMutation() {
-    const pending = pendingUpdateRef.current
+    const variables = pendingUpdateRef.current
     pendingUpdateRef.current = null
 
-    if (loading || !pending) return
-
-    const { previousStatus, ...variables } = pending
+    if (saveMediaListEntry.isPending || !variables) return
 
     setUpdatingEntryId(variables.id)
 
-    saveMediaListEntry({
-      variables,
-      update(cache, { data }) {
-        const saved = data?.SaveMediaListEntry
-        if (!saved || saved.status === previousStatus) return
-
-        const entryRef = `${saved.__typename}:${saved.id}`
-
-        cache.modify({
-          fields: {
-            MediaListCollection(existingMediaListCollection) {
-              const existingLists: TMediaListGroupCached[] = existingMediaListCollection.lists
-
-              const lists = existingLists.map((list) => {
-                if (list.status === previousStatus) {
-                  return { ...list, entries: list.entries.filter((e) => e.__ref !== entryRef) }
-                }
-
-                if (list.status === saved.status) {
-                  return { ...list, entries: [...list.entries, { __ref: entryRef }] }
-                }
-
-                return list
-              })
-
-              return { ...existingMediaListCollection, lists }
-            },
-          },
-        })
-      },
-      onCompleted: () => setUpdatingEntryId(null),
-      onError: () => setUpdatingEntryId(null),
+    saveMediaListEntry.mutate(variables, {
+      onSettled: () => setUpdatingEntryId(null),
     })
   }
 
@@ -133,9 +84,7 @@ export function AnimeListContent({ data }: AnimeListContainerProps) {
 
     return data.map((list) => ({
       ...list,
-      entries: list.entries.filter((entry) =>
-        entry.media.title.userPreferred.toLocaleLowerCase().includes(term)
-      ),
+      entries: list.entries.filter((entry) => entry.media.title.toLocaleLowerCase().includes(term)),
     }))
   }, [search, data])
 
@@ -153,7 +102,7 @@ export function AnimeListContent({ data }: AnimeListContainerProps) {
                 key={entry.id}
                 entry={entry}
                 onClickIncrementEpisode={handleClickIncrementEpisodeButton}
-                disabled={loading}
+                disabled={saveMediaListEntry.isPending}
                 isUpdating={updatingEntryId === entry.id}
               />
             ))}

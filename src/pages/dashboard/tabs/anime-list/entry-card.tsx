@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router'
 import { CircleNotch } from '@phosphor-icons/react'
-import { TMediaList } from '@/types/t-media-list-collection'
+import type { MediaListEntry } from './anime-list-queries'
 
 type TEntryCardProps = {
-  entry: TMediaList
-  onClickIncrementEpisode: (entry: TMediaList) => void
+  entry: MediaListEntry
+  onClickIncrementEpisode: (entry: MediaListEntry) => void
   disabled: boolean
   isUpdating: boolean
 }
 
 function timeLeftUntilTheNextEp(
-  nextAiringEpisode: TMediaList['media']['nextAiringEpisode'],
+  nextAiringEpisode: MediaListEntry['media']['nextAiringEpisode'],
   entryProgress: number
 ) {
   if (!nextAiringEpisode) {
@@ -54,12 +54,12 @@ export function EntryCard({
   const nextAiringEpMessages = timeLeftUntilTheNextEp(media.nextAiringEpisode, progress)
 
   return (
-    <div id={`entry-card-${id}`} key={id} className="relative pb-8 pt-4">
+    <div id={`entry-card-${id}`} key={id} className="relative pt-4 pb-8">
       <div className="flex">
         <img
           loading="lazy"
-          src={media.coverImage.large}
-          alt={media.title.userPreferred}
+          src={media.cover ?? undefined}
+          alt={media.title}
           onClick={() => navigate(`/anime/${media.id}`)}
           className="h-full w-24 cursor-pointer self-start rounded-lg object-cover md:w-28"
           style={{
@@ -77,11 +77,11 @@ export function EntryCard({
               onClick={() => navigate(`/anime/${media.id}`)}
               className="text-md text-main line-clamp-2 w-fit cursor-pointer pr-2 font-medium"
             >
-              {media.title.userPreferred}
+              {media.title}
             </span>
 
             <div className="flex flex-col gap-2">
-              <span className="text-sm">{media.format.replace(/_/g, ' ')}</span>
+              <span className="text-sm">{media.format?.replace(/_/g, ' ')}</span>
 
               {nextAiringEpMessages && (
                 <span className="text-second text-sm">

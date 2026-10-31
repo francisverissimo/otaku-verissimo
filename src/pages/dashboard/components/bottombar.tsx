@@ -9,7 +9,7 @@ export function BottomBar() {
   const active = searchParams.get('tabs') || '/'
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30 h-14 bg-zinc-950/50 backdrop-blur duration-300 sm:block md:hidden md:h-28">
+    <div className="fixed right-0 bottom-0 left-0 z-30 h-14 bg-zinc-950/50 backdrop-blur duration-300 sm:block md:hidden md:h-28">
       <div className="group mx-auto flex h-full w-full max-w-5xl items-center justify-center px-4">
         <button
           title="Home"
@@ -20,7 +20,7 @@ export function BottomBar() {
             })
           }
           data-active={active === '/'}
-          className="flex h-14 cursor-pointer items-center justify-center gap-1 p-2 data-[active=true]:text-main"
+          className="data-[active=true]:text-main flex h-14 cursor-pointer items-center justify-center gap-1 p-2"
         >
           <HouseSimple size={24} weight={active === '/' ? 'fill' : 'regular'} />
           <span className="text-sm">Home</span>
@@ -31,7 +31,7 @@ export function BottomBar() {
             title="My Anime List"
             onClick={() => setSearchParams({ tabs: 'anime-list' })}
             data-active={active === 'anime-list'}
-            className="flex h-14 cursor-pointer items-center justify-center gap-1 p-2 data-[active=true]:text-main"
+            className="data-[active=true]:text-main flex h-14 cursor-pointer items-center justify-center gap-1 p-2"
           >
             <Video size={24} weight={active === 'anime-list' ? 'fill' : 'regular'} />
             <span className="text-sm">Anime List</span>
@@ -45,7 +45,7 @@ export function BottomBar() {
             className="flex h-full cursor-pointer items-center justify-center px-2 transition"
           >
             <SignIn size={32} className="text-second" />
-            <span className="text-center text-second">Log in with AniList</span>
+            <span className="text-second text-center">Log in with AniList</span>
           </a>
         )}
 
@@ -54,9 +54,13 @@ export function BottomBar() {
             title="My profile"
             data-active={active === 'profile'}
             onClick={() => setSearchParams({ tabs: 'profile' })}
-            className="flex h-full cursor-pointer items-center justify-center gap-1 p-2 data-[active=true]:text-main md:h-28 md:w-28"
+            className="data-[active=true]:text-main flex h-full cursor-pointer items-center justify-center gap-1 p-2 md:h-28 md:w-28"
           >
-            <img src={user.avatar.medium} alt="avatar image user" className="w-10 rounded-full" />
+            <img
+              src={user.avatar.medium ?? undefined}
+              alt="avatar image user"
+              className="w-10 rounded-full"
+            />
             <span>Profile</span>
           </button>
         )}
