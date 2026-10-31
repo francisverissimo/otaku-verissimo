@@ -1,4 +1,4 @@
-import { compact } from '@/utils/compact'
+import { compact } from '@/lib/compact'
 
 type PageInfo = { currentPage: number | null; hasNextPage: boolean | null } | null | undefined
 
