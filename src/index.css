@@ -24,7 +24,7 @@
       transform: scale(1);
     }
   }
-  
+
   @keyframes fade-out {
     0% {
       transform: scale(1);

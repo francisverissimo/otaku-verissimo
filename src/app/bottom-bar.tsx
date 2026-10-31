@@ -1,37 +1,26 @@
-import { Link, useLocation } from 'react-router'
-import { HouseSimple, SignIn, Video } from '@phosphor-icons/react'
-import { useAuth } from '@/features/auth/use-auth'
+import { Link } from 'react-router'
+import { SignIn } from '@phosphor-icons/react'
 import { ANILIST_AUTH_URL } from '@/lib/access-token'
+import { PROFILE_PATH, useDashboardNav } from './nav-items'
 
 export function BottomBar() {
-  const { pathname } = useLocation()
-  const { user } = useAuth()
-  const active = pathname === '/list' ? 'anime-list' : pathname === '/profile' ? 'profile' : '/'
+  const { user, items, isActive } = useDashboardNav()
 
   return (
     <div className="fixed right-0 bottom-0 left-0 z-30 h-14 bg-zinc-950/50 backdrop-blur duration-300 sm:block md:hidden md:h-28">
       <div className="group mx-auto flex h-full w-full max-w-5xl items-center justify-center px-4">
-        <Link
-          to="/"
-          title="Home"
-          data-active={active === '/'}
-          className="data-[active=true]:text-main flex h-14 cursor-pointer items-center justify-center gap-1 p-2"
-        >
-          <HouseSimple size={24} weight={active === '/' ? 'fill' : 'regular'} />
-          <span className="text-sm">Home</span>
-        </Link>
-
-        {user && (
+        {items.map(({ to, label, title, icon: NavIcon }) => (
           <Link
-            title="My Anime List"
-            to="/list"
-            data-active={active === 'anime-list'}
+            key={to}
+            to={to}
+            title={title}
+            data-active={isActive(to)}
             className="data-[active=true]:text-main flex h-14 cursor-pointer items-center justify-center gap-1 p-2"
           >
-            <Video size={24} weight={active === 'anime-list' ? 'fill' : 'regular'} />
-            <span className="text-sm">Anime List</span>
+            <NavIcon size={24} weight={isActive(to) ? 'fill' : 'regular'} />
+            <span className="text-sm">{label}</span>
           </Link>
-        )}
+        ))}
 
         {user === null && (
           <a
@@ -47,8 +36,8 @@ export function BottomBar() {
         {user && (
           <Link
             title="My profile"
-            data-active={active === 'profile'}
-            to="/profile"
+            data-active={isActive(PROFILE_PATH)}
+            to={PROFILE_PATH}
             className="data-[active=true]:text-main flex h-full cursor-pointer items-center justify-center gap-1 p-2 md:h-28 md:w-28"
           >
             <img

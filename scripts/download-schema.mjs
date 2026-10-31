@@ -15,5 +15,8 @@ if (!data) {
   throw new Error(`Introspection failed: ${JSON.stringify(errors)}`)
 }
 
-writeFileSync(new URL('../schema.graphql', import.meta.url), printSchema(buildClientSchema(data)) + '\n')
+writeFileSync(
+  new URL('../schema.graphql', import.meta.url),
+  printSchema(buildClientSchema(data)) + '\n'
+)
 console.log('schema.graphql updated')

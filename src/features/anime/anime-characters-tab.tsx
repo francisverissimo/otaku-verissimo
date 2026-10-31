@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Image } from '@/components/image'
 import { Link } from 'react-router'
 import { Subtitle } from '@/components/subtitle'
 import { LoadMoreTrigger } from '@/components/load-more-trigger'
@@ -38,14 +39,9 @@ export function AnimeCharactersTab() {
                 className="bg-darkTxt/10 flex overflow-hidden rounded-lg shadow-lg"
               >
                 <Link to={`/character/${character.id}`}>
-                  <img
-                    src={character.image ?? undefined}
+                  <Image
+                    src={character.image}
                     alt={character.name}
-                    style={{
-                      opacity: 0,
-                      transitionDuration: '600ms',
-                    }}
-                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                     className="h-full w-24 object-cover md:w-28"
                   />
                 </Link>
@@ -66,14 +62,9 @@ export function AnimeCharactersTab() {
               className="bg-darkTxt/10 flex h-36 justify-between overflow-hidden rounded-lg shadow-lg md:h-40"
             >
               <Link to={`/character/${character.id}`}>
-                <img
-                  src={character.image ?? undefined}
+                <Image
+                  src={character.image}
                   alt={character.name}
-                  style={{
-                    opacity: 0,
-                    transitionDuration: '600ms',
-                  }}
-                  onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                   className="h-full w-24 object-cover md:w-28"
                 />
               </Link>
@@ -102,14 +93,9 @@ export function AnimeCharactersTab() {
 
               {voiceActor.image && (
                 <Link to={`/staff/${voiceActor.id}`}>
-                  <img
+                  <Image
                     src={voiceActor.image}
                     alt={voiceActor.name}
-                    style={{
-                      opacity: 0,
-                      transitionDuration: '600ms',
-                    }}
-                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                     className="h-full w-24 overflow-hidden object-cover md:w-28"
                   />
                 </Link>

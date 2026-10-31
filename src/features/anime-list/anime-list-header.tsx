@@ -21,7 +21,7 @@ export function AnimeListHeader() {
   }
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-30 h-14 bg-zinc-950/50 backdrop-blur sm:block md:ml-14">
+    <div className="fixed top-0 right-0 left-0 z-30 h-14 bg-zinc-950/50 backdrop-blur sm:block md:ml-14">
       <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-between">
         {showSearchField && (
           <div
@@ -38,7 +38,7 @@ export function AnimeListHeader() {
 
         {showSearchField ? (
           <div className="flex w-full flex-col gap-2 pr-4 md:mx-auto md:max-w-xs">
-            <div className="flex items-center gap-2 border-b-2 border-main px-2 shadow-xl">
+            <div className="border-main flex items-center gap-2 border-b-2 px-2 shadow-xl">
               <MagnifyingGlass size={24} className="text-zinc-400" weight="bold" />
 
               <input
@@ -49,7 +49,7 @@ export function AnimeListHeader() {
                 value={search}
                 autoFocus
                 placeholder="Search"
-                className="w-full bg-transparent p-2 text-lg text-zinc-300 caret-main/70 outline-none"
+                className="caret-main/70 w-full bg-transparent p-2 text-lg text-zinc-300 outline-none"
               />
 
               <button
@@ -67,7 +67,7 @@ export function AnimeListHeader() {
           </div>
         ) : (
           <div className="flex items-center gap-4 px-4">
-            <span className="text-xl font-medium uppercase text-main italic">anime list</span>
+            <span className="text-main text-xl font-medium uppercase italic">anime list</span>
           </div>
         )}
 

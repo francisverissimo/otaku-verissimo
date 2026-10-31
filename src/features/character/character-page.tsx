@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
+import { MediaCard, MediaCardCover, MediaCardTitle } from '@/components/media-card'
+import { Carousel } from '@/components/carousel'
+import { Image } from '@/components/image'
 import { Link, useParams } from 'react-router'
 import { Heart } from '@phosphor-icons/react'
 import { Footer } from '@/components/footer'
-import { SwiperHorizontal } from '@/components/swiper-horizontal'
 import { SwiperSlide } from 'swiper/react'
 import { useCharacter } from './character-queries'
 
@@ -33,15 +35,9 @@ export function CharacterPage() {
           </div>
 
           <div className="min-h-[312px] place-self-center">
-            <img
-              src={character.image ?? undefined}
+            <Image
+              src={character.image}
               alt={character.name}
-              loading="lazy"
-              style={{
-                opacity: 0,
-                transitionDuration: '700ms',
-              }}
-              onLoad={(t) => (t.currentTarget.style.opacity = '1')}
               className="w-52 rounded-lg shadow-lg"
             />
           </div>
@@ -57,24 +53,16 @@ export function CharacterPage() {
             <div className="flex flex-col gap-4 pb-4">
               <strong className="px-4 text-lg font-medium">Voices Actors</strong>
 
-              <SwiperHorizontal>
+              <Carousel variant="avatars">
                 {character.voiceActors.map((voiceActor) => (
                   <SwiperSlide key={voiceActor.id}>
                     <Link to={`/staff/${voiceActor.id}`}>
                       <div className="flex w-28 flex-col">
                         <div className="h-28 w-full overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
-                          <img
-                            src={voiceActor.image ?? undefined}
+                          <Image
+                            src={voiceActor.image}
                             alt={voiceActor.name}
                             className="h-28 w-full rounded-full object-cover shadow-lg shadow-black/10"
-                            loading="lazy"
-                            style={{
-                              opacity: 0,
-                              transitionDuration: '700ms',
-                            }}
-                            onLoad={(t) => {
-                              t.currentTarget.style.opacity = '1'
-                            }}
                           />
                         </div>
 
@@ -89,66 +77,22 @@ export function CharacterPage() {
                     </Link>
                   </SwiperSlide>
                 ))}
-              </SwiperHorizontal>
+              </Carousel>
             </div>
           )}
 
           <div className="flex flex-col gap-4 px-4">
             <strong className="text-lg font-medium">Series</strong>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] justify-between gap-x-4 gap-y-4 lg:grid-cols-[repeat(auto-fill,160px)]">
-              {character.media.map((media) =>
-                media.type == 'ANIME' ? (
-                  <Link key={media.id} to={`/anime/${media.id}`}>
-                    <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
-                      <img
-                        src={media.cover ?? undefined}
-                        alt={media.title}
-                        loading="lazy"
-                        style={{
-                          opacity: 0,
-                          aspectRatio: '6/9',
-                          objectFit: 'cover',
-                          width: '100%',
-                          transitionDuration: '700ms',
-                        }}
-                        onLoad={(t) => {
-                          t.currentTarget.style.opacity = '1'
-                        }}
-                        className="rounded shadow-lg shadow-black/20"
-                      />
-                    </div>
-
-                    <span className="mt-2 line-clamp-2 min-h-[20px] text-sm font-medium">
-                      {media.title}
-                    </span>
-                  </Link>
-                ) : (
-                  <div key={media.id}>
-                    <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
-                      <img
-                        src={media.cover ?? undefined}
-                        alt={media.title}
-                        loading="lazy"
-                        style={{
-                          opacity: 0,
-                          aspectRatio: '6/9',
-                          objectFit: 'cover',
-                          width: '100%',
-                          transitionDuration: '700ms',
-                        }}
-                        onLoad={(t) => {
-                          t.currentTarget.style.opacity = '1'
-                        }}
-                        className="rounded shadow-lg shadow-black/20"
-                      />
-                    </div>
-
-                    <span className="mt-2 line-clamp-2 min-h-[20px] text-sm font-medium">
-                      {media.title}
-                    </span>
-                  </div>
-                )
-              )}
+              {character.media.map((media) => (
+                <MediaCard
+                  key={media.id}
+                  to={media.type === 'ANIME' ? `/anime/${media.id}` : undefined}
+                >
+                  <MediaCardCover src={media.cover} alt={media.title} />
+                  <MediaCardTitle>{media.title}</MediaCardTitle>
+                </MediaCard>
+              ))}
             </div>
           </div>
         </div>

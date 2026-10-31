@@ -1,4 +1,6 @@
 import { Link, useParams } from 'react-router'
+import { MediaCard, MediaCardBadge, MediaCardCover, MediaCardTitle } from '@/components/media-card'
+import { Image } from '@/components/image'
 import { Heart } from '@phosphor-icons/react'
 import { CollapseParagraph } from '@/components/collapse-paragraph'
 import { DefaultLoading as Loading } from '@/components/loading'
@@ -27,15 +29,9 @@ export function StaffPage() {
               <div className="mx-auto flex max-w-5xl flex-col md:flex-row">
                 <div className="flex flex-col-reverse gap-2 md:flex-col">
                   <div className="mx-auto min-w-max">
-                    <img
-                      src={staff.image ?? undefined}
+                    <Image
+                      src={staff.image}
                       alt={staff.name}
-                      loading="lazy"
-                      style={{
-                        opacity: 0,
-                        transitionDuration: '700ms',
-                      }}
-                      onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                       className="w-56 rounded-2xl shadow-lg"
                     />
                   </div>
@@ -142,18 +138,10 @@ function StaffCharacters({ staff }: { staff: StaffView }) {
                 <div className="flex items-center gap-2">
                   <div className="overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300 shadow-md shadow-black/20">
                     <Link to={`/character/${character.id}`}>
-                      <img
-                        src={character.image ?? undefined}
+                      <Image
+                        src={character.image}
                         alt={character.name}
                         className="h-24 w-24 object-cover md:h-28 md:w-28"
-                        loading="lazy"
-                        style={{
-                          opacity: 0,
-                          transitionDuration: '700ms',
-                        }}
-                        onLoad={(t) => {
-                          t.currentTarget.style.opacity = '1'
-                        }}
                       />
                     </Link>
                   </div>
@@ -168,40 +156,16 @@ function StaffCharacters({ staff }: { staff: StaffView }) {
 
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] justify-between gap-x-4 gap-y-8 md:grid-cols-[repeat(auto-fill,176px)]">
                   {character.media.map((media) => (
-                    <Link key={media.id} to={`/anime/${media.id}`}>
-                      <div className="rounded">
-                        <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
-                          <img
-                            src={media.cover ?? undefined}
-                            alt={media.title}
-                            loading="lazy"
-                            style={{
-                              opacity: 0,
-                              aspectRatio: '6/9',
-                              objectFit: 'cover',
-                              width: '100%',
-                              transitionDuration: '700ms',
-                            }}
-                            onLoad={(t) => {
-                              t.currentTarget.style.opacity = '1'
-                            }}
-                            className="rounded shadow-lg shadow-black/20"
-                          />
-                        </div>
-
-                        <div className="top-0 right-0 left-0 flex items-center pt-2">
-                          <span className="text-main text-sm">
-                            {media.format ? media.format.replace(/_/g, ' ') : ''}
-                          </span>
-                        </div>
-
-                        <div className="right-0 bottom-0 left-0 flex items-center">
-                          <span className="line-clamp-2 min-h-[20px] text-sm font-medium">
-                            {media.title}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
+                    <MediaCard key={media.id} to={`/anime/${media.id}`}>
+                      <MediaCardCover src={media.cover} alt={media.title}>
+                        {media.format && (
+                          <MediaCardBadge position="top-right">
+                            {media.format.replace(/_/g, ' ')}
+                          </MediaCardBadge>
+                        )}
+                      </MediaCardCover>
+                      <MediaCardTitle>{media.title}</MediaCardTitle>
+                    </MediaCard>
                   ))}
                 </div>
               </div>
@@ -244,46 +208,25 @@ function StaffMediaRoles({ staff }: { staff: StaffView }) {
             {sortByStartDateDesc(groupStaffMediaRoles(roles)).map((role) => {
               const { id, cover, startDate, title } = role
               return (
-                <Link to={`/anime/${id}`} key={id}>
-                  <div className="flex flex-col gap-2">
-                    <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
-                      <img
-                        src={cover ?? undefined}
-                        alt={title}
-                        loading="lazy"
-                        style={{
-                          opacity: 0,
-                          aspectRatio: '6/9',
-                          objectFit: 'cover',
-                          width: '100%',
-                          transitionDuration: '700ms',
-                        }}
-                        onLoad={(t) => {
-                          t.currentTarget.style.opacity = '1'
-                        }}
-                        className="rounded shadow-md shadow-black/20"
-                      />
-                    </div>
+                <MediaCard key={id} to={`/anime/${id}`}>
+                  <MediaCardCover src={cover} alt={title}>
+                    {startDate.year && (
+                      <MediaCardBadge position="top-left">{startDate.year}</MediaCardBadge>
+                    )}
+                  </MediaCardCover>
 
-                    <div className="flex flex-col gap-1">
-                      <span className="text-md font-medium text-sky-400">{startDate.year}</span>
+                  <MediaCardTitle>{title}</MediaCardTitle>
 
-                      <span className="text-main line-clamp-2 text-xs font-medium">{title}</span>
-
-                      <div className="flex flex-col gap-1">
-                        {role.staffRoles.map((staffRole, index) => (
-                          <span
-                            key={index}
-                            className="line-clamp-1 text-xs font-medium"
-                            title={staffRole}
-                          >
-                            {staffRole}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                  {role.staffRoles.map((staffRole, index) => (
+                    <span
+                      key={index}
+                      className="text-main line-clamp-1 text-xs font-medium"
+                      title={staffRole}
+                    >
+                      {staffRole}
+                    </span>
+                  ))}
+                </MediaCard>
               )
             })}
           </div>

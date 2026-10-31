@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { Image } from '@/components/image'
 import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
 import * as HoverCard from '@radix-ui/react-hover-card'
 import type { MediaCoverCardData } from './media-cover-card-fragment'
@@ -19,16 +20,10 @@ export function MediaCoverCard({ anime }: TCoverCardProps) {
         <Link to={`/anime/${id}`}>
           <div className="group flex h-full cursor-pointer flex-col">
             <div className="relative overflow-hidden rounded-t-lg shadow-md">
-              <img
-                src={cover ?? undefined}
+              <Image
+                src={cover}
                 alt={title}
                 className="aspect-[6/9] h-full w-full object-cover object-center"
-                loading="lazy"
-                style={{
-                  opacity: 0,
-                  transitionDuration: '600ms',
-                }}
-                onLoad={(t) => (t.currentTarget.style.opacity = '1')}
               />
             </div>
 

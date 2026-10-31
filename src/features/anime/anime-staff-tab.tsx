@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Image } from '@/components/image'
 import { Link } from 'react-router'
 import { Subtitle } from '@/components/subtitle'
 import { LoadMoreTrigger } from '@/components/load-more-trigger'
@@ -38,14 +39,9 @@ export function AnimeStaffTab() {
             <div className="flex flex-1">
               {member.image && (
                 <Link to={`/staff/${member.id}`}>
-                  <img
+                  <Image
                     src={member.image}
                     alt={member.name}
-                    style={{
-                      opacity: 0,
-                      transitionDuration: '700ms',
-                    }}
-                    onLoad={(t) => (t.currentTarget.style.opacity = '1')}
                     className="h-full w-28 object-cover md:w-32"
                   />
                 </Link>

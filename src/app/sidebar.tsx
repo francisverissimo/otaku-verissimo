@@ -1,44 +1,32 @@
-import { Link, useLocation } from 'react-router'
-import { HouseSimple, SignIn, Video } from '@phosphor-icons/react'
-import { useAuth } from '@/features/auth/use-auth'
+import { Link } from 'react-router'
+import { SignIn } from '@phosphor-icons/react'
 import { ANILIST_AUTH_URL } from '@/lib/access-token'
+import { PROFILE_PATH, useDashboardNav } from './nav-items'
 import logo from '@/assets/logo-short.svg'
 
+const tooltipClass =
+  'bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block'
+
 export function Sidebar() {
-  const { pathname } = useLocation()
-  const { user } = useAuth()
-  const active = pathname === '/list' ? 'anime-list' : pathname === '/profile' ? 'profile' : '/'
+  const { user, items, isActive } = useDashboardNav()
 
   return (
     <div className="bg-darkTxt/5 fixed z-40 hidden h-screen w-14 flex-col items-center justify-center backdrop-blur md:flex">
       <img src={logo} alt="ov logo" className="w-10 pt-4" />
 
       <div className="flex flex-1 flex-col items-center justify-center gap-4">
-        <Link
-          to="/"
-          title="Home"
-          data-active={active === '/'}
-          className="group data-[active=true]:text-main relative flex h-14 cursor-pointer items-center justify-center gap-1 p-2"
-        >
-          <HouseSimple size={24} weight={active === '/' ? 'fill' : 'regular'} />
-          <span className="bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block">
-            Home
-          </span>
-        </Link>
-
-        {user && (
+        {items.map(({ to, label, title, icon: NavIcon }) => (
           <Link
-            title="My Anime List"
-            to="/list"
-            data-active={active === 'anime-list'}
+            key={to}
+            to={to}
+            title={title}
+            data-active={isActive(to)}
             className="group data-[active=true]:text-main relative flex h-14 cursor-pointer items-center justify-center gap-1 p-2 whitespace-nowrap"
           >
-            <Video size={24} weight={active === 'anime-list' ? 'fill' : 'regular'} />
-            <span className="bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block">
-              Anime List
-            </span>
+            <NavIcon size={24} weight={isActive(to) ? 'fill' : 'regular'} />
+            <span className={tooltipClass}>{label}</span>
           </Link>
-        )}
+        ))}
 
         {user === null && (
           <a
@@ -56,8 +44,8 @@ export function Sidebar() {
         {user && (
           <Link
             title="My profile"
-            data-active={active === 'profile'}
-            to="/profile"
+            data-active={isActive(PROFILE_PATH)}
+            to={PROFILE_PATH}
             className="group data-[active=true]:ring-main data-[active=true]:text-main relative flex aspect-square h-14 cursor-pointer items-center justify-center rounded-full ring"
           >
             <img
@@ -65,9 +53,7 @@ export function Sidebar() {
               alt="avatar image user"
               className="w-full rounded-full"
             />
-            <span className="bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block">
-              Profile
-            </span>
+            <span className={tooltipClass}>Profile</span>
           </Link>
         )}
       </div>
