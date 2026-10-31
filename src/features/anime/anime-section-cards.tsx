@@ -1,14 +1,12 @@
-import { ReactNode } from "react";
-import { Swiper } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { ReactNode } from 'react'
+import { Swiper } from 'swiper/react'
+import { Pagination } from 'swiper/modules'
 
 type SwiperCoverCardsBellowProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
-export function SwiperCoverCardsBellow({
-  children,
-}: SwiperCoverCardsBellowProps) {
+export function SwiperCoverCardsBellow({ children }: SwiperCoverCardsBellowProps) {
   return (
     <div className="w-full">
       <Swiper
@@ -32,5 +30,5 @@ export function SwiperCoverCardsBellow({
         {children}
       </Swiper>
     </div>
-  );
+  )
 }

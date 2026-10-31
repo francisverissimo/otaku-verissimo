@@ -12,7 +12,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "codegen": "graphql-codegen --config codegen.ts",
-    "codegen:schema": "node scripts/download-schema.mjs"
+    "codegen:schema": "node scripts/download-schema.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

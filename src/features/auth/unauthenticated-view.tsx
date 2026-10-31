@@ -27,7 +27,7 @@ export function UnauthenticatedView() {
 
         <Link
           to="/"
-          className="mx-auto mt-4 flex w-fit items-center justify-center gap-2 rounded-lg p-2 text-xl text-main transition hover:bg-main/10 hover:text-main"
+          className="text-main hover:bg-main/10 hover:text-main mx-auto mt-4 flex w-fit items-center justify-center gap-2 rounded-lg p-2 text-xl transition"
         >
           <span className="text-zinc-200">or</span> back to home
           <HouseSimple weight="duotone" size={24} />

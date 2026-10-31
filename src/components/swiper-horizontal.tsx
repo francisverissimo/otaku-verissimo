@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
-import { Swiper } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { ReactNode } from 'react'
+import { Swiper } from 'swiper/react'
+import { Pagination } from 'swiper/modules'
 
 type TSwiperHorizontalProps = {
-  children: ReactNode[];
-};
+  children: ReactNode[]
+}
 
 export function SwiperHorizontal({ children }: TSwiperHorizontalProps) {
   return (
@@ -33,5 +33,5 @@ export function SwiperHorizontal({ children }: TSwiperHorizontalProps) {
         {children}
       </Swiper>
     </div>
-  );
+  )
 }

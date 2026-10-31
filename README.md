@@ -13,6 +13,7 @@ Site de animes e mangás com uma vasta biblioteca de títulos e informações so
 - **Vite 8**
 
 ## 🚀 Acesse o Projeto
+
 Você pode acessar o projeto online através do seguinte link:
 
 [**Clique aqui para acessar**](https://otakuverissimo.vercel.app/).
@@ -32,13 +33,14 @@ O login usa o fluxo OAuth implícito da AniList. Para testá-lo localmente, crie
 [anilist.co/settings/developer](https://anilist.co/settings/developer) com a redirect URL
 `http://localhost:9000` e use o ID dele em `VITE_ID_CLIENT`. As páginas públicas funcionam sem login.
 
-| Script | O que faz |
-| --- | --- |
-| `yarn dev` | servidor de desenvolvimento |
-| `yarn lint` | ESLint |
-| `yarn build` | checagem de tipos (`tsc`) e build de produção |
-| `yarn preview` | serve o build localmente |
-| `yarn codegen` | gera os tipos das queries em `src/gql/` |
+| Script                | O que faz                                            |
+| --------------------- | ---------------------------------------------------- |
+| `yarn dev`            | servidor de desenvolvimento                          |
+| `yarn lint`           | ESLint                                               |
+| `yarn format`         | formata o código com Prettier                        |
+| `yarn build`          | checagem de tipos (`tsc`) e build de produção        |
+| `yarn preview`        | serve o build localmente                             |
+| `yarn codegen`        | gera os tipos das queries em `src/gql/`              |
 | `yarn codegen:schema` | atualiza `schema.graphql` com a API atual da AniList |
 
 Mais detalhes em [`docs/architecture.md`](docs/architecture.md) e nas decisões em [`docs/adr/`](docs/adr/).
@@ -46,6 +48,7 @@ Mais detalhes em [`docs/architecture.md`](docs/architecture.md) e nas decisões 
 Variáveis `VITE_*` são embutidas no bundle e ficam visíveis no navegador. Nunca coloque segredos nelas.
 
 ## 📸 Capturas de Tela
+
 Aqui estão algumas capturas de tela do projeto em funcionamento:
 
 ![página inicial](.github/print-1.png)

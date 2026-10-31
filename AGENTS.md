@@ -17,12 +17,14 @@ nvm use          # Node 26
 yarn install
 yarn dev         # http://localhost:9000
 yarn lint
+yarn format      # Prettier em todo o repositório
 yarn build       # tsc + vite build
 yarn codegen     # regenera src/gql/ a partir das queries e de schema.graphql
 yarn codegen:schema  # baixa o schema atual da AniList
 ```
 
-Antes de dar uma tarefa por concluída, rode `yarn lint` e `yarn build`. Ambos devem passar sem erros.
+Antes de dar uma tarefa por concluída, rode `yarn lint`, `yarn format:check` e `yarn build`. Todos devem
+passar sem erros.
 Se você mudou alguma query ou fragment, rode `yarn codegen` antes e inclua `src/gql/` no commit.
 
 ## Estrutura

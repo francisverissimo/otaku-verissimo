@@ -21,12 +21,12 @@ export function AnimeTitle({ title }: TAnimeTitleProps) {
     <div className="flex flex-1 items-center gap-1">
       <span
         onClick={handleClick}
-        className="relative cursor-pointer pr-4 text-justify font-raleway text-lg text-second"
+        className="font-raleway text-second relative cursor-pointer pr-4 text-justify text-lg"
         title="click to copy"
       >
         {title}
 
-        <CopySimple className="absolute -right-3 -top-1 h-6 w-6 cursor-pointer rounded-full bg-main/80 p-1 text-[20px] text-zinc-50 duration-500" />
+        <CopySimple className="bg-main/80 absolute -top-1 -right-3 h-6 w-6 cursor-pointer rounded-full p-1 text-[20px] text-zinc-50 duration-500" />
       </span>
     </div>
   )
