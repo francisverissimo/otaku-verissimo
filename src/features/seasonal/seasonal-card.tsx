@@ -3,7 +3,7 @@ import { CircleNotch, Heart, ListPlus, Star, UsersThree } from '@phosphor-icons/
 import { Image } from '@/components/image'
 import { getContrastSafeColor } from '@/lib/get-contrast-safe-color'
 import type { SeasonalMedia } from './seasonal-queries'
-import { LIST_STATUS_COLORS, LIST_STATUS_LABELS } from './seasonal-utils'
+import { LIST_STATUS_COLORS, LIST_STATUS_LABELS } from '@/lib/list-status'
 
 type SeasonalCardProps = {
   media: SeasonalMedia

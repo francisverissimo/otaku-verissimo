@@ -93,7 +93,7 @@ const MAX_PAGES = 10
 
 /** Genres are filtered on the client, so they are not part of the key. */
 const seasonalKey = (filters: SeasonalFilters, userId: number | null) =>
-  ['seasonal', toQueryVariables(filters, userId != null), userId] as const
+  [...queryKeys.seasonal, toQueryVariables(filters, userId != null), userId] as const
 
 /**
  * Loads every anime of the season, page after page, so the list can be grouped by format and
@@ -138,6 +138,7 @@ export function useAddToPlanning(filters: SeasonalFilters, userId: number) {
         media ? setListEntry(media, mediaId, { id: entry.id, status: entry.status }) : media
       )
       queryClient.invalidateQueries({ queryKey: queryKeys.mediaList(userId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.animeListEntries })
     },
   })
 }

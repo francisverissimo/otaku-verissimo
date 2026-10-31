@@ -13,6 +13,16 @@ export type CharacterRole =
   /** A supporting character role in the media */
   | 'SUPPORTING';
 
+/** Date object that allows for incomplete date values (fuzzy) */
+export type FuzzyDateInput = {
+  /** Numeric Day (24) */
+  day?: number | null | undefined;
+  /** Numeric Month (3) */
+  month?: number | null | undefined;
+  /** Numeric Year (2017) */
+  year?: number | null | undefined;
+};
+
 /** The format the media was released in */
 export type MediaFormat =
   /** Professionally published manga with more than one chapter */
@@ -185,6 +195,19 @@ export type MediaType =
   /** Asian comic */
   | 'MANGA';
 
+/** Media list scoring type */
+export type ScoreFormat =
+  /** An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :) */
+  | 'POINT_3'
+  /** An integer from 0-5. Should be represented in Stars */
+  | 'POINT_5'
+  /** An integer from 0-10 */
+  | 'POINT_10'
+  /** A float from 0-10 with 1 decimal place */
+  | 'POINT_10_DECIMAL'
+  /** An integer from 0-100 */
+  | 'POINT_100';
+
 export type MediaCoverCardFragment = { id: number, genres: Array<string | null> | null, episodes: number | null, averageScore: number | null, format: MediaFormat | null, season: MediaSeason | null, seasonYear: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null, color: string | null } | null, studios: { nodes: Array<{ id: number, name: string } | null> | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null };
 
 export type MediaListCollectionQueryVariables = Exact<{
@@ -202,6 +225,37 @@ export type SaveMediaListEntryMutationVariables = Exact<{
 
 
 export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, status: MediaListStatus | null, progress: number | null } | null };
+
+export type AnimeListEntryFieldsFragment = { id: number, status: MediaListStatus | null, progress: number | null, score: number | null, repeat: number | null, notes: string | null, private: boolean | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null };
+
+export type AnimeListEntryQueryVariables = Exact<{
+  mediaId?: number | null | undefined;
+}>;
+
+
+export type AnimeListEntryQuery = { Viewer: { mediaListOptions: { scoreFormat: ScoreFormat | null } | null } | null, Media: { mediaListEntry: { id: number, status: MediaListStatus | null, progress: number | null, score: number | null, repeat: number | null, notes: string | null, private: boolean | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null } | null } | null };
+
+export type SaveAnimeListEntryMutationVariables = Exact<{
+  mediaId?: number | null | undefined;
+  status?: MediaListStatus | null | undefined;
+  progress?: number | null | undefined;
+  score?: number | null | undefined;
+  repeat?: number | null | undefined;
+  notes?: string | null | undefined;
+  private?: boolean | null | undefined;
+  startedAt?: FuzzyDateInput | null | undefined;
+  completedAt?: FuzzyDateInput | null | undefined;
+}>;
+
+
+export type SaveAnimeListEntryMutation = { SaveMediaListEntry: { id: number, status: MediaListStatus | null, progress: number | null, score: number | null, repeat: number | null, notes: string | null, private: boolean | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null } | null };
+
+export type DeleteAnimeListEntryMutationVariables = Exact<{
+  id?: number | null | undefined;
+}>;
+
+
+export type DeleteAnimeListEntryMutation = { DeleteMediaListEntry: { deleted: boolean | null } | null };
 
 export type AnimeCharacterEdgeFragment = { role: CharacterRole | null, node: { id: number, name: { full: string | null } | null, image: { medium: string | null } | null } | null, voiceActorRoles: Array<{ roleNotes: string | null, voiceActor: { id: number, name: { full: string | null } | null, image: { medium: string | null } | null } | null } | null> | null };
 
@@ -352,6 +406,27 @@ export const MediaCoverCardFragmentDoc = new TypedDocumentString(`
   }
 }
     `, {"fragmentName":"MediaCoverCard"}) as unknown as TypedDocumentString<MediaCoverCardFragment, unknown>;
+export const AnimeListEntryFieldsFragmentDoc = new TypedDocumentString(`
+    fragment AnimeListEntryFields on MediaList {
+  id
+  status
+  progress
+  score
+  repeat
+  notes
+  private
+  startedAt {
+    year
+    month
+    day
+  }
+  completedAt {
+    year
+    month
+    day
+  }
+}
+    `, {"fragmentName":"AnimeListEntryFields"}) as unknown as TypedDocumentString<AnimeListEntryFieldsFragment, unknown>;
 export const AnimeCharacterEdgeFragmentDoc = new TypedDocumentString(`
     fragment AnimeCharacterEdge on CharacterEdge {
   role
@@ -477,6 +552,80 @@ export const SaveMediaListEntryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<SaveMediaListEntryMutation, SaveMediaListEntryMutationVariables>;
+export const AnimeListEntryDocument = new TypedDocumentString(`
+    query AnimeListEntry($mediaId: Int) {
+  Viewer {
+    mediaListOptions {
+      scoreFormat
+    }
+  }
+  Media(id: $mediaId, type: ANIME) {
+    mediaListEntry {
+      ...AnimeListEntryFields
+    }
+  }
+}
+    fragment AnimeListEntryFields on MediaList {
+  id
+  status
+  progress
+  score
+  repeat
+  notes
+  private
+  startedAt {
+    year
+    month
+    day
+  }
+  completedAt {
+    year
+    month
+    day
+  }
+}`) as unknown as TypedDocumentString<AnimeListEntryQuery, AnimeListEntryQueryVariables>;
+export const SaveAnimeListEntryDocument = new TypedDocumentString(`
+    mutation SaveAnimeListEntry($mediaId: Int, $status: MediaListStatus, $progress: Int, $score: Float, $repeat: Int, $notes: String, $private: Boolean, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) {
+  SaveMediaListEntry(
+    mediaId: $mediaId
+    status: $status
+    progress: $progress
+    score: $score
+    repeat: $repeat
+    notes: $notes
+    private: $private
+    startedAt: $startedAt
+    completedAt: $completedAt
+  ) {
+    ...AnimeListEntryFields
+  }
+}
+    fragment AnimeListEntryFields on MediaList {
+  id
+  status
+  progress
+  score
+  repeat
+  notes
+  private
+  startedAt {
+    year
+    month
+    day
+  }
+  completedAt {
+    year
+    month
+    day
+  }
+}`) as unknown as TypedDocumentString<SaveAnimeListEntryMutation, SaveAnimeListEntryMutationVariables>;
+export const DeleteAnimeListEntryDocument = new TypedDocumentString(`
+    mutation DeleteAnimeListEntry($id: Int) {
+  DeleteMediaListEntry(id: $id) {
+    deleted
+  }
+}
+    `) as unknown as TypedDocumentString<DeleteAnimeListEntryMutation, DeleteAnimeListEntryMutationVariables>;
 export const AnimeDocument = new TypedDocumentString(`
     query Anime($id: Int) {
   Media(id: $id, type: ANIME) {
