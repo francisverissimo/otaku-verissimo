@@ -1,5 +1,4 @@
 import { Link, useSearchParams } from 'react-router'
-import { GET_SEARCH_QUERY } from '@/lib/queries/search-query'
 import { InputSearch } from './search-fields'
 import { ResultsList } from './search-results-list'
 import shortLogo from '@/assets/logo-short.svg'
@@ -26,16 +25,7 @@ export function Search() {
         <InputSearch initialValue={searchTerm} onSearch={handleSearch} />
       </div>
 
-      <ResultsList
-        query={GET_SEARCH_QUERY}
-        variables={{
-          perPage: 40,
-          page: 1,
-          ...(searchTerm && { search: searchTerm }),
-          sort: 'POPULARITY_DESC',
-          isAdult: false,
-        }}
-      />
+      <ResultsList search={searchTerm} />
     </>
   )
 }

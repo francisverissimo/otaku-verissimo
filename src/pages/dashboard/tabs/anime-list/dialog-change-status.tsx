@@ -1,16 +1,17 @@
 import { Ref, useState, useImperativeHandle } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
+import type { MediaListStatus } from '@/gql/graphql'
 
 export type TDialogChangeStatusHandle = {
   handleDialog: (data: TDialogState) => void
 }
 
-type TDialogState = { open: boolean; status: string } | null
+type TDialogState = { open: boolean; status: MediaListStatus } | null
 
 type TDialogChangeStatusProps = {
   ref: Ref<TDialogChangeStatusHandle>
   onClickStay: () => void
-  onClickMove: (status: string) => void
+  onClickMove: (status: MediaListStatus) => void
   onClickCancel: () => void
 }
 

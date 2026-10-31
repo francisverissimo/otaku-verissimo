@@ -1,9 +1,9 @@
 import { Subtitle } from '@/components/subtitle'
-import { MediaTag } from '@/types/t-media'
+import type { AnimeView } from './anime-queries'
 import { useState } from 'react'
 
 interface TAnimeTagsProps {
-  tags: MediaTag[]
+  tags: AnimeView['tags']
 }
 
 export function AnimeTags({ tags }: TAnimeTagsProps) {

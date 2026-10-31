@@ -1,65 +1,39 @@
 import { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
 import { Link } from 'react-router'
-import { GET_PAGE_MEDIA_QUERY } from '@/lib/queries/page-media-query'
 import { seasonHandler as season } from '@/utils/season-handler'
 import { DefaultLoading as Loading } from '@/components/loading'
-import { TPageMediaResultQuery } from '@/types/t-page-media'
 import { MagnifyingGlass } from '@phosphor-icons/react'
 import { HomeListingSection } from './home-listing-section'
+import { useHomeMediaPage } from './home-queries'
 import shortLogo from '@/assets/logo-short.svg'
 
 export function Home() {
-  const {
-    data: trendingData,
-    loading: trendingLoading,
-    error: trendingError,
-  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
-    variables: { perPage: 10, sort: 'TRENDING_DESC' },
+  const trending = useHomeMediaPage({ sort: 'TRENDING_DESC' })
+  const thisSeason = useHomeMediaPage({
+    season: season.getCurrentSeason(),
+    seasonYear: season.getCurrentYear(),
+    sort: 'POPULARITY_DESC',
+  })
+  const nextSeason = useHomeMediaPage({
+    season: season.getNextSeason(),
+    seasonYear: season.getNextYear(),
+    sort: 'POPULARITY_DESC',
   })
 
-  const {
-    data: thisSeasonData,
-    loading: thisSeasonLoading,
-    error: thisSeasonError,
-  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
-    variables: {
-      perPage: 10,
-      season: season.getCurrentSeason(),
-      seasonYear: season.getCurrentYear(),
-      sort: 'POPULARITY_DESC',
-    },
-  })
-
-  const {
-    data: nextSeasonData,
-    loading: nextSeasonLoading,
-    error: nextSeasonError,
-  } = useQuery<TPageMediaResultQuery>(GET_PAGE_MEDIA_QUERY, {
-    variables: {
-      perPage: 10,
-      season: season.getNextSeason(),
-      seasonYear: season.getNextYear(),
-      sort: 'POPULARITY_DESC',
-    },
-  })
-
-  const isLoading = trendingLoading || thisSeasonLoading || nextSeasonLoading
-  const hasError = trendingError || thisSeasonError || nextSeasonError
+  const isLoading = trending.isPending || thisSeason.isPending || nextSeason.isPending
+  const hasError = trending.isError || thisSeason.isError || nextSeason.isError
+  const bannerImage = trending.data?.find((media) => media.bannerImage)?.bannerImage
 
   useEffect(() => {
-    if (trendingData) {
-      const animeTrending = trendingData.Page.media.find((media) => media.bannerImage)
+    // #homeBgTrending only exists once every section has loaded.
+    const homeElement = document.getElementById('homeBgTrending')
 
-      const homeElement = document.getElementById('homeBgTrending')
-
-      if (homeElement && animeTrending) {
-        homeElement.style.backgroundImage = `url(${animeTrending.bannerImage})`
-        homeElement.style.transform = 'scale(1)'
-        homeElement.style.opacity = '0.3'
-      }
+    if (homeElement && bannerImage) {
+      homeElement.style.backgroundImage = `url(${bannerImage})`
+      homeElement.style.transform = 'scale(1)'
+      homeElement.style.opacity = '0.3'
     }
-  }, [trendingData, thisSeasonData, nextSeasonData])
+  }, [bannerImage, isLoading])
 
   if (isLoading) {
     return <Loading />
@@ -67,7 +41,7 @@ export function Home() {
 
   if (hasError) {
     return (
-      <strong className="flex w-full items-center justify-center p-4 text-2xl font-medium uppercase italic text-red-300">
+      <strong className="flex w-full items-center justify-center p-4 text-2xl font-medium text-red-300 uppercase italic">
         Error occurred
       </strong>
     )
@@ -83,39 +57,18 @@ export function Home() {
           className="flex h-full cursor-pointer items-center justify-center gap-1 p-4 transition hover:brightness-125"
           to="/search"
         >
-          <span className="text-lg uppercase text-main">search for some anime</span>
-          <MagnifyingGlass size={24} className="rotate-90 text-main" />
+          <span className="text-main text-lg uppercase">search for some anime</span>
+          <MagnifyingGlass size={24} className="text-main rotate-90" />
         </Link>
       </div>
 
-      {/* {isLocalHost && (
-        <>
-          <button
-            onClick={() => window.parent.postMessage("uma mensagem para você", "*")}
-            className="my-4"
-          >
-            WindowParentPostMessage
-          </button>
-
-          <button
-            onClick={handleLoginWithAniList}
-            className="my-4 text-yellow-300"
-          >
-            windowAddEventListenerMessage
-          </button>
-        </>
-      )} */}
-
-      {trendingData && thisSeasonData && nextSeasonData && (
+      {trending.data && thisSeason.data && nextSeason.data && (
         <div className="w-full">
-          <HomeListingSection title="trending now" mediasArray={trendingData.Page.media} />
+          <HomeListingSection title="trending now" mediasArray={trending.data} />
 
-          <HomeListingSection title="popular this season" mediasArray={thisSeasonData.Page.media} />
+          <HomeListingSection title="popular this season" mediasArray={thisSeason.data} />
 
-          <HomeListingSection
-            title="upcoming next season"
-            mediasArray={nextSeasonData.Page.media}
-          />
+          <HomeListingSection title="upcoming next season" mediasArray={nextSeason.data} />
         </div>
       )}
 

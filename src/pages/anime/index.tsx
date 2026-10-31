@@ -1,44 +1,37 @@
 import { useParams } from 'react-router'
-import { useQuery } from '@apollo/client'
 import { Heart, Star } from '@phosphor-icons/react'
-import { GET_MEDIA_QUERY } from '@/lib/queries/media-query'
 import { DefaultLoading as Loading } from '@/components/loading'
 import { ErrorFallback } from '@/components/error-fallback'
 import { Footer } from '@/components/footer'
 import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
-import { TMediaResultQuery } from '@/types/t-media'
 import { AnimeHeader as Header } from './anime-header'
 import { AnimeContent } from './anime-content'
+import { useAnime } from './anime-queries'
 
 export function Anime() {
   const { id } = useParams() as { id: string }
 
-  const { data, error, loading, refetch } = useQuery<TMediaResultQuery>(GET_MEDIA_QUERY, {
-    variables: { id },
-  })
+  const { data: anime, error, isPending, refetch } = useAnime(Number(id))
 
   if (error) {
     return <ErrorFallback error={error} onRetry={refetch} />
   }
 
-  if (loading || !data) {
+  if (isPending || !anime) {
     return <Loading />
   }
 
-  const anime = data.Media
-  const safeColor = getContrastSafeColor(anime.coverImage.color)
-
-  const isToBeAnnounced = !anime.startDate.day && !anime.startDate.month && !anime.startDate.year
+  const safeColor = getContrastSafeColor(anime.color)
 
   return (
     <div className="flex min-h-screen flex-col">
       <>
         <Header />
 
-        {anime.bannerImage ? (
+        {anime.banner ? (
           <div className="relative">
             <img
-              src={anime.bannerImage}
+              src={anime.banner}
               className="h-80 w-full object-cover object-center md:h-96"
               alt="anime banner image"
               loading="lazy"
@@ -59,11 +52,11 @@ export function Anime() {
           <div className="flex flex-col gap-2 px-4">
             <div
               className={`z-10 aspect-[6/9] w-48 place-self-center overflow-hidden rounded-lg shadow-lg md:w-56 ${
-                anime.bannerImage && '-mt-40 md:-mt-36'
+                anime.banner && '-mt-40 md:-mt-36'
               }`}
             >
               <img
-                src={anime.coverImage.large}
+                src={anime.cover ?? undefined}
                 alt={anime.title.userPreferred}
                 className="h-full w-full"
                 loading="lazy"
@@ -100,7 +93,7 @@ export function Anime() {
               {anime.title.userPreferred}
             </h1>
 
-            {isToBeAnnounced && <span className="peer">To Be Announced</span>}
+            {anime.isToBeAnnounced && <span className="peer">To Be Announced</span>}
 
             <div className="flex items-center gap-4">
               {anime.seasonYear && (

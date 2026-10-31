@@ -1,11 +1,14 @@
-import { TStoredViewer } from '@/types/t-viewer'
+import { graphql } from '@/gql'
+import type { ViewerQuery as ViewerQueryResult } from '@/gql/graphql'
+import { execute } from '@/lib/graphql-client'
+import { compact } from '@/utils/compact'
 import { consumeTokenFromUrl, getStoredToken } from './token'
 
 const VIEWER_KEY = 'viewer'
 const VIEWER_MAX_AGE_MS = 60 * 60 * 1000
 
-const GET_VIEWER = `
-  query ViewerQuery {
+const ViewerQuery = graphql(`
+  query Viewer {
     Viewer {
       id
       name
@@ -19,32 +22,43 @@ const GET_VIEWER = `
       }
     }
   }
-`
+`)
 
-async function fetchViewer(token: string): Promise<TStoredViewer | undefined> {
+/** The shape is also what gets persisted in localStorage, so keep it backwards compatible. */
+export type TViewer = {
+  id: number
+  name: string
+  avatar: { medium: string | null }
+  mediaListOptions: { animeList: { sectionOrder: string[] } }
+}
+
+type TStoredViewer = TViewer & {
+  lastAccess: number /** Date.now() */
+}
+
+function toViewer(data: ViewerQueryResult): TViewer | undefined {
+  const viewer = data.Viewer
+  if (!viewer) return undefined
+
+  return {
+    id: viewer.id,
+    name: viewer.name,
+    avatar: { medium: viewer.avatar?.medium ?? null },
+    mediaListOptions: {
+      animeList: { sectionOrder: compact(viewer.mediaListOptions?.animeList?.sectionOrder) },
+    },
+  }
+}
+
+async function fetchViewer(): Promise<TStoredViewer | undefined> {
   try {
-    const response = await fetch('https://graphql.anilist.co', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: GET_VIEWER }),
-    })
+    const viewer = toViewer(await execute(ViewerQuery, undefined, { auth: true }))
+    if (!viewer) return undefined
 
-    if (!response.ok) {
-      throw new Error(`Error on request Viewer: ${response.status}`)
-    }
+    const storedViewer = { ...viewer, lastAccess: Date.now() }
+    localStorage.setItem(VIEWER_KEY, JSON.stringify(storedViewer))
 
-    const data = await response.json()
-    const viewer = {
-      ...data.data.Viewer,
-      lastAccess: Date.now(),
-    } as TStoredViewer
-
-    localStorage.setItem(VIEWER_KEY, JSON.stringify(viewer))
-
-    return viewer
+    return storedViewer
   } catch (error) {
     console.error('Error on request Viewer:', error)
     return undefined
@@ -65,10 +79,8 @@ export function clearStoredViewer() {
  * cached viewer is reused for up to an hour before being refreshed.
  */
 export async function resolveViewer(): Promise<TStoredViewer | undefined> {
-  const urlToken = consumeTokenFromUrl()
-
-  if (urlToken) {
-    return fetchViewer(urlToken)
+  if (consumeTokenFromUrl()) {
+    return fetchViewer()
   }
 
   const token = getStoredToken()
@@ -77,7 +89,7 @@ export async function resolveViewer(): Promise<TStoredViewer | undefined> {
   if (!token || !storedViewer) return undefined
 
   if (Date.now() - storedViewer.lastAccess > VIEWER_MAX_AGE_MS) {
-    return fetchViewer(token)
+    return fetchViewer()
   }
 
   return storedViewer

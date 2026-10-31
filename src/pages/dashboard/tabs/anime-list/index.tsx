@@ -1,8 +1,8 @@
 import { useAuth } from '@/hooks/use-auth'
-import { TViewer } from '@/types/t-viewer'
+import type { TViewer } from '@/auth/viewer'
 import { AnimeListHeader } from './anime-list-header'
 import { UnauthenticatedView } from '@/components/unauthenticated-view'
-import { useMediaListCollection } from './use-media-list-collection'
+import { useMediaListCollection } from './anime-list-queries'
 import { AnimeListContent } from './anime-list-content'
 import logo from '@/assets/logo-short.svg'
 
@@ -15,9 +15,12 @@ export function AnimeList() {
 }
 
 function AuthenticatedAnimeList({ user }: { user: TViewer }) {
-  const { data, loading } = useMediaListCollection(user)
+  const { data, isPending } = useMediaListCollection(
+    user.id,
+    user.mediaListOptions.animeList.sectionOrder
+  )
 
-  if (loading) {
+  if (isPending) {
     return (
       <div className="my-auto items-center justify-center saturate-50">
         <img src={logo} alt="ov logo" className="w-32 animate-bounce opacity-25" />
@@ -37,7 +40,7 @@ function AuthenticatedAnimeList({ user }: { user: TViewer }) {
     <div className="w-full px-4 pt-14 pb-24">
       <AnimeListHeader />
 
-      <AnimeListContent data={data} />
+      <AnimeListContent data={data} userId={user.id} />
     </div>
   )
 }

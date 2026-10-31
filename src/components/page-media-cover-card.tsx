@@ -1,17 +1,17 @@
 import { Link } from 'react-router'
 import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
 import * as HoverCard from '@radix-ui/react-hover-card'
-import { TPageMedia } from '@/types/t-page-media'
+import type { MediaCoverCardData } from './media-cover-card-fragment'
 import { getContrastSafeColor } from '@/utils/get-contrast-safe-color'
 
 type TCoverCardProps = {
-  anime: TPageMedia
+  anime: MediaCoverCardData
 }
 
 export function PageMediaCoverCard({ anime }: TCoverCardProps) {
-  const { id, title, coverImage } = anime
+  const { id, title, cover, color } = anime
 
-  const safeColor = getContrastSafeColor(coverImage.color)
+  const safeColor = getContrastSafeColor(color)
 
   return (
     <HoverCard.Root key={id} openDelay={0} closeDelay={0}>
@@ -20,8 +20,8 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
           <div className="group flex h-full cursor-pointer flex-col">
             <div className="relative overflow-hidden rounded-t-lg shadow-md">
               <img
-                src={coverImage.large}
-                alt={title.userPreferred}
+                src={cover ?? undefined}
+                alt={title}
                 className="aspect-[6/9] h-full w-full object-cover object-center"
                 loading="lazy"
                 style={{
@@ -36,7 +36,7 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
               className="line-clamp-2 rounded-b-lg px-2 font-medium backdrop-blur-sm backdrop-brightness-50"
               style={{ color: safeColor }}
             >
-              {title.userPreferred}
+              {title}
             </span>
           </div>
         </Link>
@@ -57,11 +57,9 @@ export function PageMediaCoverCard({ anime }: TCoverCardProps) {
 }
 
 function CoverCardPopover({ anime }: TCoverCardProps) {
-  const { episodes, studios, averageScore, season, seasonYear, format, startDate, coverImage } =
-    anime
-  const genres = anime.genres.length > 3 ? anime.genres.slice(0, 3) : anime.genres
-  const isTBA = !startDate.year && !startDate.month && !startDate.day
-  const safeColor = getContrastSafeColor(coverImage.color)
+  const { episodes, studios, averageScore, season, year, format, isTBA, color } = anime
+  const genres = anime.genres.slice(0, 3)
+  const safeColor = getContrastSafeColor(color)
 
   return (
     <div className="bg-darkBG/80 flex w-72 flex-col gap-2 rounded-lg p-4 shadow-2xl backdrop-blur">
@@ -69,7 +67,7 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
         {!isTBA && (
           <div className="flex items-center justify-center gap-2">
             {season && <span className="peer text-sm font-medium">{season}</span>}
-            <span className="text-second text-sm font-medium">{seasonYear || startDate.year}</span>
+            <span className="text-second text-sm font-medium">{year}</span>
           </div>
         )}
 
@@ -90,15 +88,10 @@ function CoverCardPopover({ anime }: TCoverCardProps) {
 
       {isTBA && <span className="font-medium text-rose-600">TBA</span>}
 
-      {studios.nodes.length > 0 && (
-        <div>
-          {studios.nodes.map((studio, index, array) => (
-            <span key={index} className="text-sm font-medium" style={{ color: safeColor }}>
-              {studio.name}
-              {index != array.length - 1 && ', '}
-            </span>
-          ))}
-        </div>
+      {studios.length > 0 && (
+        <span className="text-sm font-medium" style={{ color: safeColor }}>
+          {studios.join(', ')}
+        </span>
       )}
 
       <div className="flex">

@@ -1,26 +1,15 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router'
-import { useQuery } from '@apollo/client'
 import { Heart } from '@phosphor-icons/react'
-import { GET_CHARACTER_QUERY } from '@/lib/queries/character-query'
 import { Footer } from '@/components/footer'
-import { CharacterModel } from '@/types'
 import { SwiperHorizontal } from '@/components/swiper-horizontal'
 import { SwiperSlide } from 'swiper/react'
+import { useCharacter } from './character-queries'
 
 export function Character() {
   const { id } = useParams() as { id: string }
 
-  const { data, error } = useQuery(GET_CHARACTER_QUERY, {
-    variables: { id },
-    notifyOnNetworkStatusChange: true,
-    onError(error) {
-      console.error(error)
-    },
-  })
-
-  const character: CharacterModel | undefined = data?.Character
-  const voiceActors = character?.media.edges[0]?.voiceActors ?? []
+  const { data: character, error } = useCharacter(Number(id))
 
   useEffect(() => {
     scrollTo({ top: 0 })
@@ -39,14 +28,14 @@ export function Character() {
       {character && (
         <div className="mx-auto mb-auto flex w-full max-w-5xl flex-col gap-2 py-4">
           <div className="flex flex-col items-center">
-            <strong className="text-2xl">{character.name.full}</strong>
-            <span>{character.name.native}</span>
+            <strong className="text-2xl">{character.name}</strong>
+            <span>{character.nativeName}</span>
           </div>
 
           <div className="min-h-[312px] place-self-center">
             <img
-              src={character.image.large}
-              alt={character.name.full}
+              src={character.image ?? undefined}
+              alt={character.name}
               loading="lazy"
               style={{
                 opacity: 0,
@@ -64,19 +53,19 @@ export function Character() {
             </div>
           )}
 
-          {voiceActors.length > 0 && (
+          {character.voiceActors.length > 0 && (
             <div className="flex flex-col gap-4 pb-4">
               <strong className="px-4 text-lg font-medium">Voices Actors</strong>
 
               <SwiperHorizontal>
-                {voiceActors.map((voiceActor) => (
+                {character.voiceActors.map((voiceActor) => (
                   <SwiperSlide key={voiceActor.id}>
                     <Link to={`/staff/${voiceActor.id}`}>
                       <div className="flex w-28 flex-col">
                         <div className="h-28 w-full overflow-hidden rounded-full bg-gradient-to-t from-zinc-600 via-zinc-400 to-zinc-300">
                           <img
-                            src={voiceActor.image.large}
-                            alt={voiceActor.name.full}
+                            src={voiceActor.image ?? undefined}
+                            alt={voiceActor.name}
                             className="h-28 w-full rounded-full object-cover shadow-lg shadow-black/10"
                             loading="lazy"
                             style={{
@@ -90,11 +79,11 @@ export function Character() {
                         </div>
 
                         <span className="mt-2 line-clamp-2 text-center font-medium">
-                          {voiceActor.name.full}
+                          {voiceActor.name}
                         </span>
 
                         <span className="text-main line-clamp-2 text-center font-medium">
-                          {voiceActor.languageV2}
+                          {voiceActor.language}
                         </span>
                       </div>
                     </Link>
@@ -107,13 +96,13 @@ export function Character() {
           <div className="flex flex-col gap-4 px-4">
             <strong className="text-lg font-medium">Series</strong>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] justify-between gap-x-4 gap-y-4 lg:grid-cols-[repeat(auto-fill,160px)]">
-              {character.media.edges.map((edge) =>
-                edge.node.type == 'ANIME' ? (
-                  <Link key={edge.node.id} to={`/anime/${edge.node.id}`}>
+              {character.media.map((media) =>
+                media.type == 'ANIME' ? (
+                  <Link key={media.id} to={`/anime/${media.id}`}>
                     <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
                       <img
-                        src={edge.node.coverImage.large}
-                        alt={edge.node.title.userPreferred}
+                        src={media.cover ?? undefined}
+                        alt={media.title}
                         loading="lazy"
                         style={{
                           opacity: 0,
@@ -130,15 +119,15 @@ export function Character() {
                     </div>
 
                     <span className="mt-2 line-clamp-2 min-h-[20px] text-sm font-medium">
-                      {edge.node.title.userPreferred}
+                      {media.title}
                     </span>
                   </Link>
                 ) : (
-                  <div key={edge.node.id}>
+                  <div key={media.id}>
                     <div className="rounded bg-gradient-to-t from-orange-700 via-orange-600 to-orange-500">
                       <img
-                        src={edge.node.coverImage.large}
-                        alt={edge.node.title.userPreferred}
+                        src={media.cover ?? undefined}
+                        alt={media.title}
                         loading="lazy"
                         style={{
                           opacity: 0,
@@ -155,7 +144,7 @@ export function Character() {
                     </div>
 
                     <span className="mt-2 line-clamp-2 min-h-[20px] text-sm font-medium">
-                      {edge.node.title.userPreferred}
+                      {media.title}
                     </span>
                   </div>
                 )

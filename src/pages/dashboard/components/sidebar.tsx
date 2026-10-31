@@ -65,7 +65,11 @@ export function Sidebar() {
             onClick={() => setSearchParams({ tabs: 'profile' })}
             className="group data-[active=true]:ring-main data-[active=true]:text-main relative flex aspect-square h-14 cursor-pointer items-center justify-center rounded-full ring"
           >
-            <img src={user.avatar.medium} alt="avatar image user" className="w-full rounded-full" />
+            <img
+              src={user.avatar.medium ?? undefined}
+              alt="avatar image user"
+              className="w-full rounded-full"
+            />
             <span className="bg-darkBG pointer-events-none absolute left-[100%] w-fit scale-75 rounded-full px-4 py-2 opacity-0 duration-100 group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 lg:block">
               Profile
             </span>

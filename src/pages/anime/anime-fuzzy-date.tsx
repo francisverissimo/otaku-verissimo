@@ -1,6 +1,6 @@
-import { TMedia } from '@/types/t-media'
+import type { FuzzyDate } from './anime-queries'
 
-type TAnimeFuzzyDateProps = { fuzzyDate: TMedia['startDate'] }
+type TAnimeFuzzyDateProps = { fuzzyDate: FuzzyDate }
 
 export function AnimeFuzzyDate({ fuzzyDate }: TAnimeFuzzyDateProps) {
   const { year, month, day } = fuzzyDate

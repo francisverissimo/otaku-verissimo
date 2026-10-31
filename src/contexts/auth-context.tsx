@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useCallback, useMemo, useState } from 'react'
-import { TViewer } from '@/types/t-viewer'
+import type { TViewer } from '@/auth/viewer'
 import { clearStoredToken } from '@/auth/token'
 import { clearStoredViewer } from '@/auth/viewer'
 

@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ApolloProvider } from '@apollo/client'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { AuthContextProvider } from './contexts/auth-context'
-import { client } from './lib/apollo'
+import { queryClient } from './lib/query-client'
 import { App } from './app'
 import { AnimeListContextProvider } from './pages/dashboard/tabs/anime-list/anime-list-context'
 import './index.css'
@@ -13,10 +13,10 @@ createRoot(document.getElementById('root') as HTMLElement).render(
     <AuthContextProvider>
       <AnimeListContextProvider
         children={
-          <ApolloProvider client={client}>
+          <QueryClientProvider client={queryClient}>
             <App />
             <Toaster />
-          </ApolloProvider>
+          </QueryClientProvider>
         }
       />
     </AuthContextProvider>

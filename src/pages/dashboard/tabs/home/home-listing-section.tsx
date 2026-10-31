@@ -2,11 +2,11 @@ import { SwiperSlide } from 'swiper/react'
 import { Subtitle } from '@/components/subtitle'
 import { PageMediaCoverCard } from '@/components/page-media-cover-card'
 import { SwiperSectionHome } from '@/components/swiper-section-home'
-import { TPageMedia } from '@/types/t-page-media'
+import type { MediaCoverCardData } from '@/components/media-cover-card-fragment'
 
 type THomeListingSectionProps = {
   title: string
-  mediasArray: TPageMedia[]
+  mediasArray: MediaCoverCardData[]
 }
 
 export function HomeListingSection({ title, mediasArray }: THomeListingSectionProps) {

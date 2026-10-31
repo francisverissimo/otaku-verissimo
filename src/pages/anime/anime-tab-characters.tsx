@@ -1,14 +1,22 @@
-import { TMedia } from '@/types/t-media'
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { Subtitle } from '@/components/subtitle'
-import { useEffect } from 'react'
+import { LoadMoreTrigger } from '@/components/load-more-trigger'
+import type { Page } from '@/lib/connection-page'
+import { useAnimeCharacters, type AnimeCharacter } from './anime-queries'
 
 type TAnimeTabCharactersProps = {
-  characters: TMedia['characters']
+  animeId: number
+  firstPage: Page<AnimeCharacter>
 }
 
-export function AnimeTabCharacters({ characters }: TAnimeTabCharactersProps) {
-  const { edges } = characters
+export function AnimeTabCharacters({ animeId, firstPage }: TAnimeTabCharactersProps) {
+  const {
+    data: characters,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAnimeCharacters(animeId, firstPage)
 
   useEffect(() => {
     const elementHeader = document.querySelector('#characters_header')
@@ -26,17 +34,17 @@ export function AnimeTabCharacters({ characters }: TAnimeTabCharactersProps) {
       </Subtitle>
 
       <div className="grid gap-4 pb-2 md:grid-cols-2">
-        {edges.map((character) => {
-          if (!character.voiceActorRoles.length) {
+        {characters.map((character) => {
+          if (!character.voiceActors.length) {
             return (
               <div
-                key={character.node.id}
+                key={character.id}
                 className="bg-darkTxt/10 flex overflow-hidden rounded-lg shadow-lg"
               >
-                <Link to={`/character/${character.node.id}`}>
+                <Link to={`/character/${character.id}`}>
                   <img
-                    src={character.node.image.medium}
-                    alt={character.node.name.full}
+                    src={character.image ?? undefined}
+                    alt={character.name}
                     style={{
                       opacity: 0,
                       transitionDuration: '600ms',
@@ -48,7 +56,7 @@ export function AnimeTabCharacters({ characters }: TAnimeTabCharactersProps) {
 
                 <div className="flex gap-1 p-2">
                   <div className="flex w-full flex-col gap-1">
-                    <span className="font-medium">{character.node.name.full}</span>
+                    <span className="font-medium">{character.name}</span>
                     <span className="text-main">{character.role}</span>
                   </div>
                 </div>
@@ -56,71 +64,70 @@ export function AnimeTabCharacters({ characters }: TAnimeTabCharactersProps) {
             )
           }
 
-          return character.voiceActorRoles.map((voiceActorRole, index) => {
-            return (
-              <div
-                key={index}
-                className="bg-darkTxt/10 flex h-36 justify-between overflow-hidden rounded-lg shadow-lg md:h-40"
-              >
-                <Link to={`/character/${character.node.id}`}>
+          return character.voiceActors.map((voiceActor) => (
+            <div
+              key={`${character.id}-${voiceActor.id}`}
+              className="bg-darkTxt/10 flex h-36 justify-between overflow-hidden rounded-lg shadow-lg md:h-40"
+            >
+              <Link to={`/character/${character.id}`}>
+                <img
+                  src={character.image ?? undefined}
+                  alt={character.name}
+                  style={{
+                    opacity: 0,
+                    transitionDuration: '600ms',
+                  }}
+                  onLoad={(t) => (t.currentTarget.style.opacity = '1')}
+                  className="h-full w-24 object-cover md:w-28"
+                />
+              </Link>
+
+              <div className="flex flex-1 flex-col justify-between">
+                <div className="flex w-full flex-col gap-1 p-2">
+                  <Link
+                    className="line-clamp-2 font-medium break-all"
+                    to={`/character/${character.id}`}
+                  >
+                    {character.name}
+                  </Link>
+                  <span className="text-main">{character.role}</span>
+                </div>
+
+                <div className="flex w-fit flex-col place-self-end p-2">
+                  {voiceActor.roleNotes && (
+                    <span className="text-main text-end">{voiceActor.roleNotes}</span>
+                  )}
+
+                  <Link className="text-end font-medium" to={`/staff/${voiceActor.id}`}>
+                    {voiceActor.name}
+                  </Link>
+                </div>
+              </div>
+
+              {voiceActor.image && (
+                <Link to={`/staff/${voiceActor.id}`}>
                   <img
-                    src={character.node.image.medium}
-                    alt={character.node.name.full}
+                    src={voiceActor.image}
+                    alt={voiceActor.name}
                     style={{
                       opacity: 0,
                       transitionDuration: '600ms',
                     }}
                     onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                    className="h-full w-24 object-cover md:w-28"
+                    className="h-full w-24 overflow-hidden object-cover md:w-28"
                   />
                 </Link>
-
-                <div className="flex flex-1 flex-col justify-between">
-                  <div className="flex w-full flex-col gap-1 p-2">
-                    <Link
-                      className="line-clamp-2 font-medium break-all"
-                      to={`/character/${character.node.id}`}
-                    >
-                      {character.node.name.full}
-                    </Link>
-                    <span className="text-main">{character.role}</span>
-                  </div>
-
-                  {voiceActorRole && (
-                    <div className="flex w-fit flex-col place-self-end p-2">
-                      {voiceActorRole.roleNotes && (
-                        <span className="text-main text-end">{voiceActorRole.roleNotes}</span>
-                      )}
-
-                      <Link
-                        className="text-end font-medium"
-                        to={`/staff/${voiceActorRole.voiceActor.id}`}
-                      >
-                        {voiceActorRole.voiceActor.name.full}
-                      </Link>
-                    </div>
-                  )}
-                </div>
-
-                {voiceActorRole && voiceActorRole.voiceActor.image && (
-                  <Link to={`/staff/${voiceActorRole.voiceActor.id}`}>
-                    <img
-                      src={voiceActorRole.voiceActor.image.medium}
-                      alt={voiceActorRole.voiceActor.name.full}
-                      style={{
-                        opacity: 0,
-                        transitionDuration: '600ms',
-                      }}
-                      onLoad={(t) => (t.currentTarget.style.opacity = '1')}
-                      className="h-full w-24 overflow-hidden object-cover md:w-28"
-                    />
-                  </Link>
-                )}
-              </div>
-            )
-          })
+              )}
+            </div>
+          ))
         })}
       </div>
+
+      <LoadMoreTrigger
+        hasMore={hasNextPage}
+        isLoading={isFetchingNextPage}
+        onLoadMore={fetchNextPage}
+      />
     </div>
   )
 }

@@ -1,18 +1,15 @@
+import type { MediaSeason } from '@/gql/graphql'
+
+const SEASONS: MediaSeason[] = ['WINTER', 'SPRING', 'SUMMER', 'FALL']
+
 class SeasonHandler {
-  getCurrentSeason(): string {
-    const currentMonth = new Date().getMonth()
-    if ([0, 1, 2].includes(currentMonth)) return 'WINTER'
-    if ([3, 4, 5].includes(currentMonth)) return 'SPRING'
-    if ([6, 7, 8].includes(currentMonth)) return 'SUMMER'
-    return 'FALL'
+  getCurrentSeason(): MediaSeason {
+    return SEASONS[Math.floor(new Date().getMonth() / 3)]
   }
 
-  getNextSeason(): string {
-    const seasonWeAreIn = this.getCurrentSeason()
-    const seasons = ['WINTER', 'SPRING', 'SUMMER', 'FALL']
-    const index = seasons.findIndex((season) => season == seasonWeAreIn)
-    if (index === 3) return seasons[0]
-    return seasons[index + 1]
+  getNextSeason(): MediaSeason {
+    const index = SEASONS.indexOf(this.getCurrentSeason())
+    return SEASONS[(index + 1) % SEASONS.length]
   }
 
   getCurrentYear(): number {

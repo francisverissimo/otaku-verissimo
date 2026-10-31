@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TMedia } from '@/types/t-media'
+import type { AnimeView } from './anime-queries'
 import { AnimeTabCharacters as TabCharacters } from './anime-tab-characters'
 import { AnimeTabStaff as TabStaff } from './anime-tab-staff'
 
@@ -7,7 +7,7 @@ import { AnimeNavigationTabs } from './anime-navigation-tabs'
 import { AnimeTabOverview } from './anime-tab-overview'
 
 type TAnimeContentProps = {
-  anime: TMedia
+  anime: AnimeView
 }
 
 export function AnimeContent({ anime }: TAnimeContentProps) {
@@ -22,10 +22,10 @@ export function AnimeContent({ anime }: TAnimeContentProps) {
       )}
 
       {pageContent == 'characters' && (
-        <TabCharacters characters={anime.characters} />
+        <TabCharacters animeId={anime.id} firstPage={anime.characters} />
       )}
 
-      {pageContent == 'staff' && <TabStaff staff={anime.staff} />}
+      {pageContent == 'staff' && <TabStaff animeId={anime.id} firstPage={anime.staff} />}
     </div>
   )
 }

@@ -1,10 +1,10 @@
 import { SwiperSlide } from 'swiper/react'
 import { Link } from 'react-router'
-import { TMedia } from '@/types/t-media'
+import type { AnimeView } from './anime-queries'
 import { Subtitle } from '@/components/subtitle'
 import { SwiperCoverCardsBellow } from './anime-section-cards'
 
-type TAnimeRelationsProps = { edges: TMedia['relations']['edges'] }
+type TAnimeRelationsProps = { relations: AnimeView['relations'] }
 
 const order = [
   'ADAPTATION',
@@ -19,10 +19,10 @@ const order = [
   'OTHER',
 ]
 
-export function AnimeRelations({ edges }: TAnimeRelationsProps) {
-  const sorttedEdges = edges.slice().sort((a, b) => {
-    const indexA = order.indexOf(a.relationType)
-    const indexB = order.indexOf(b.relationType)
+export function AnimeRelations({ relations }: TAnimeRelationsProps) {
+  const sortedRelations = relations.slice().sort((a, b) => {
+    const indexA = order.indexOf(a.relationType ?? '')
+    const indexB = order.indexOf(b.relationType ?? '')
 
     if (indexA === -1 && indexB === -1) {
       return 0 // Se ambos os tipos de relação não estiverem presentes na ordem, mantenha a ordem original
@@ -35,7 +35,7 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
     }
   })
 
-  if (!edges.length) {
+  if (!relations.length) {
     return null
   }
 
@@ -46,16 +46,14 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
       </Subtitle>
 
       <SwiperCoverCardsBellow>
-        {sorttedEdges.map((edge) => {
-          const { id, title, coverImage, format } = edge.node
-
+        {sortedRelations.map(({ id, title, cover, format, relationType }) => {
           return (
             <SwiperSlide key={id}>
               <Link to={`/anime/${id}`} className="flex cursor-pointer flex-col gap-1 py-1">
                 <div className="relative mb-2 aspect-[6/9] overflow-hidden rounded-lg shadow-md">
                   <img
-                    src={coverImage.large}
-                    alt={title.userPreferred}
+                    src={cover ?? undefined}
+                    alt={title}
                     className="h-full w-full object-cover object-center"
                     loading="lazy"
                     style={{
@@ -73,14 +71,12 @@ export function AnimeRelations({ edges }: TAnimeRelationsProps) {
 
                   <div className="absolute right-0 bottom-0 left-0 flex justify-center bg-zinc-950/70 p-1">
                     <span className="text-sm font-medium text-zinc-50">
-                      {edge.relationType.replace(/_/g, ' ')}
+                      {relationType?.replace(/_/g, ' ')}
                     </span>
                   </div>
                 </div>
 
-                <span className="line-clamp-2 text-center text-sm md:text-base">
-                  {title.userPreferred}
-                </span>
+                <span className="line-clamp-2 text-center text-sm md:text-base">{title}</span>
               </Link>
             </SwiperSlide>
           )
