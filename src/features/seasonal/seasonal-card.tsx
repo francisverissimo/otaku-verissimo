@@ -3,7 +3,7 @@ import { CircleNotch, Heart, ListPlus, Star, UsersThree } from '@phosphor-icons/
 import { Image } from '@/components/image'
 import { getContrastSafeColor } from '@/lib/get-contrast-safe-color'
 import type { SeasonalMedia } from './seasonal-queries'
-import { LIST_STATUS_LABELS } from './seasonal-utils'
+import { LIST_STATUS_COLORS, LIST_STATUS_LABELS } from './seasonal-utils'
 
 type SeasonalCardProps = {
   media: SeasonalMedia
@@ -67,8 +67,12 @@ export function SeasonalCard({ media, onAddToPlanning, isAdding }: SeasonalCardP
 
         <div className="mt-auto pt-1">
           {media.listEntry?.status ? (
-            <span className="text-second flex items-center gap-2 text-sm font-medium uppercase">
-              <span className="bg-second h-3 w-3 rounded-full" />
+            <span
+              className={`flex items-center gap-2 text-sm font-medium uppercase ${LIST_STATUS_COLORS[media.listEntry.status].text}`}
+            >
+              <span
+                className={`h-3 w-3 rounded-full ${LIST_STATUS_COLORS[media.listEntry.status].dot}`}
+              />
               {LIST_STATUS_LABELS[media.listEntry.status]}
             </span>
           ) : (

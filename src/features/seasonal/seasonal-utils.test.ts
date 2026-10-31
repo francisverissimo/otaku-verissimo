@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { toSeasonalMedia, type SeasonalMedia } from './seasonal-queries'
-import { countGenres, filterByGenres, groupByFormat, setListEntry } from './seasonal-utils'
+import {
+  countGenres,
+  filterByGenres,
+  groupByFormat,
+  LIST_STATUS_COLORS,
+  setListEntry,
+} from './seasonal-utils'
 
 function media(id: number, format: SeasonalMedia['format'], genres: string[]): SeasonalMedia {
   return {
@@ -84,5 +90,13 @@ describe('toSeasonalMedia', () => {
         mediaListEntry: null,
       })
     ).toEqual({ ...media(1, null, ['Action']), title: '', studio: 'MAPPA' })
+  })
+})
+
+describe('LIST_STATUS_COLORS', () => {
+  it('gives every list status its own color', () => {
+    const colors = Object.values(LIST_STATUS_COLORS).map((color) => color.text)
+
+    expect(new Set(colors).size).toBe(colors.length)
   })
 })
