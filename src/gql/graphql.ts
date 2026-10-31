@@ -259,6 +259,25 @@ export type SearchMediaQueryVariables = Exact<{
 
 export type SearchMediaQuery = { Page: { pageInfo: { currentPage: number | null, hasNextPage: boolean | null } | null, media: Array<{ id: number, genres: Array<string | null> | null, episodes: number | null, averageScore: number | null, format: MediaFormat | null, season: MediaSeason | null, seasonYear: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null, color: string | null } | null, studios: { nodes: Array<{ id: number, name: string } | null> | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
+export type SeasonalMediaPageQueryVariables = Exact<{
+  page?: number | null | undefined;
+  season?: MediaSeason | null | undefined;
+  seasonYear?: number | null | undefined;
+  sort?: Array<MediaSort | null | undefined> | MediaSort | null | undefined;
+  isAdult?: boolean | null | undefined;
+  onList?: boolean | null | undefined;
+}>;
+
+
+export type SeasonalMediaPageQuery = { Page: { pageInfo: { hasNextPage: boolean | null } | null, media: Array<{ id: number, format: MediaFormat | null, genres: Array<string | null> | null, averageScore: number | null, favourites: number | null, popularity: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null, color: string | null } | null, studios: { nodes: Array<{ name: string } | null> | null } | null, mediaListEntry: { id: number, status: MediaListStatus | null } | null } | null> | null } | null };
+
+export type AddToPlanningMutationVariables = Exact<{
+  mediaId?: number | null | undefined;
+}>;
+
+
+export type AddToPlanningMutation = { SaveMediaListEntry: { id: number, status: MediaListStatus | null } | null };
+
 export type StaffCharacterEdgeFragment = { id: number | null, role: CharacterRole | null, node: { id: number, name: { full: string | null } | null, image: { large: string | null } | null } | null, media: Array<{ id: number, format: MediaFormat | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null } | null } | null> | null };
 
 export type StaffMediaEdgeFragment = { staffRole: string | null, node: { id: number, title: { userPreferred: string | null } | null, coverImage: { large: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null } | null };
@@ -803,6 +822,54 @@ export const SearchMediaDocument = new TypedDocumentString(`
     day
   }
 }`) as unknown as TypedDocumentString<SearchMediaQuery, SearchMediaQueryVariables>;
+export const SeasonalMediaPageDocument = new TypedDocumentString(`
+    query SeasonalMediaPage($page: Int, $season: MediaSeason, $seasonYear: Int, $sort: [MediaSort], $isAdult: Boolean, $onList: Boolean) {
+  Page(page: $page, perPage: 50) {
+    pageInfo {
+      hasNextPage
+    }
+    media(
+      type: ANIME
+      season: $season
+      seasonYear: $seasonYear
+      sort: $sort
+      isAdult: $isAdult
+      onList: $onList
+    ) {
+      id
+      format
+      title {
+        userPreferred
+      }
+      coverImage {
+        large
+        color
+      }
+      genres
+      averageScore
+      favourites
+      popularity
+      studios(isMain: true) {
+        nodes {
+          name
+        }
+      }
+      mediaListEntry {
+        id
+        status
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SeasonalMediaPageQuery, SeasonalMediaPageQueryVariables>;
+export const AddToPlanningDocument = new TypedDocumentString(`
+    mutation AddToPlanning($mediaId: Int) {
+  SaveMediaListEntry(mediaId: $mediaId, status: PLANNING) {
+    id
+    status
+  }
+}
+    `) as unknown as TypedDocumentString<AddToPlanningMutation, AddToPlanningMutationVariables>;
 export const StaffDocument = new TypedDocumentString(`
     query Staff($id: Int) {
   Staff(id: $id) {
