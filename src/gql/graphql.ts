@@ -185,12 +185,23 @@ export type MediaType =
   /** Asian comic */
   | 'MANGA';
 
-export type ViewerQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ViewerQuery = { Viewer: { id: number, name: string, avatar: { medium: string | null } | null, mediaListOptions: { animeList: { sectionOrder: Array<string | null> | null } | null } | null } | null };
-
 export type MediaCoverCardFragment = { id: number, genres: Array<string | null> | null, episodes: number | null, averageScore: number | null, format: MediaFormat | null, season: MediaSeason | null, seasonYear: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null, color: string | null } | null, studios: { nodes: Array<{ id: number, name: string } | null> | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null };
+
+export type MediaListCollectionQueryVariables = Exact<{
+  userId?: number | null | undefined;
+}>;
+
+
+export type MediaListCollectionQuery = { MediaListCollection: { lists: Array<{ name: string | null, status: MediaListStatus | null, entries: Array<{ id: number, status: MediaListStatus | null, progress: number | null, media: { id: number, format: MediaFormat | null, episodes: number | null, averageScore: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null } | null, nextAiringEpisode: { airingAt: number, episode: number } | null } | null } | null> | null } | null> | null } | null };
+
+export type SaveMediaListEntryMutationVariables = Exact<{
+  id?: number | null | undefined;
+  status?: MediaListStatus | null | undefined;
+  progress?: number | null | undefined;
+}>;
+
+
+export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, status: MediaListStatus | null, progress: number | null } | null };
 
 export type AnimeCharacterEdgeFragment = { role: CharacterRole | null, node: { id: number, name: { full: string | null } | null, image: { medium: string | null } | null } | null, voiceActorRoles: Array<{ roleNotes: string | null, voiceActor: { id: number, name: { full: string | null } | null, image: { medium: string | null } | null } | null } | null> | null };
 
@@ -219,28 +230,17 @@ export type AnimeStaffPageQueryVariables = Exact<{
 
 export type AnimeStaffPageQuery = { Media: { staff: { edges: Array<{ id: number | null, role: string | null, node: { id: number, name: { full: string | null } | null, image: { medium: string | null } | null } | null } | null> | null, pageInfo: { currentPage: number | null, hasNextPage: boolean | null } | null } | null } | null };
 
+export type ViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ViewerQuery = { Viewer: { id: number, name: string, avatar: { medium: string | null } | null, mediaListOptions: { animeList: { sectionOrder: Array<string | null> | null } | null } | null } | null };
+
 export type CharacterQueryVariables = Exact<{
   id?: number | null | undefined;
 }>;
 
 
 export type CharacterQuery = { Character: { id: number, favourites: number | null, name: { full: string | null, native: string | null } | null, image: { large: string | null } | null, media: { edges: Array<{ node: { id: number, type: MediaType | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null } | null } | null, voiceActors: Array<{ id: number, languageV2: string | null, name: { full: string | null } | null, image: { large: string | null } | null } | null> | null } | null> | null } | null } | null };
-
-export type MediaListCollectionQueryVariables = Exact<{
-  userId?: number | null | undefined;
-}>;
-
-
-export type MediaListCollectionQuery = { MediaListCollection: { lists: Array<{ name: string | null, status: MediaListStatus | null, entries: Array<{ id: number, status: MediaListStatus | null, progress: number | null, media: { id: number, format: MediaFormat | null, episodes: number | null, averageScore: number | null, title: { userPreferred: string | null } | null, coverImage: { large: string | null } | null, nextAiringEpisode: { airingAt: number, episode: number } | null } | null } | null> | null } | null> | null } | null };
-
-export type SaveMediaListEntryMutationVariables = Exact<{
-  id?: number | null | undefined;
-  status?: MediaListStatus | null | undefined;
-  progress?: number | null | undefined;
-}>;
-
-
-export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, status: MediaListStatus | null, progress: number | null } | null };
 
 export type HomeMediaPageQueryVariables = Exact<{
   sort?: Array<MediaSort | null | undefined> | MediaSort | null | undefined;
@@ -418,22 +418,46 @@ export const StaffMediaEdgeFragmentDoc = new TypedDocumentString(`
   }
 }
     `, {"fragmentName":"StaffMediaEdge"}) as unknown as TypedDocumentString<StaffMediaEdgeFragment, unknown>;
-export const ViewerDocument = new TypedDocumentString(`
-    query Viewer {
-  Viewer {
-    id
-    name
-    avatar {
-      medium
-    }
-    mediaListOptions {
-      animeList {
-        sectionOrder
+export const MediaListCollectionDocument = new TypedDocumentString(`
+    query MediaListCollection($userId: Int) {
+  MediaListCollection(userId: $userId, type: ANIME) {
+    lists {
+      name
+      status
+      entries {
+        id
+        status
+        progress
+        media {
+          id
+          title {
+            userPreferred
+          }
+          coverImage {
+            large
+          }
+          format
+          episodes
+          averageScore
+          nextAiringEpisode {
+            airingAt
+            episode
+          }
+        }
       }
     }
   }
 }
-    `) as unknown as TypedDocumentString<ViewerQuery, ViewerQueryVariables>;
+    `) as unknown as TypedDocumentString<MediaListCollectionQuery, MediaListCollectionQueryVariables>;
+export const SaveMediaListEntryDocument = new TypedDocumentString(`
+    mutation SaveMediaListEntry($id: Int, $status: MediaListStatus, $progress: Int) {
+  SaveMediaListEntry(id: $id, status: $status, progress: $progress) {
+    id
+    status
+    progress
+  }
+}
+    `) as unknown as TypedDocumentString<SaveMediaListEntryMutation, SaveMediaListEntryMutationVariables>;
 export const AnimeDocument = new TypedDocumentString(`
     query Anime($id: Int) {
   Media(id: $id, type: ANIME) {
@@ -649,6 +673,22 @@ export const AnimeStaffPageDocument = new TypedDocumentString(`
     }
   }
 }`) as unknown as TypedDocumentString<AnimeStaffPageQuery, AnimeStaffPageQueryVariables>;
+export const ViewerDocument = new TypedDocumentString(`
+    query Viewer {
+  Viewer {
+    id
+    name
+    avatar {
+      medium
+    }
+    mediaListOptions {
+      animeList {
+        sectionOrder
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ViewerQuery, ViewerQueryVariables>;
 export const CharacterDocument = new TypedDocumentString(`
     query Character($id: Int) {
   Character(id: $id) {
@@ -688,46 +728,6 @@ export const CharacterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CharacterQuery, CharacterQueryVariables>;
-export const MediaListCollectionDocument = new TypedDocumentString(`
-    query MediaListCollection($userId: Int) {
-  MediaListCollection(userId: $userId, type: ANIME) {
-    lists {
-      name
-      status
-      entries {
-        id
-        status
-        progress
-        media {
-          id
-          title {
-            userPreferred
-          }
-          coverImage {
-            large
-          }
-          format
-          episodes
-          averageScore
-          nextAiringEpisode {
-            airingAt
-            episode
-          }
-        }
-      }
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<MediaListCollectionQuery, MediaListCollectionQueryVariables>;
-export const SaveMediaListEntryDocument = new TypedDocumentString(`
-    mutation SaveMediaListEntry($id: Int, $status: MediaListStatus, $progress: Int) {
-  SaveMediaListEntry(id: $id, status: $status, progress: $progress) {
-    id
-    status
-    progress
-  }
-}
-    `) as unknown as TypedDocumentString<SaveMediaListEntryMutation, SaveMediaListEntryMutationVariables>;
 export const HomeMediaPageDocument = new TypedDocumentString(`
     query HomeMediaPage($sort: [MediaSort], $season: MediaSeason, $seasonYear: Int) {
   Page(page: 1, perPage: 10) {

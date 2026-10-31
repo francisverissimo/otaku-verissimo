@@ -1,5 +1,5 @@
 import type { TypedDocumentString } from '@/gql/graphql'
-import { getStoredToken } from '@/auth/token'
+import { getStoredToken } from '@/lib/access-token'
 
 const ANILIST_URL = 'https://graphql.anilist.co'
 

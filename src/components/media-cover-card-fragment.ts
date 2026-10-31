@@ -1,6 +1,6 @@
 import { graphql } from '@/gql'
 import type { MediaCoverCardFragment } from '@/gql/graphql'
-import { compact } from '@/utils/compact'
+import { compact } from '@/lib/compact'
 
 graphql(`
   fragment MediaCoverCard on Media {
