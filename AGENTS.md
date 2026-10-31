@@ -51,12 +51,21 @@ A estrutura está em migração (veja "Trabalho em andamento").
 - Não registre o token em logs nem o exponha fora de `src/auth/`.
 - Mantenha as mudanças no escopo da tarefa. Refactors fora do escopo viram sugestão, não código.
 
+## Restrições de versão
+
+- **TypeScript fica no 6.x.** O TypeScript 7 (compilador nativo) ainda não tem API JavaScript, e o
+  `typescript-eslint` não roda com ele. Reavalie quando o `typescript-eslint` aceitar o 7.
+- **Apollo Client fica no 3.x.** Ele será substituído na etapa `refactor/data-layer`. Os avisos de
+  depreciação do Apollo 4 no console são esperados até lá.
+- **React Router:** use o pacote `react-router` (o `react-router-dom` não existe mais no v8).
+  `RouterProvider` vem de `react-router/dom`.
+
 ## Trabalho em andamento
 
 Migração em etapas, uma branch por vez a partir do `main`:
 
-1. `chore/foundation`: ESLint, Node 26, correções de bugs, remoção de código morto
-2. `chore/upgrade-stack`: React 19, React Router 7, Vite e demais dependências
+1. `chore/foundation`: ESLint, Node 26, correções de bugs, remoção de código morto (concluída)
+2. `chore/upgrade-stack`: React 19, React Router 8, Vite 8 e demais dependências
 3. `refactor/data-layer`: troca do Apollo Client por TanStack Query + GraphQL Codegen (decidido)
 4. `refactor/feature-structure`: organização por feature, rotas aninhadas
 5. `refactor/shared-components`: componentes compartilhados (imagem, card de mídia, carrossel)

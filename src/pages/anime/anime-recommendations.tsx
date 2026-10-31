@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { SwiperSlide } from 'swiper/react'
 import { Subtitle } from '@/components/subtitle'
 import { Heart, Star } from '@phosphor-icons/react'

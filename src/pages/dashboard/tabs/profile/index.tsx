@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/use-auth'
 import { UnauthenticatedView } from '@/components/unauthenticated-view'
 

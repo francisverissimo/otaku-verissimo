@@ -15,8 +15,6 @@
     "jsx": "react-jsx",
     
     "strict": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
 
     "paths": {

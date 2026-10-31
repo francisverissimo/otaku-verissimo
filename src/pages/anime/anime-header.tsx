@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { CaretLeft } from '@phosphor-icons/react'
 
 export function AnimeHeader() {

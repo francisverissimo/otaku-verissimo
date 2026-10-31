@@ -1,5 +1,5 @@
 import { TMedia } from '@/types/t-media'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { Subtitle } from '@/components/subtitle'
 import { useEffect } from 'react'
 

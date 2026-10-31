@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { SignIn, HouseSimple } from '@phosphor-icons/react'
 import { ANILIST_AUTH_URL } from '@/auth/token'
 import logo from '@/assets/logo-short.svg'

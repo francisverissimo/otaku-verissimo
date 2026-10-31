@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useQuery } from '@apollo/client'
 import { Heart, Star } from '@phosphor-icons/react'
 import { GET_MEDIA_QUERY } from '@/lib/queries/media-query'

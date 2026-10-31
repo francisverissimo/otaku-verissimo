@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { TMedia } from '@/types/t-media'
 import { useEffect } from 'react'
 import { Subtitle } from '@/components/subtitle'

@@ -6,11 +6,11 @@ Site de animes e mangás com uma vasta biblioteca de títulos e informações so
 
 ## 🛠 Tecnologias Utilizadas
 
-- **React** com **React Router**
+- **React 19** com **React Router 8**
 - **TypeScript**
 - **Tailwind CSS**
 - **GraphQL** ([AniList API](https://docs.anilist.co/)) via **Apollo Client**
-- **Vite**
+- **Vite 8**
 
 ## 🚀 Acesse o Projeto
 Você pode acessar o projeto online através do seguinte link:

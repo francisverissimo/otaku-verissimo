@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { CircleNotch } from '@phosphor-icons/react'
 import { TMediaList } from '@/types/t-media-list-collection'
 
