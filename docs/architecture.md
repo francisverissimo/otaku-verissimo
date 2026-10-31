@@ -28,6 +28,11 @@ SPA em React servida pela Vercel. Não há backend próprio: o navegador fala di
 - `AnimePage` busca o anime uma vez e repassa o modelo de view para as abas pelo outlet context
   (`useAnimeRoute()`). Trocar de aba não refaz a query.
 - Links antigos `/?tabs=anime-list` e `/?tabs=profile` redirecionam para `/list` e `/profile`.
+- Todas as rotas, menos a home e o layout do dashboard, usam `lazy`: o código de cada página é baixado
+  na primeira vez que ela é aberta.
+- `RouteErrorBoundary` envolve todas as rotas. Depois de um deploy, uma aba aberta pode pedir um chunk
+  que não existe mais; nesse caso a página recarrega uma vez (no máximo a cada 10 s) para buscar o build
+  novo. Outros erros mostram o `ErrorFallback`.
 
 ## Camada de dados
 
