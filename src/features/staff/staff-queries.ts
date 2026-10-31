@@ -168,7 +168,7 @@ function toStaffMediaRole(edge: StaffMediaEdgeFragment) {
 export type StaffCharacter = NonNullable<ReturnType<typeof toStaffCharacter>>
 export type StaffMediaRole = NonNullable<ReturnType<typeof toStaffMediaRole>>
 
-function toStaffView(data: StaffQueryResult) {
+export function toStaffView(data: StaffQueryResult) {
   const staff = data.Staff
   if (!staff) return null
 

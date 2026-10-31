@@ -50,7 +50,7 @@ const SaveMediaListEntryMutation = graphql(`
   }
 `)
 
-function toMediaListGroups(data: MediaListCollectionResult) {
+export function toMediaListGroups(data: MediaListCollectionResult) {
   return compact(data.MediaListCollection?.lists).map((list) => ({
     name: list.name ?? '',
     /** null for custom lists, which repeat entries that also live in a status list. */

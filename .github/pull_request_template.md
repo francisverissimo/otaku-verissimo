@@ -12,6 +12,7 @@
 
 ## Checklist
 
-- [ ] `yarn lint` e `yarn build` passam
+- [ ] `yarn lint`, `yarn format:check`, `yarn test` e `yarn build` passam
+- [ ] Testes adicionados ou ajustados para mapeamentos e utilitários alterados
 - [ ] README, `AGENTS.md` ou `docs/` atualizados, se comandos, convenções ou estrutura mudaram
 - [ ] Decisão de arquitetura relevante registrada em `docs/adr/`

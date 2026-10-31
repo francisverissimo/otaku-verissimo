@@ -246,7 +246,7 @@ function toFuzzyDate(
 
 export type FuzzyDate = ReturnType<typeof toFuzzyDate>
 
-function toAnimeView(data: AnimeQueryResult) {
+export function toAnimeView(data: AnimeQueryResult) {
   const media = data.Media
   if (!media) return null
 

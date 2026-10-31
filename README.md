@@ -10,7 +10,7 @@ Site de animes e mangás com uma vasta biblioteca de títulos e informações so
 - **TypeScript**
 - **Tailwind CSS**
 - **GraphQL** ([AniList API](https://docs.anilist.co/)) com **TanStack Query** e **GraphQL Codegen**
-- **Vite 8**
+- **Vite 8** e **Vitest**
 
 ## 🚀 Acesse o Projeto
 
@@ -37,6 +37,7 @@ O login usa o fluxo OAuth implícito da AniList. Para testá-lo localmente, crie
 | --------------------- | ---------------------------------------------------- |
 | `yarn dev`            | servidor de desenvolvimento                          |
 | `yarn lint`           | ESLint                                               |
+| `yarn test`           | testes com Vitest                                    |
 | `yarn format`         | formata o código com Prettier                        |
 | `yarn build`          | checagem de tipos (`tsc`) e build de produção        |
 | `yarn preview`        | serve o build localmente                             |
