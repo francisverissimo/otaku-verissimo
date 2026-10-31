@@ -53,6 +53,10 @@ Detalhes da camada de dados e do fluxo de login: [`docs/architecture.md`](docs/a
 - Texto da interface em inglês.
 - Componentes recebem o modelo de view da query (`AnimeView`, `StaffView`...), não a resposta crua da
   API. Trate os `null` da AniList no mapeamento (`toXView`), usando `compact` para listas.
+- Use os componentes compartilhados em vez de repetir o markup: `Image` (fade-in e `loading="lazy"`)
+  no lugar de `<img>` para imagens da AniList, `MediaCard` + `MediaCardCover`/`MediaCardBadge`/
+  `MediaCardTitle` para capas, `Carousel` (`variant`: `cards`, `covers`, `avatars`) para carrosséis.
+- Destinos da navegação do dashboard ficam em `src/app/nav-items.ts`, usado pela sidebar e pela bottom bar.
 - Novos documentos GraphQL usam `graphql()` de `@/gql`, ficam na pasta da feature e passam por
   `execute()`. Use `{ auth: true }` só quando a requisição precisa do usuário logado.
 
@@ -79,7 +83,9 @@ Migração em etapas, uma branch por vez a partir do `main`:
 1. `chore/foundation`: ESLint, Node 26, correções de bugs, remoção de código morto (concluída)
 2. `chore/upgrade-stack`: React 19, React Router 8, Vite 8 e demais dependências (concluída)
 3. `refactor/data-layer`: TanStack Query + GraphQL Codegen no lugar do Apollo Client (concluída)
-4. `refactor/feature-structure`: organização por feature, rotas aninhadas
+4. `refactor/feature-structure`: organização por feature, rotas aninhadas (concluída)
 5. `refactor/shared-components`: componentes compartilhados (imagem, card de mídia, carrossel)
+6. `chore/tests`: Vitest e testes dos mapeamentos e de `applySavedEntry`
+7. `perf/route-splitting`: carregamento das páginas sob demanda (`lazy` nas rotas)
 
 Decisões de arquitetura ficam em `docs/adr/` (modelo em `0000-template.md`).
