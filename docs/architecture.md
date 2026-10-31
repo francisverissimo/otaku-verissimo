@@ -8,6 +8,27 @@ das decisões está em [`adr/`](./adr/).
 SPA em React servida pela Vercel. Não há backend próprio: o navegador fala direto com a
 [API GraphQL da AniList](https://docs.anilist.co/) em `https://graphql.anilist.co`.
 
+## Rotas e pastas
+
+```
+/                     DashboardLayout ─ HomePage            features/home
+/list                 DashboardLayout ─ AnimeListPage       features/anime-list  (filtro em ?q=)
+/profile              DashboardLayout ─ ProfilePage         features/profile
+/search               SearchPage                            features/search      (termo em ?search=)
+/anime/:id            AnimePage ─ AnimeOverviewTab          features/anime
+/anime/:id/characters AnimePage ─ AnimeCharactersTab
+/anime/:id/staff      AnimePage ─ AnimeStaffTab
+/staff/:id            StaffPage                             features/staff
+/character/:id        CharacterPage                         features/character
+*                     NotFoundPage                          app/
+```
+
+- O router fica em `src/app/app.tsx`. `DashboardLayout` desenha a sidebar (desktop) e a bottom bar
+  (mobile) em volta das páginas do dashboard.
+- `AnimePage` busca o anime uma vez e repassa o modelo de view para as abas pelo outlet context
+  (`useAnimeRoute()`). Trocar de aba não refaz a query.
+- Links antigos `/?tabs=anime-list` e `/?tabs=profile` redirecionam para `/list` e `/profile`.
+
 ## Camada de dados
 
 ```
@@ -16,7 +37,7 @@ componente ─► hook da página (useAnime, useStaff...) ─► TanStack Query 
                     └─ select: resposta crua ─► modelo de view (sem nulls soltos)
 ```
 
-- **Queries** ficam ao lado da página que as usa, em `src/pages/<página>/<página>-queries.ts`. Cada
+- **Queries** ficam na pasta da feature que as usa, em `src/features/<feature>/<feature>-queries.ts`. Cada
   arquivo define o documento com `graphql()`, a função de mapeamento (`toXView`) e os hooks.
 - **Fragments** compartilhados ficam com o componente que os consome, por exemplo
   `src/components/media-cover-card-fragment.ts` (card de capa usado na home e na busca).
@@ -36,7 +57,7 @@ Fluxo OAuth implícito da AniList:
 
 1. O link de login (`ANILIST_AUTH_URL`) leva à AniList.
 2. A AniList redireciona para a redirect URL cadastrada no client, com `#access_token=...` na URL.
-3. `resolveViewer()` (`src/auth/viewer.ts`) lê o token do fragmento, guarda no `localStorage` e busca
+3. `resolveViewer()` (`src/features/auth/viewer.ts`) lê o token do fragmento, guarda no `localStorage` e busca
    o usuário (`Viewer`). O usuário fica em cache no `localStorage` por uma hora.
 4. `AuthContext` expõe `user`: `undefined` enquanto resolve, `null` sem login, ou o usuário.
 
@@ -46,6 +67,6 @@ README).
 ## Lista do usuário
 
 `anime-list-queries.ts` busca a `MediaListCollection` e expõe `useSaveMediaListEntry`. Depois de salvar,
-`applySavedEntry` (`utils.ts`) atualiza o cache local: muda o progresso e, se o status mudou, move a
+`applySavedEntry` (`anime-list-utils.ts`) atualiza o cache local: muda o progresso e, se o status mudou, move a
 entrada de lista. Listas personalizadas (`status: null`) repetem entradas das listas de status e
 recebem a atualização também.
