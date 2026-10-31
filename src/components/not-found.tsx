@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { HouseSimple } from "@phosphor-icons/react";
 import logo from "../assets/logo.svg";
 

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 import { useQuery } from '@apollo/client'
 import { Heart } from '@phosphor-icons/react'
 import { GET_STAFF_QUERY } from '@/lib/queries/staff-query'

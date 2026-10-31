@@ -1,5 +1,5 @@
 import { SwiperSlide } from 'swiper/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { TMedia } from '@/types/t-media'
 import { Subtitle } from '@/components/subtitle'
 import { SwiperCoverCardsBellow } from './anime-section-cards'

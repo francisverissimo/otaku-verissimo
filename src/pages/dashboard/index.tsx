@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import { Home, AnimeList, Profile } from './tabs'
 import { Sidebar, BottomBar } from './components'
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { GET_PAGE_MEDIA_QUERY } from '@/lib/queries/page-media-query'
 import { seasonHandler as season } from '@/utils/season-handler'
 import { DefaultLoading as Loading } from '@/components/loading'

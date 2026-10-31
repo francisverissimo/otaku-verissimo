@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import { HouseSimple, SignIn, Video } from '@phosphor-icons/react'
 import { useAuth } from '@/hooks/use-auth'
 import { ANILIST_AUTH_URL } from '@/auth/token'

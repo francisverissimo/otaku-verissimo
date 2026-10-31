@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router'
+import { RouterProvider } from 'react-router/dom'
 import { useAuth } from './hooks/use-auth'
 import { resolveViewer } from './auth/viewer'
 import { Anime } from './pages/anime'

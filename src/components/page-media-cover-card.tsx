@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { Smiley, SmileyMeh, SmileySad } from '@phosphor-icons/react'
 import * as HoverCard from '@radix-ui/react-hover-card'
 import { TPageMedia } from '@/types/t-page-media'

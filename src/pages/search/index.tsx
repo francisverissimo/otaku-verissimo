@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router'
 import { GET_SEARCH_QUERY } from '@/lib/queries/search-query'
 import { InputSearch } from './search-fields'
 import { ResultsList } from './search-results-list'
