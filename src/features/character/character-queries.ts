@@ -44,7 +44,7 @@ const CharacterQuery = graphql(`
   }
 `)
 
-function toCharacterView(data: CharacterQueryResult) {
+export function toCharacterView(data: CharacterQueryResult) {
   const character = data.Character
   if (!character) return null
 

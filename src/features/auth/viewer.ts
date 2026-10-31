@@ -36,7 +36,7 @@ type TStoredViewer = TViewer & {
   lastAccess: number /** Date.now() */
 }
 
-function toViewer(data: ViewerQueryResult): TViewer | undefined {
+export function toViewer(data: ViewerQueryResult): TViewer | undefined {
   const viewer = data.Viewer
   if (!viewer) return undefined
 

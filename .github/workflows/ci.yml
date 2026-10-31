@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Generated GraphQL types are up to date
+        run: |
+          yarn codegen
+          git diff --exit-code -- src/gql
+
+      - run: yarn lint
+      - run: yarn format:check
+      - run: yarn test
+      - run: yarn build

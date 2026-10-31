@@ -17,14 +17,16 @@ nvm use          # Node 26
 yarn install
 yarn dev         # http://localhost:9000
 yarn lint
+yarn test        # Vitest (yarn test:watch durante o desenvolvimento)
 yarn format      # Prettier em todo o repositório
 yarn build       # tsc + vite build
 yarn codegen     # regenera src/gql/ a partir das queries e de schema.graphql
 yarn codegen:schema  # baixa o schema atual da AniList
 ```
 
-Antes de dar uma tarefa por concluída, rode `yarn lint`, `yarn format:check` e `yarn build`. Todos devem
-passar sem erros.
+Antes de dar uma tarefa por concluída, rode `yarn lint`, `yarn format:check`, `yarn test` e `yarn build`.
+Todos devem passar sem erros. A CI (`.github/workflows/ci.yml`) roda os mesmos comandos em cada PR e
+falha se `src/gql/` estiver desatualizado.
 Se você mudou alguma query ou fragment, rode `yarn codegen` antes e inclua `src/gql/` no commit.
 
 ## Estrutura
@@ -56,6 +58,9 @@ Detalhes da camada de dados e do fluxo de login: [`docs/architecture.md`](docs/a
 - Use os componentes compartilhados em vez de repetir o markup: `Image` (fade-in e `loading="lazy"`)
   no lugar de `<img>` para imagens da AniList, `MediaCard` + `MediaCardCover`/`MediaCardBadge`/
   `MediaCardTitle` para capas, `Carousel` (`variant`: `cards`, `covers`, `avatars`) para carrosséis.
+- Testes ficam ao lado do código (`anime-queries.test.ts`). Ao mudar um mapeamento (`toXView`) ou uma
+  função de `*-utils.ts`/`lib/`, ajuste ou adicione o teste correspondente. Os testes não chamam a API:
+  use objetos com o tipo gerado (`AnimeQuery` etc.) como entrada.
 - Destinos da navegação do dashboard ficam em `src/app/nav-items.ts`, usado pela sidebar e pela bottom bar.
 - Novos documentos GraphQL usam `graphql()` de `@/gql`, ficam na pasta da feature e passam por
   `execute()`. Use `{ auth: true }` só quando a requisição precisa do usuário logado.
@@ -84,8 +89,8 @@ Migração em etapas, uma branch por vez a partir do `main`:
 2. `chore/upgrade-stack`: React 19, React Router 8, Vite 8 e demais dependências (concluída)
 3. `refactor/data-layer`: TanStack Query + GraphQL Codegen no lugar do Apollo Client (concluída)
 4. `refactor/feature-structure`: organização por feature, rotas aninhadas (concluída)
-5. `refactor/shared-components`: componentes compartilhados (imagem, card de mídia, carrossel)
-6. `chore/tests`: Vitest e testes dos mapeamentos e de `applySavedEntry`
+5. `refactor/shared-components`: componentes compartilhados (imagem, card de mídia, carrossel) (concluída)
+6. `chore/tests`: Vitest, testes dos mapeamentos e de `applySavedEntry`, CI no GitHub Actions
 7. `perf/route-splitting`: carregamento das páginas sob demanda (`lazy` nas rotas)
 
 Decisões de arquitetura ficam em `docs/adr/` (modelo em `0000-template.md`).
