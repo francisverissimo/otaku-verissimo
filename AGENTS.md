@@ -62,6 +62,8 @@ Detalhes da camada de dados e do fluxo de login: [`docs/architecture.md`](docs/a
   função de `*-utils.ts`/`lib/`, ajuste ou adicione o teste correspondente. Os testes não chamam a API:
   use objetos com o tipo gerado (`AnimeQuery` etc.) como entrada.
 - Destinos da navegação do dashboard ficam em `src/app/nav-items.ts`, usado pela sidebar e pela bottom bar.
+- Páginas novas entram no router (`src/app/app.tsx`) com `lazy`, como as existentes. Só a home e o
+  layout do dashboard ficam no bundle inicial.
 - Novos documentos GraphQL usam `graphql()` de `@/gql`, ficam na pasta da feature e passam por
   `execute()`. Use `{ auth: true }` só quando a requisição precisa do usuário logado.
 
@@ -90,7 +92,7 @@ Migração em etapas, uma branch por vez a partir do `main`:
 3. `refactor/data-layer`: TanStack Query + GraphQL Codegen no lugar do Apollo Client (concluída)
 4. `refactor/feature-structure`: organização por feature, rotas aninhadas (concluída)
 5. `refactor/shared-components`: componentes compartilhados (imagem, card de mídia, carrossel) (concluída)
-6. `chore/tests`: Vitest, testes dos mapeamentos e de `applySavedEntry`, CI no GitHub Actions
-7. `perf/route-splitting`: carregamento das páginas sob demanda (`lazy` nas rotas)
+6. `chore/tests`: Vitest, testes dos mapeamentos e de `applySavedEntry`, CI no GitHub Actions (concluída)
+7. `perf/route-splitting`: carregamento das páginas sob demanda (`lazy` nas rotas) (concluída)
 
 Decisões de arquitetura ficam em `docs/adr/` (modelo em `0000-template.md`).

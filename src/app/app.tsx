@@ -1,20 +1,13 @@
 import { useEffect } from 'react'
 import { createBrowserRouter, Navigate, useSearchParams } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
+import { DefaultLoading } from '@/components/loading'
 import { useAuth } from '@/features/auth/use-auth'
 import { resolveViewer } from '@/features/auth/viewer'
 import { HomePage } from '@/features/home/home-page'
-import { AnimeListPage } from '@/features/anime-list/anime-list-page'
-import { ProfilePage } from '@/features/profile/profile-page'
-import { SearchPage } from '@/features/search/search-page'
-import { AnimePage } from '@/features/anime/anime-page'
-import { AnimeOverviewTab } from '@/features/anime/anime-overview-tab'
-import { AnimeCharactersTab } from '@/features/anime/anime-characters-tab'
-import { AnimeStaffTab } from '@/features/anime/anime-staff-tab'
-import { StaffPage } from '@/features/staff/staff-page'
-import { CharacterPage } from '@/features/character/character-page'
 import { DashboardLayout } from './dashboard-layout'
 import { NotFoundPage } from './not-found-page'
+import { RouteErrorBoundary } from './route-error-boundary'
 
 const LEGACY_TABS: Record<string, string> = { 'anime-list': '/list', profile: '/profile' }
 
@@ -28,28 +21,74 @@ function HomeRoute() {
   return <HomePage />
 }
 
+// Home and the dashboard shell load with the app; every other page is downloaded when first opened.
 const router = createBrowserRouter([
   {
-    element: <DashboardLayout />,
+    errorElement: <RouteErrorBoundary />,
+    // Shown while the chunk of a lazy route opened directly by URL is downloading.
+    hydrateFallbackElement: <DefaultLoading />,
     children: [
-      { index: true, element: <HomeRoute /> },
-      { path: 'list', element: <AnimeListPage /> },
-      { path: 'profile', element: <ProfilePage /> },
+      {
+        element: <DashboardLayout />,
+        children: [
+          { index: true, element: <HomeRoute /> },
+          {
+            path: 'list',
+            lazy: async () => ({
+              Component: (await import('@/features/anime-list/anime-list-page')).AnimeListPage,
+            }),
+          },
+          {
+            path: 'profile',
+            lazy: async () => ({
+              Component: (await import('@/features/profile/profile-page')).ProfilePage,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'search',
+        lazy: async () => ({
+          Component: (await import('@/features/search/search-page')).SearchPage,
+        }),
+      },
+      {
+        path: 'anime/:id',
+        lazy: async () => ({ Component: (await import('@/features/anime/anime-page')).AnimePage }),
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/features/anime/anime-overview-tab')).AnimeOverviewTab,
+            }),
+          },
+          {
+            path: 'characters',
+            lazy: async () => ({
+              Component: (await import('@/features/anime/anime-characters-tab')).AnimeCharactersTab,
+            }),
+          },
+          {
+            path: 'staff',
+            lazy: async () => ({
+              Component: (await import('@/features/anime/anime-staff-tab')).AnimeStaffTab,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'staff/:id',
+        lazy: async () => ({ Component: (await import('@/features/staff/staff-page')).StaffPage }),
+      },
+      {
+        path: 'character/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/character/character-page')).CharacterPage,
+        }),
+      },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
-  { path: 'search', element: <SearchPage /> },
-  {
-    path: 'anime/:id',
-    element: <AnimePage />,
-    children: [
-      { index: true, element: <AnimeOverviewTab /> },
-      { path: 'characters', element: <AnimeCharactersTab /> },
-      { path: 'staff', element: <AnimeStaffTab /> },
-    ],
-  },
-  { path: 'staff/:id', element: <StaffPage /> },
-  { path: 'character/:id', element: <CharacterPage /> },
-  { path: '*', element: <NotFoundPage /> },
 ])
 
 export function App() {
