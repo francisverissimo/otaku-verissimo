@@ -35,9 +35,11 @@ Organização por feature. Cada pasta em `src/features/` reúne a página, os co
 e o `<feature>-queries.ts` (queries, mapeamento para o modelo de view e hooks).
 
 - `src/app/`: router (`app.tsx`), layout do dashboard, navegação (sidebar e bottom bar) e página 404
-- `src/features/`: `anime`, `anime-list`, `auth`, `character`, `home`, `profile`, `search`, `staff`
+- `src/features/`: `anime`, `anime-list`, `auth`, `character`, `home`, `profile`, `search`, `seasonal`,
+  `staff`
 - `src/components/`: componentes usados por mais de uma feature
-- `src/lib/`: código sem UI compartilhado (`execute`, `queryClient`, token, paginação, cores, datas)
+- `src/lib/`: código sem UI compartilhado (`execute`, `queryClient`, `queryKeys`, token, paginação,
+  cores, datas, temporada)
 - `src/gql/`: tipos gerados pelo GraphQL Codegen (não edite à mão)
 - `src/index.css`: tokens do tema do Tailwind v4 (`--color-main`, `--color-darkBG` etc.)
 

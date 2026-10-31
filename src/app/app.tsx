@@ -47,6 +47,12 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: 'seasonal',
+        lazy: async () => ({
+          Component: (await import('@/features/seasonal/seasonal-page')).SeasonalPage,
+        }),
+      },
+      {
         path: 'search',
         lazy: async () => ({
           Component: (await import('@/features/search/search-page')).SearchPage,

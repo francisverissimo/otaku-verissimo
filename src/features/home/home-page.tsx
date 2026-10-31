@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router'
-import { seasonHandler as season } from './season'
+import { seasonHandler as season } from '@/lib/season'
 import { DefaultLoading as Loading } from '@/components/loading'
-import { MagnifyingGlass } from '@phosphor-icons/react'
+import { MagnifyingGlass, SquaresFour } from '@phosphor-icons/react'
 import { HomeListingSection } from './home-listing-section'
 import { useHomeMediaPage } from './home-queries'
 import shortLogo from '@/assets/logo-short.svg'
@@ -59,6 +59,21 @@ export function HomePage() {
         >
           <span className="text-main text-lg uppercase">search for some anime</span>
           <MagnifyingGlass size={24} className="text-main rotate-90" />
+        </Link>
+      </div>
+
+      <div className="flex px-4 pt-2">
+        <Link
+          to="/seasonal"
+          className="border-main/40 hover:bg-main/10 flex items-center gap-3 rounded-full border bg-zinc-950/40 py-2 pr-5 pl-3 backdrop-blur transition"
+        >
+          <SquaresFour size={28} weight="duotone" className="text-main" />
+          <span className="flex flex-col leading-tight">
+            <span className="font-medium">Seasonal Chart</span>
+            <span className="text-xs text-zinc-400">
+              Every anime of {season.getCurrentSeason().toLowerCase()} {season.getCurrentYear()}
+            </span>
+          </span>
         </Link>
       </div>
 

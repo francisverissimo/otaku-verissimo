@@ -6,6 +6,7 @@ import type {
 } from '@/gql/graphql'
 import { execute } from '@/lib/graphql-client'
 import { compact } from '@/lib/compact'
+import { queryKeys } from '@/lib/query-keys'
 import { applySavedEntry, sortSections } from './anime-list-utils'
 
 const MediaListCollectionQuery = graphql(`
@@ -81,7 +82,7 @@ export function toMediaListGroups(data: MediaListCollectionResult) {
 export type MediaListGroup = ReturnType<typeof toMediaListGroups>[number]
 export type MediaListEntry = MediaListGroup['entries'][number]
 
-const mediaListKey = (userId: number) => ['media-list', userId]
+const mediaListKey = queryKeys.mediaList
 
 export function useMediaListCollection(userId: number, sectionOrder: string[]) {
   return useQuery({

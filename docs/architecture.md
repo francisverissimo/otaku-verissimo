@@ -15,6 +15,7 @@ SPA em React servida pela Vercel. Não há backend próprio: o navegador fala di
 /list                 DashboardLayout ─ AnimeListPage       features/anime-list  (filtro em ?q=)
 /profile              DashboardLayout ─ ProfilePage         features/profile
 /search               SearchPage                            features/search      (termo em ?search=)
+/seasonal             SeasonalPage                          features/seasonal    (filtros na URL)
 /anime/:id            AnimePage ─ AnimeOverviewTab          features/anime
 /anime/:id/characters AnimePage ─ AnimeCharactersTab
 /anime/:id/staff      AnimePage ─ AnimeStaffTab
@@ -55,6 +56,22 @@ componente ─► hook da página (useAnime, useStaff...) ─► TanStack Query 
 - **Paginação:** `useInfiniteQuery` + `LoadMoreTrigger` (IntersectionObserver). A primeira página vem
   na query principal e entra como `initialData`; `src/lib/connection-page.ts` converte connections da
   AniList em `{ items, nextPage }`.
+
+## Seasonal Chart
+
+Lista todos os animes de uma temporada, agrupados por formato na ordem do AL-chan (TV, TV Short,
+Movie, OVA, ONA, Special, Music).
+
+- `useSeasonalChart` busca todas as páginas da temporada de uma vez (50 por página, normalmente 2 ou 3
+  requisições). Com a lista completa, o agrupamento por formato e o filtro por gênero acontecem no
+  navegador, sem novas requisições.
+- Ano, temporada, ordenação, ordem, gêneros, "na minha lista" e conteúdo adulto ficam na URL
+  (`seasonal-filters.ts`). Só os valores diferentes do padrão aparecem nela.
+- Gêneros não vão para a API e não entram na chave do cache: trocar de gênero não refaz a busca.
+- Logado, a query envia o token para trazer o `mediaListEntry` de cada anime. "Add to Planning" salva a
+  entrada, atualiza o card no cache e invalida a lista do usuário (`queryKeys.mediaList`).
+- `isAdult: false` esconde conteúdo adulto. Para mostrar, a variável é omitida, porque `isAdult: true`
+  traria só conteúdo adulto.
 
 ## Autenticação
 
