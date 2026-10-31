@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer'
 import { getContrastSafeColor } from '@/lib/get-contrast-safe-color'
 import { AnimeHeader as Header } from './anime-header'
 import { AnimeNavigationTabs } from './anime-navigation-tabs'
+import { AnimeListEntry } from './anime-list-entry'
 import { useAnime, type AnimeView } from './anime-queries'
 
 export function AnimePage() {
@@ -94,6 +95,12 @@ export function AnimePage() {
                 }`}</span>
               )}
             </div>
+
+            <AnimeListEntry
+              mediaId={anime.id}
+              title={anime.title.userPreferred}
+              episodes={anime.episodes}
+            />
           </div>
         </div>
 

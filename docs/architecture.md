@@ -73,6 +73,20 @@ Movie, OVA, ONA, Special, Music).
 - `isAdult: false` esconde conteúdo adulto. Para mostrar, a variável é omitida, porque `isAdult: true`
   traria só conteúdo adulto.
 
+## Entrada da lista na página do anime
+
+Logado, a página do anime mostra o status do anime na lista do usuário (ou "Add to list") e um botão
+"+1 EP". O status abre o editor (`anime-list-entry-dialog.tsx`) com status, episódios, nota, datas,
+rewatches, notas, privado e remoção (com confirmação).
+
+- `useAnimeListEntry` busca a entrada e o formato de nota do usuário (`scoreFormat`), que define o
+  intervalo e o passo do campo de nota.
+- `applyFormRules` (`anime-list-entry-utils.ts`) segue as regras da AniList: chegar ao último episódio
+  completa a entrada; passar para Watching preenche a data de início; passar para Completed preenche o
+  progresso e a data de fim. Datas já preenchidas não são sobrescritas.
+- Salvar ou remover atualiza a entrada no cache e invalida a lista do usuário e o Seasonal Chart, para
+  que as três telas mostrem o mesmo estado.
+
 ## Autenticação
 
 Fluxo OAuth implícito da AniList:

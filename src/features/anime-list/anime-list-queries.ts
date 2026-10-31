@@ -105,6 +105,8 @@ export function useSaveMediaListEntry(userId: number) {
       queryClient.setQueryData<MediaListGroup[]>(mediaListKey(userId), (lists) =>
         lists ? applySavedEntry(lists, saved) : lists
       )
+      queryClient.invalidateQueries({ queryKey: queryKeys.animeListEntries })
+      queryClient.invalidateQueries({ queryKey: queryKeys.seasonal })
     },
   })
 }

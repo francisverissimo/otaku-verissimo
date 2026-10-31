@@ -37,7 +37,7 @@ export function SeasonalFilterBar({
   onOpenExtraFilters,
 }: SeasonalFilterBarProps) {
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-30 bg-zinc-950/80 backdrop-blur">
+    <div className="text-darkTxt fixed right-0 bottom-0 left-0 z-30 bg-zinc-950/80 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center">
         <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto px-4 py-3">
           <Field label="Year">

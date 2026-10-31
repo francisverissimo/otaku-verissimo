@@ -39,7 +39,7 @@ e o `<feature>-queries.ts` (queries, mapeamento para o modelo de view e hooks).
   `staff`
 - `src/components/`: componentes usados por mais de uma feature
 - `src/lib/`: código sem UI compartilhado (`execute`, `queryClient`, `queryKeys`, token, paginação,
-  cores, datas, temporada)
+  cores, datas, temporada, rótulos e cores dos status da lista)
 - `src/gql/`: tipos gerados pelo GraphQL Codegen (não edite à mão)
 - `src/index.css`: tokens do tema do Tailwind v4 (`--color-main`, `--color-darkBG` etc.)
 
@@ -63,6 +63,10 @@ Detalhes da camada de dados e do fluxo de login: [`docs/architecture.md`](docs/a
 - Testes ficam ao lado do código (`anime-queries.test.ts`). Ao mudar um mapeamento (`toXView`) ou uma
   função de `*-utils.ts`/`lib/`, ajuste ou adicione o teste correspondente. Os testes não chamam a API:
   use objetos com o tipo gerado (`AnimeQuery` etc.) como entrada.
+- Mudanças numa entrada da lista (status, progresso) devem invalidar as outras telas que a mostram:
+  `queryKeys.mediaList`, `queryKeys.seasonal` e `queryKeys.animeListEntries`.
+- Diálogos (`Dialog.Content`) usam `text-darkTxt`: eles são renderizados num portal e, com o sistema em
+  tema claro, herdariam a cor de texto escura da página.
 - Destinos da navegação do dashboard ficam em `src/app/nav-items.ts`, usado pela sidebar e pela bottom bar.
 - Páginas novas entram no router (`src/app/app.tsx`) com `lazy`, como as existentes. Só a home e o
   layout do dashboard ficam no bundle inicial.

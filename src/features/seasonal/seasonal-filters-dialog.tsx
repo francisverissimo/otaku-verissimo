@@ -42,7 +42,7 @@ export function SeasonalFiltersDialog({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/60" />
-        <Dialog.Content className="bg-darkBG fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col gap-6 overflow-y-auto rounded-t-2xl p-6 outline-none md:inset-x-auto md:top-1/2 md:bottom-auto md:left-1/2 md:w-full md:max-w-xl md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl">
+        <Dialog.Content className="bg-darkBG text-darkTxt fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col gap-6 overflow-y-auto rounded-t-2xl p-6 outline-none md:inset-x-auto md:top-1/2 md:bottom-auto md:left-1/2 md:w-full md:max-w-xl md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl">
           <div className="flex items-center justify-between">
             <Dialog.Title className="text-xl font-medium">Filters</Dialog.Title>
             <Dialog.Close
